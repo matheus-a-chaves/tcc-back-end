@@ -22,4 +22,8 @@ public class AmistosoController{
     public ResponseEntity<Amistoso> create(@RequestBody Amistoso amistoso) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(amistoso));
     }
+    @PostMapping("/findAll")
+    public ResponseEntity<List<Amistoso>> findAll() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
+    }
 }

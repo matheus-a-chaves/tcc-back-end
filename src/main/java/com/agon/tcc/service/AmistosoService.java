@@ -5,6 +5,7 @@ import com.agon.tcc.model.persistence.AmistosoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -16,5 +17,8 @@ public class AmistosoService {
 
     public Amistoso create(Amistoso amistoso){
         return repository.save(amistoso);
+    }
+    public List<Amistoso> findAll(){
+        return repository.findAll();
     }
 }
