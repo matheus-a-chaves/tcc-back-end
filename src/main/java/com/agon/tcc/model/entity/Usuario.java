@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,7 +24,7 @@ public class Usuario {
     @Column(nullable = false)
     private String email;
 
-    private java.sql.Date dataNascimento;
+    private Date dataNascimento;
 
     private String telefone;
 
