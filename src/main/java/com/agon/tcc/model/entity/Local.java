@@ -19,6 +19,9 @@ public class Local {
     @Column(nullable = false)
     private String nome;
 
+    @Lob
+    private byte[] logo;
+
     private String descricao;
 
     private Double valor;
