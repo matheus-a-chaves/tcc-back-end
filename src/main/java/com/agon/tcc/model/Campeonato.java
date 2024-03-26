@@ -1,6 +1,6 @@
 package com.agon.tcc.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -30,8 +30,8 @@ public class Campeonato {
 		
 	private String nome;
 	private Integer quantidadeEquipes;
-	private Date dataInicio;
-	private Date dataFim;
+	private LocalDate dataInicio;
+	private LocalDate dataFim;
 	private Byte[] regulamento;
 	private Byte[] imagemCampeonato;
 	
@@ -40,4 +40,5 @@ public class Campeonato {
 	
 	@Enumerated(EnumType.STRING)
 	private Modalidade modalidade;
+
 }
