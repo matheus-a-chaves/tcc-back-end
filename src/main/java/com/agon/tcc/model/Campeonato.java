@@ -1,11 +1,13 @@
 package com.agon.tcc.model;
 
-import org.springframework.data.annotation.Id;
+import java.util.Date;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,24 +16,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="Usuario")
+@Table(name = "Campeonato")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Usuario {
+public class Campeonato {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+		
 	private String nome;
-	private String cpf;
-	private String cnpj;
-	private Byte[] imagemPerfil;
+	private Integer quantidadeEquipes;
+	private Date dataInicio;
+	private Date dataFim;
+	private Byte[] regulamento;
+	private Byte[] imagemCampeonato;
 	
-	@OneToOne
-	private Endereco endereco;
-
+	@Enumerated(EnumType.ORDINAL)
+	private Formato formato;
+	
+	@Enumerated(EnumType.STRING)
+	private Modalidade modalidade;
 }
