@@ -32,10 +32,10 @@ public class Campeonato {
 	private Integer quantidadeEquipes;
 	private LocalDate dataInicio;
 	private LocalDate dataFim;
-	private Byte[] regulamento;
-	private Byte[] imagemCampeonato;
+	private byte[] regulamento;
+	private byte[] imagemCampeonato;
 	
-	@Enumerated(EnumType.ORDINAL)
+	@Enumerated(EnumType.STRING)
 	private Formato formato;
 	
 	@Enumerated(EnumType.STRING)
