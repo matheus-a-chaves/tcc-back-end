@@ -1,6 +1,7 @@
 package com.agon.tcc.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,5 +41,7 @@ public class Campeonato {
 	
 	@Enumerated(EnumType.STRING)
 	private Modalidade modalidade;
+	
+	public static List<Campeonato> listCampeonato;
 
 }

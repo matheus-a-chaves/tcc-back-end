@@ -19,37 +19,62 @@ public class CampeonatoService {
 	private CampeonatoRepository campeonatoRepository;
 
 	public List<Campeonato> findAll() {
-		return this.campeonatoRepository.findAll();
+		Campeonato newCamp = new Campeonato();
+		return newCamp.listCampeonato;
+//		return this.campeonatoRepository.findAll();
 	}
 	
 	public Campeonato findById(Long id) {
-		Optional<Campeonato> campeonato = this.campeonatoRepository.findById(id);
-		return campeonato.orElseThrow(() -> new RuntimeException("Campeonato " + id + " não encontrado!"));
+		Campeonato newCamp = new Campeonato();
+		for(Campeonato camp : newCamp.listCampeonato) {
+			if(camp.getId().compareTo(id) == 0) {
+				return camp;
+			}
+		}
+		
+		return newCamp;
+		
+//		Optional<Campeonato> campeonato = this.campeonatoRepository.findById(id);
+//		return campeonato.orElseThrow(() -> new RuntimeException("Campeonato " + id + " não encontrado!"));
 	}
 	
 	@Transactional
 	public Campeonato create(Campeonato camp) {
-		camp.setId(null);
-		camp = campeonatoRepository.save(camp);
+		Campeonato newCamp = new Campeonato();
+		
+		int aux = newCamp.listCampeonato.size() + 1;
+		Long aux2 = Long.parseLong(Integer.toString(aux));
+		camp.setId(aux2);
+		newCamp.listCampeonato.add(camp);
+//		camp = campeonatoRepository.save(camp);
 		return camp;
 	}
 	
 	@Transactional
-	public Campeonato update(Campeonato camp) {
-		Campeonato newCamp = findById(camp.getId());
-		newCamp.setNome(camp.getNome());
-		newCamp.setDataInicio(camp.getDataInicio());
-		newCamp.setQuantidadeEquipes(camp.getQuantidadeEquipes());
-		return this.campeonatoRepository.save(newCamp);
+	public void update(Campeonato camp) {
+		Campeonato newCamp = new Campeonato();
+		newCamp.listCampeonato.removeIf(t -> t.getId().compareTo(camp.getId()) == 0);
+		newCamp.listCampeonato.add(newCamp);
+//		Campeonato newCamp = findById(camp.getId());
+//		newCamp.setNome(camp.getNome());
+//		newCamp.setDataInicio(camp.getDataInicio());
+//		newCamp.setQuantidadeEquipes(camp.getQuantidadeEquipes());
+//		return this.campeonatoRepository.save(newCamp);
 	}
 	
 	public void delete(Long id) {
-		findById(id);
-		try {
-			this.campeonatoRepository.deleteById(id);
-		} catch (Exception e) {
+		Campeonato newCamp = new Campeonato();
+		if(newCamp.listCampeonato.removeIf(t -> t.getId().compareTo(id) == 0)) {
+			
+		}else {
 			throw new RuntimeErrorException(null, "Não é possível excluir pois há entidades relacionadas!");
 		}
+//		findById(id);
+//		try {
+//			this.campeonatoRepository.deleteById(id);
+//		} catch (Exception e) {
+//			throw new RuntimeErrorException(null, "Não é possível excluir pois há entidades relacionadas!");
+//		}
 	}
 	
 }
