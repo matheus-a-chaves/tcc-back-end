@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.agon.tcc.model.Campeonato;
+import com.agon.tcc.dto.CampeonatoDTO;
 import com.agon.tcc.service.CampeonatoService;
 
 @RestController
@@ -28,31 +28,31 @@ public class CampeonatoController {
 	private CampeonatoService campeonatoService;
 	
 	@GetMapping
-	public ResponseEntity<List<Campeonato>> findAll() {
-		List<Campeonato> campeonatos = this.campeonatoService.findAll();
-		return ResponseEntity.ok().body(campeonatos);
+	public ResponseEntity<List<CampeonatoDTO>> findAll() {
+		List<CampeonatoDTO> campeonatosDTO = this.campeonatoService.findAll();
+		return ResponseEntity.ok().body(campeonatosDTO);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Campeonato> findById(@PathVariable Long id) {
-		Campeonato campeonato = this.campeonatoService.findById(id);
-		return ResponseEntity.ok().body(campeonato);
+	public ResponseEntity<CampeonatoDTO> findById(@PathVariable Long id) {
+		CampeonatoDTO campeonatoDTO = this.campeonatoService.findById(id);
+		return ResponseEntity.ok().body(campeonatoDTO);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> create(@RequestBody Campeonato campeonato) {
-		this.campeonatoService.create(campeonato);
+	public ResponseEntity<Void> create(@RequestBody CampeonatoDTO campeonatoDTO) {
+		this.campeonatoService.create(campeonatoDTO);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/agon/campeonatos/{id}")
-				.buildAndExpand(campeonato.getId())
+				.buildAndExpand(campeonatoDTO.id())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Void> update(@RequestBody Campeonato campeonato, @PathVariable Long id) {
-		campeonato.setId(id);
-		this.campeonatoService.update(campeonato);
+	public ResponseEntity<Void> update(@RequestBody CampeonatoDTO campeonatoDTO, @PathVariable Long id) {
+		this.campeonatoService.update(new CampeonatoDTO(id, campeonatoDTO.nome(), campeonatoDTO.quantidadeEquipes(), 
+									  					campeonatoDTO.dataInicio(), campeonatoDTO.dataFim(), null, null, null, null));
 		return ResponseEntity.noContent().build();
 	}
 	

@@ -1,6 +1,9 @@
 package com.agon.tcc.model;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
+
+import com.agon.tcc.dto.CampeonatoDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,5 +43,25 @@ public class Campeonato {
 	
 	@Enumerated(EnumType.STRING)
 	private Modalidade modalidade;
+	
+	public Campeonato(CampeonatoDTO campeonatoDTO) {
+		this.id = campeonatoDTO.id();
+		this.nome = campeonatoDTO.nome();
+		this.quantidadeEquipes = campeonatoDTO.quantidadeEquipes();
+		try {
+			this.dataInicio = campeonatoDTO.dataInicio();
+		} catch(DateTimeException dte) {
+			this.dataInicio = null;
+		}
+		try {
+			this.dataFim = campeonatoDTO.dataFim();
+		} catch(DateTimeException dte) {
+			this.dataFim = null;
+		}
+		this.regulamento = campeonatoDTO.regulamento();
+		this.imagemCampeonato = campeonatoDTO.imagemCampeonato();
+		this.formato = campeonatoDTO.formato();
+		this.modalidade = campeonatoDTO.modalidade();
+	}
 
 }
