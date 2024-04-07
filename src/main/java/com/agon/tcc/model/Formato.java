@@ -24,13 +24,13 @@ public enum Formato {
 		return Arrays.stream(Formato.values()).filter(
 						formato -> formato.getCodigoFormato()
 								.equals(codigo))
-				.findFirst().orElseThrow(() -> new RuntimeException("Código da modalidade inválido."));
+				.findFirst().orElseThrow(() -> new RuntimeException("Código do formato inválido."));
 	}
 
 	public static Formato getByName(final String nomeFormato) {
 		return Arrays.stream(Formato.values()).filter(
 						formato -> formato.getNomeFormato()
 								.equalsIgnoreCase(nomeFormato))
-				.findFirst().orElseThrow(() -> new RuntimeException("Nome da modalidade inválido."));
+				.findFirst().orElseThrow(() -> new RuntimeException("Nome do Formato inválido."));
 	}
 }

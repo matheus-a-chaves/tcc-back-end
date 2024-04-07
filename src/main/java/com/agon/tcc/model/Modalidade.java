@@ -24,10 +24,10 @@ public enum Modalidade {
 				.findFirst().orElseThrow(() -> new RuntimeException("Código da modalidade inválido."));
 	}
 
-	public static Modalidade getByName(final String situacao) {
+	public static Modalidade getByName(final String nome) {
 	return Arrays.stream(Modalidade.values()).filter(
 			modalidade -> modalidade.name()
-					.equalsIgnoreCase(situacao))
+					.equalsIgnoreCase(nome))
 			.findFirst().orElseThrow(() -> new RuntimeException("Nome da modalidade inválido."));
 	}
 
