@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Campeonato")
+@Table(name = "campeonato")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,10 +38,10 @@ public class Campeonato {
 	private byte[] regulamento;
 	private byte[] imagemCampeonato;
 	
-	@Enumerated(EnumType.STRING)
+	@Enumerated(EnumType.ORDINAL)
 	private Formato formato;
 	
-	@Enumerated(EnumType.STRING)
+	@Enumerated(EnumType.ORDINAL)
 	private Modalidade modalidade;
 	
 	public Campeonato(CampeonatoDTO campeonatoDTO) {
