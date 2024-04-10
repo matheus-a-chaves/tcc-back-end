@@ -1,20 +1,45 @@
 package com.agon.tcc.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import com.agon.tcc.dto.ModalidadeDTO;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "modalidade")
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public enum Modalidade {
+@Setter
+public class Modalidade {
 	
-	FUTEBOL(1, "FUTEBOL"),
-	FUTSAL(2, "FUTSAL"),
-	FUT7(3, "FUT7"),
-	BASQUETE(4, "BASQUETE"),
-	VOLEI(5, "VOLEI"),
-	HANDEBOL(6, "HANDEBOL");
+	/*
+	FUTEBOL(1, "Futebol"),
+	FUTSAL(2, "Futsal"),
+	FUT7(3, "Fut7"),
+	BASQUETE(4, "Basquete"),
+	VOLEI(5, "Volei"),
+	HANDEBOL(6, "Handebol");
+	*/
 	
-	private Integer id;
-	private String descricao;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long codigoModalidade;
+	
+	private String descricaoModalidade;
+	
+	public Modalidade(ModalidadeDTO modalidadeDTO) {
+		this.codigoModalidade = modalidadeDTO.id();
+		this.descricaoModalidade = modalidadeDTO.nome();
+	}
 
 }

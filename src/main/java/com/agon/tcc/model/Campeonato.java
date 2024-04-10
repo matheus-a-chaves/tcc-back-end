@@ -5,9 +5,8 @@ import java.time.LocalDate;
 
 import com.agon.tcc.dto.CampeonatoDTO;
 
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,10 +37,10 @@ public class Campeonato {
 	private byte[] regulamento;
 	private byte[] imagemCampeonato;
 	
-	@Enumerated(EnumType.ORDINAL)
+	@EmbeddedId
 	private Formato formato;
 	
-	@Enumerated(EnumType.ORDINAL)
+	@EmbeddedId
 	private Modalidade modalidade;
 	
 	public Campeonato(CampeonatoDTO campeonatoDTO) {
