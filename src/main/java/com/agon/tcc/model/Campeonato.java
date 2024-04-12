@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,11 +37,11 @@ public class Campeonato {
 	private LocalDate dataFim;
 	private byte[] regulamento;
 	private byte[] imagemCampeonato;
-	
-	@EmbeddedId
+
+	@ManyToOne
 	private Formato formato;
 	
-	@EmbeddedId
+	@ManyToOne
 	private Modalidade modalidade;
 	
 	public Campeonato(CampeonatoDTO campeonatoDTO) {
