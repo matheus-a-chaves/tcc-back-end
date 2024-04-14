@@ -1,13 +1,15 @@
 package com.agon.tcc.model;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 
+import com.agon.tcc.dto.CampeonatoDTO;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Campeonato")
+@Table(name = "campeonato")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,13 +34,33 @@ public class Campeonato {
 	private Integer quantidadeEquipes;
 	private LocalDate dataInicio;
 	private LocalDate dataFim;
-	private byte[] regulamento;
-	private byte[] imagemCampeonato;
+	private String regulamento;
+	private String imagemCampeonato;
 	
-	@Enumerated(EnumType.STRING)
+	@ManyToOne
 	private Formato formato;
 	
-	@Enumerated(EnumType.STRING)
+	@ManyToOne
 	private Modalidade modalidade;
+	
+	public Campeonato(CampeonatoDTO campeonatoDTO) {
+		this.id = campeonatoDTO.id();
+		this.nome = campeonatoDTO.nome();
+		this.quantidadeEquipes = campeonatoDTO.quantidadeEquipes();
+		try {
+			this.dataInicio = campeonatoDTO.dataInicio();
+		} catch(DateTimeException dte) {
+			this.dataInicio = null;
+		}
+		try {
+			this.dataFim = campeonatoDTO.dataFim();
+		} catch(DateTimeException dte) {
+			this.dataFim = null;
+		}
+		this.regulamento = campeonatoDTO.regulamento();
+		this.imagemCampeonato = campeonatoDTO.imagemCampeonato();
+		this.formato = campeonatoDTO.formato();
+		this.modalidade = campeonatoDTO.modalidade();
+	}
 
 }

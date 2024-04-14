@@ -16,49 +16,48 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.agon.tcc.dto.CampeonatoDTO;
-import com.agon.tcc.service.CampeonatoService;
+import com.agon.tcc.dto.FormatoDTO;
+import com.agon.tcc.service.FormatoService;
 
 @RestController
 @Validated
-@RequestMapping("/agon/campeonatos")
-public class CampeonatoController {
+@RequestMapping("/agon/formatos")
+public class FormatoController {
 	
-	@Autowired
-	private CampeonatoService campeonatoService;
-	
-	@GetMapping
-	public ResponseEntity<List<CampeonatoDTO>> findAll() {
-		List<CampeonatoDTO> campeonatosDTO = this.campeonatoService.findAll();
-		return ResponseEntity.ok().body(campeonatosDTO);
-	}
-	
+    @Autowired
+    private FormatoService formatoService;
+
+    @GetMapping
+    public ResponseEntity<List<FormatoDTO>> findAll() {
+        List<FormatoDTO> formatoDTO = this.formatoService.findAll();
+        return ResponseEntity.ok().body(formatoDTO);
+    }
+
 	@GetMapping("/{id}")
-	public ResponseEntity<CampeonatoDTO> findById(@PathVariable Long id) {
-		CampeonatoDTO campeonatoDTO = this.campeonatoService.findById(id);
-		return ResponseEntity.ok().body(campeonatoDTO);
+	public ResponseEntity<FormatoDTO> findById(@PathVariable Long id) {
+		FormatoDTO formatoDTO = this.formatoService.findById(id);
+		return ResponseEntity.ok().body(formatoDTO);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> create(@RequestBody CampeonatoDTO campeonatoDTO) {
-		this.campeonatoService.create(campeonatoDTO);
+	public ResponseEntity<Void> create(@RequestBody FormatoDTO formatoDTO) {
+		this.formatoService.create(formatoDTO);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/agon/campeonatos/{id}")
-				.buildAndExpand(campeonatoDTO.id())
+				.path("/agon/formatos/{id}")
+				.buildAndExpand(formatoDTO.codigoFormato())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Void> update(@RequestBody CampeonatoDTO campeonatoDTO, @PathVariable Long id) {
-		this.campeonatoService.update(new CampeonatoDTO(id, campeonatoDTO.nome(), campeonatoDTO.quantidadeEquipes(), 
-									  					campeonatoDTO.dataInicio(), campeonatoDTO.dataFim(), null, null, null, null));
+	public ResponseEntity<Void> update(@RequestBody FormatoDTO formatoDTO, @PathVariable Long id) {
+		this.formatoService.update(new FormatoDTO(id, formatoDTO.descricaoFormato()));
 		return ResponseEntity.noContent().build();
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		this.campeonatoService.delete(id);
+		this.formatoService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 }
