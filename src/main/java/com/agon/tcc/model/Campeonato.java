@@ -34,8 +34,8 @@ public class Campeonato {
 	private Integer quantidadeEquipes;
 	private LocalDate dataInicio;
 	private LocalDate dataFim;
-	private byte[] regulamento;
-	private byte[] imagemCampeonato;
+	private String regulamento;
+	private String imagemCampeonato;
 	
 	@ManyToOne
 	private Formato formato;

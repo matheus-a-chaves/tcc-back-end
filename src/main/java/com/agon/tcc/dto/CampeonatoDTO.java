@@ -10,8 +10,8 @@ public record CampeonatoDTO(Long id,
 							Integer quantidadeEquipes, 
 							LocalDate dataInicio, 
 							LocalDate dataFim, 
-							byte[] regulamento, 
-							byte[] imagemCampeonato, 
+							String regulamento, 
+							String imagemCampeonato, 
 							Formato formato, 
 							Modalidade modalidade) {
 
