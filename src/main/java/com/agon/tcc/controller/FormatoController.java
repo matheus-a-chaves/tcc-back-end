@@ -44,14 +44,14 @@ public class FormatoController {
 		this.formatoService.create(formatoDTO);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/agon/formatos/{id}")
-				.buildAndExpand(formatoDTO.id())
+				.buildAndExpand(formatoDTO.codigoFormato())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody FormatoDTO formatoDTO, @PathVariable Long id) {
-		this.formatoService.update(new FormatoDTO(id, formatoDTO.nome()));
+		this.formatoService.update(new FormatoDTO(id, formatoDTO.descricaoFormato()));
 		return ResponseEntity.noContent().build();
 	}
 	

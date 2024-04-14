@@ -28,9 +28,9 @@ public class ModalidadeService {
     }
     
     public ModalidadeDTO findById(Long id) {
-		Optional<Modalidade> formato = modalidadeRepository.findById(id);
-		if (formato.isPresent()) {
-			Modalidade m = formato.get();
+		Optional<Modalidade> modalidade = modalidadeRepository.findById(id);
+		if (modalidade.isPresent()) {
+			Modalidade m = modalidade.get();
 			return new ModalidadeDTO(m.getCodigoModalidade(), m.getDescricaoModalidade());
 		} else {
 			return null;
@@ -44,8 +44,8 @@ public class ModalidadeService {
 	
 	@Transactional
 	public void update(ModalidadeDTO modalidadeDTO) {
-		Modalidade novaModalidade = new Modalidade(findById(modalidadeDTO.id()));
-		novaModalidade.setDescricaoModalidade(modalidadeDTO.nome());
+		Modalidade novaModalidade = new Modalidade(findById(modalidadeDTO.codigoModalidade()));
+		novaModalidade.setDescricaoModalidade(modalidadeDTO.descricaoModalidade());
 		this.modalidadeRepository.save(novaModalidade);
 	}
 	

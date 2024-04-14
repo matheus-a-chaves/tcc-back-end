@@ -44,14 +44,14 @@ public class ModalidadeController {
 		this.modalidadeService.create(modalidadeDTO);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/agon/formatos/{id}")
-				.buildAndExpand(modalidadeDTO.id())
+				.buildAndExpand(modalidadeDTO.codigoModalidade())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody ModalidadeDTO modalidadeDTO, @PathVariable Long id) {
-		this.modalidadeService.update(new ModalidadeDTO(id, modalidadeDTO.nome()));
+		this.modalidadeService.update(new ModalidadeDTO(id, modalidadeDTO.descricaoModalidade()));
 		return ResponseEntity.noContent().build();
 	}
 	

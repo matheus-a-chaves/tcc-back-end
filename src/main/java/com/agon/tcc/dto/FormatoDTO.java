@@ -1,4 +1,4 @@
 package com.agon.tcc.dto;
 
-public record FormatoDTO(Long id, String nome) {
+public record FormatoDTO(Long codigoFormato, String descricaoFormato) {
 }

@@ -1,5 +1,7 @@
 package com.agon.tcc.service;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,6 +63,15 @@ public class CampeonatoService {
 			} catch (Exception e) {
 				throw new RuntimeErrorException(null, "Não é possível excluir pois há entidades relacionadas!");
 			}
+		}
+	}
+	
+	public byte[] converteDados(String obj) throws Exception {
+		try {
+			byte[] objConvertido = Base64.getDecoder().decode(new String(obj).getBytes("UTF-8"));
+			return objConvertido;
+		} catch (UnsupportedEncodingException e) {
+			throw new Exception("Não foi possível converter: " + e.getMessage());
 		}
 	}
 	

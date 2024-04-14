@@ -2,6 +2,7 @@ package com.agon.tcc.model;
 
 import com.agon.tcc.dto.FormatoDTO;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,11 +37,12 @@ public class Formato {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigoFormato;
 	
+	@Column(unique = true)
 	private String descricaoFormato;
 	
 	public Formato(FormatoDTO formatoDTO) {
-		this.codigoFormato = formatoDTO.id();
-		this.descricaoFormato = formatoDTO.nome();
+		this.codigoFormato = formatoDTO.codigoFormato();
+		this.descricaoFormato = formatoDTO.descricaoFormato();
 	}
 	
 }

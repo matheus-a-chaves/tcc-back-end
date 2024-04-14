@@ -44,8 +44,8 @@ public class FormatoService {
 	
 	@Transactional
 	public void update(FormatoDTO formatoDTO) {
-		Formato novoFormato = new Formato(findById(formatoDTO.id()));
-		novoFormato.setDescricaoFormato(formatoDTO.nome());
+		Formato novoFormato = new Formato(findById(formatoDTO.codigoFormato()));
+		novoFormato.setDescricaoFormato(formatoDTO.descricaoFormato());
 		this.formatoRepository.save(novoFormato);
 	}
 	

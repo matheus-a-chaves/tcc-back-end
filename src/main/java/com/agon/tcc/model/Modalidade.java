@@ -2,6 +2,7 @@ package com.agon.tcc.model;
 
 import com.agon.tcc.dto.ModalidadeDTO;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,11 +36,12 @@ public class Modalidade {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigoModalidade;
 	
+	@Column(unique = true)
 	private String descricaoModalidade;
 	
 	public Modalidade(ModalidadeDTO modalidadeDTO) {
-		this.codigoModalidade = modalidadeDTO.id();
-		this.descricaoModalidade = modalidadeDTO.nome();
+		this.codigoModalidade = modalidadeDTO.codigoModalidade();
+		this.descricaoModalidade = modalidadeDTO.descricaoModalidade();
 	}
 
 }
