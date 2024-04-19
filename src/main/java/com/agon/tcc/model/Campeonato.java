@@ -2,6 +2,7 @@ package com.agon.tcc.model;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.Base64;
 
 import com.agon.tcc.dto.CampeonatoDTO;
 
@@ -57,10 +58,14 @@ public class Campeonato {
 		} catch(DateTimeException dte) {
 			this.dataFim = null;
 		}
-		this.regulamento = campeonatoDTO.regulamento();
-		this.imagemCampeonato = campeonatoDTO.imagemCampeonato();
+
+		this.regulamento =  convertToByte(campeonatoDTO.regulamento());
+		this.imagemCampeonato = convertToByte(campeonatoDTO.imagemCampeonato());
 		this.formato = campeonatoDTO.formato();
 		this.modalidade = campeonatoDTO.modalidade();
 	}
 
+	private byte[] convertToByte(String base64String) {
+		return Base64.getDecoder().decode(base64String);
+	}
 }

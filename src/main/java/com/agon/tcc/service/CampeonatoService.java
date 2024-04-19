@@ -26,7 +26,7 @@ public class CampeonatoService {
 		return campeonatoRepository.findAll()
 				.stream()
 				.map(c -> new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(), 
-											c.getRegulamento(), c.getImagemCampeonato(), c.getFormato(), c.getModalidade()))
+											"c.getRegulamento()"," c.getImagemCampeonato()", c.getFormato(), c.getModalidade()))
 				.collect(Collectors.toList());
 	}
 	
@@ -35,7 +35,7 @@ public class CampeonatoService {
 		if (campeonato.isPresent()) {
 			Campeonato c = campeonato.get();
 			return new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(), 
-									 c.getRegulamento(), c.getImagemCampeonato(), c.getFormato(), c.getModalidade());
+									" c.getRegulamento()"," c.getImagemCampeonato()", c.getFormato(), c.getModalidade());
 		} else {
 			return null;
 		}
