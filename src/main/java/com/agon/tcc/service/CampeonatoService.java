@@ -13,18 +13,32 @@ import org.springframework.transaction.annotation.Transactional;
 import com.agon.tcc.dto.CampeonatoDTO;
 import com.agon.tcc.model.Campeonato;
 import com.agon.tcc.repository.CampeonatoRepository;
+import com.agon.tcc.util.Util;
 
 @Service
 public class CampeonatoService {
 
 	@Autowired
 	private CampeonatoRepository campeonatoRepository;
-
+	
+	private CampeonatoDTO converteDados(Campeonato camp) throws Exception {
+        return new CampeonatoDTO(camp.getId(), camp.getNome(), camp.getQuantidadeEquipes(), camp.getDataInicio(), camp.getDataFim(), 
+        						 Util.convertToString(camp.getRegulamento()), Util.convertToString(camp.getImagemCampeonato()), 
+        						 camp.getFormato(), camp.getModalidade());
+    }
+		
 	public List<CampeonatoDTO> findAll() {
 		return campeonatoRepository.findAll()
 				.stream()
-				.map(c -> new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(), 
-											c.getRegulamento(), c.getImagemCampeonato(), c.getFormato(), c.getModalidade()))
+				.map(c -> {
+					try {
+						return new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(), 
+												 Util.convertToString(c.getRegulamento()), Util.convertToString(c.getImagemCampeonato()), c.getFormato(), c.getModalidade());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(), null, null, c.getFormato(), c.getModalidade());
+				}) 
 				.collect(Collectors.toList());
 	}
 	
@@ -32,11 +46,13 @@ public class CampeonatoService {
 		Optional<Campeonato> campeonato = campeonatoRepository.findById(id);
 		if (campeonato.isPresent()) {
 			Campeonato c = campeonato.get();
-			return new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(), 
-									 c.getRegulamento(), c.getImagemCampeonato(), c.getFormato(), c.getModalidade());
-		} else {
-			return null;
+			try {
+				return converteDados(c);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
+		return null;
 	}
 	
 	@Transactional
@@ -63,5 +79,5 @@ public class CampeonatoService {
 			}
 		}
 	}
-		
+	
 }

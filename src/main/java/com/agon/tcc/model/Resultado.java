@@ -1,12 +1,11 @@
 package com.agon.tcc.model;
 
-import com.agon.tcc.dto.FormatoDTO;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,24 +14,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "formato")
+@Table(name = "resultado")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Formato {
+public class Resultado {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long codigoFormato;
-	
-	@Column(unique = true)
-	private String descricaoFormato;
-	
-	public Formato(FormatoDTO formatoDTO) {
-		this.codigoFormato = formatoDTO.codigoFormato();
-		this.descricaoFormato = formatoDTO.descricaoFormato();
-	}
-	
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private int golsEquipeCasa;
+    private int golsEquipeVisitante;
+    
+    @OneToOne
+    @JoinColumn(name = "partida_id")
+    private Partida partida;
+    
 }

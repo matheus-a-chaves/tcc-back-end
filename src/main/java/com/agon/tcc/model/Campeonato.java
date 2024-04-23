@@ -4,6 +4,7 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 
 import com.agon.tcc.dto.CampeonatoDTO;
+import com.agon.tcc.util.Util;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,8 +35,8 @@ public class Campeonato {
 	private Integer quantidadeEquipes;
 	private LocalDate dataInicio;
 	private LocalDate dataFim;
-	private String regulamento;
-	private String imagemCampeonato;
+	private byte[] regulamento;
+	private byte[] imagemCampeonato;
 	
 	@ManyToOne
 	private Formato formato;
@@ -57,8 +58,16 @@ public class Campeonato {
 		} catch(DateTimeException dte) {
 			this.dataFim = null;
 		}
-		this.regulamento = campeonatoDTO.regulamento();
-		this.imagemCampeonato = campeonatoDTO.imagemCampeonato();
+		try {
+			this.regulamento = Util.convertToByte(campeonatoDTO.regulamento());
+		} catch (Exception e) {
+			this.regulamento = null;
+		}
+		try {
+			this.imagemCampeonato = Util.convertToByte(campeonatoDTO.imagemCampeonato());
+		} catch (Exception e) {
+			this.imagemCampeonato = null;
+		}
 		this.formato = campeonatoDTO.formato();
 		this.modalidade = campeonatoDTO.modalidade();
 	}
