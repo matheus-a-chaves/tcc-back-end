@@ -38,6 +38,13 @@ public class EquipeService {
 		}
 	}
 	
+	public List<EquipeDTO> findAllEquipesByIdCampeonato(Long id) {
+		return equipeRepository.findAllEquipesByIdCampeonato(id)
+				.stream()
+				.map(e -> new EquipeDTO(e.getId(), e.getNome(), e.getImagem(), e.getModalidade(), e.getUsuario()))
+				.collect(Collectors.toList());
+	}
+	
 	@Transactional
 	public void create(EquipeDTO equipeDTO) {
 		equipeRepository.save(new Equipe(equipeDTO));

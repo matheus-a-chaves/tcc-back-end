@@ -39,6 +39,13 @@ public class EquipeController {
 		return ResponseEntity.ok().body(equipeDTO);
 	}
 	
+	@GetMapping("/campeonato/{id}")
+	//@GetMapping("/{id}")
+	public ResponseEntity<List<EquipeDTO>> findAllEquipesByIdCampeonato (@PathVariable Long id) {
+		List<EquipeDTO> equipesDTO = this.equipeService.findAllEquipesByIdCampeonato(id);
+		return ResponseEntity.ok().body(equipesDTO);
+	}
+	
 	@PostMapping
 	public ResponseEntity<Void> create(@RequestBody EquipeDTO equipeDTO) {
 		this.equipeService.create(equipeDTO);
