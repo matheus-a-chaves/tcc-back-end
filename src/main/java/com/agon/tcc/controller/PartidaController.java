@@ -40,17 +40,17 @@ public class PartidaController {
 	}
 	
 	@GetMapping("/campeonato/{id}")
-	public ResponseEntity<List<PartidaDTO>> findByCampeonatoId(@PathVariable Long id) {
-		List<PartidaDTO> partidasDTO = this.partidaService.findByCampeonatoId(id);
+	public ResponseEntity<List<PartidaDTO>> findByCampeonato(@PathVariable Long id) {
+		List<PartidaDTO> partidasDTO = this.partidaService.findByCampeonato(id);
 		return ResponseEntity.ok().body(partidasDTO);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> create(@RequestBody PartidaDTO partidaDTO) {
-		this.partidaService.create(partidaDTO);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/agon/campeonatos/{id}").buildAndExpand(partidaDTO.id()).toUri();
-		return ResponseEntity.created(uri).build();
-	}
+	public ResponseEntity<Void> create(@RequestBody PartidaDTO partidaDTO, @RequestBody List<Long> idsEquipes) {
+        partidaService.create(partidaDTO, idsEquipes);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(partidaDTO.id()).toUri();
+        return ResponseEntity.created(uri).build();
+    }
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody PartidaDTO partidaDTO, @PathVariable Long id) {
