@@ -2,6 +2,7 @@ package com.agon.tcc.model;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.List;
 
 import com.agon.tcc.dto.CampeonatoDTO;
 import com.agon.tcc.util.Util;
@@ -10,6 +11,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -39,10 +43,20 @@ public class Campeonato {
 	private byte[] imagemCampeonato;
 	
 	@ManyToOne
+	@JoinColumn(name = "formato_id")
 	private Formato formato;
 	
 	@ManyToOne
+	@JoinColumn(name = "modalidade_id")
 	private Modalidade modalidade;
+	
+	@ManyToMany
+    @JoinTable(
+        name = "campeonato_usuario",
+        joinColumns = @JoinColumn(name = "campeonato_id"),
+        inverseJoinColumns = @JoinColumn(name = "usuario_id")
+    )
+    private List<Usuario> usuarios;
 	
 	public Campeonato(CampeonatoDTO campeonatoDTO) {
 		this.id = campeonatoDTO.id();

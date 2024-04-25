@@ -55,6 +55,21 @@ public class CampeonatoService {
 		return null;
 	}
 	
+	public List<CampeonatoDTO> findByUsuarioIdAndModalidadeId(Long usuarioId, Long modalidadeId) {
+		return campeonatoRepository.findByUsuariosIdAndModalidadeId(usuarioId, modalidadeId)
+				.stream()
+                .map(c -> {
+                    try {
+                        return new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(), 
+                                                 Util.convertToString(c.getRegulamento()), Util.convertToString(c.getImagemCampeonato()), c.getFormato(), c.getModalidade());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(), null, null, c.getFormato(), c.getModalidade());
+                }) 
+                .collect(Collectors.toList());
+    }
+	
 	@Transactional
 	public void create(CampeonatoDTO campeonatoDTO) {
 		campeonatoRepository.save(new Campeonato(campeonatoDTO));
