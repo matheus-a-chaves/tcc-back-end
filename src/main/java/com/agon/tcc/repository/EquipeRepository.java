@@ -13,5 +13,8 @@ public interface EquipeRepository extends JpaRepository<Equipe, Long> {
 
 	@Query("SELECT e FROM Equipe e JOIN e.partidas p WHERE p.campeonato.id = :campeonatoId")
     List<Equipe> findByCampeonatoId(Long campeonatoId);
+	
+	@Query("SELECT e FROM Equipe e WHERE e.atletica = :atleticaId")
+	List<Equipe> findAllEquipesByIdAtletica(Long atleticaId);
 
 }

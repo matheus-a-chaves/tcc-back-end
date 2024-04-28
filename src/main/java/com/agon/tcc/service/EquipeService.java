@@ -67,6 +67,18 @@ public class EquipeService {
 				.collect(Collectors.toList());
 	}
 	
+	public List<EquipeDTO> findAllEquipesByIdAtletica(Long id) {
+		return equipeRepository.findAllEquipesByIdAtletica(id)
+				.stream()
+				.map(e -> {
+					try {
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getUsuarios(), e.getPartidas());
+					} catch(Exception ex) {
+						throw new RuntimeErrorException(null, "Erro na consulta: " + ex);
+					}
+				}).collect(Collectors.toList());
+	}
+	
 	@Transactional
 	public void create(EquipeDTO equipeDTO) {
 		equipeRepository.save(new Equipe(equipeDTO));

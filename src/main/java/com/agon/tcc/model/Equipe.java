@@ -45,6 +45,8 @@ public class Equipe {
 	@JsonIgnore
     private List<Usuario> usuarios;
 	
+	private Long atletica;
+	
 	@ManyToMany(mappedBy = "equipes")
 	@JsonIgnore
     private List<Partida> partidas;
