@@ -48,7 +48,10 @@ public class PartidaController {
 	@PostMapping
 	public ResponseEntity<Void> create(@RequestBody PartidaDTO partidaDTO, @RequestBody List<Long> idsEquipes) {
         partidaService.create(partidaDTO, idsEquipes);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(partidaDTO.id()).toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+        		.path("/agon/partidas/{id}")
+        		.buildAndExpand(partidaDTO.id())
+        		.toUri();
         return ResponseEntity.created(uri).build();
     }
 	

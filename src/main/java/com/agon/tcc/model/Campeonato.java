@@ -43,11 +43,11 @@ public class Campeonato {
 	private byte[] imagemCampeonato;
 	
 	@ManyToOne
-	@JoinColumn(name = "formato_id")
+	@JoinColumn(name = "codigo_formato")
 	private Formato formato;
 	
 	@ManyToOne
-	@JoinColumn(name = "modalidade_id")
+	@JoinColumn(name = "codigo_modalidade")
 	private Modalidade modalidade;
 	
 	@ManyToMany

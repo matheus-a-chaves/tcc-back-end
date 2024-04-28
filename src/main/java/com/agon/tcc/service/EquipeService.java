@@ -60,9 +60,9 @@ public class EquipeService {
 					try {
 						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getUsuarios(), e.getPartidas());
 					} catch (Exception ex) {
-						ex.printStackTrace();
+						throw new RuntimeErrorException(null, "Erro na consulta: " + ex);
 					}
-					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade(), e.getUsuarios(), e.getPartidas());
+//					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade(), e.getUsuarios(), e.getPartidas());
 				})
 				.collect(Collectors.toList());
 	}

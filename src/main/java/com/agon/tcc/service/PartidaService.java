@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.agon.tcc.dto.PartidaDTO;
+import com.agon.tcc.model.Equipe;
 import com.agon.tcc.model.Partida;
+import com.agon.tcc.repository.EquipeRepository;
 import com.agon.tcc.repository.PartidaRepository;
 
 @Service
@@ -21,7 +23,7 @@ public class PartidaService {
 	private PartidaRepository partidaRepository;
 	
 	@Autowired
-//	private EquipeRepository equipeRepository;
+	private EquipeRepository equipeRepository;
 	
     public List<PartidaDTO> findAll() {
         return partidaRepository.findAll()
@@ -69,16 +71,16 @@ public class PartidaService {
 	
 	@Transactional
 	public void create(PartidaDTO partidaDTO, List<Long> idsEquipes) {
-//	    Partida partida = new Partida();
-//	    // Recuperar as equipes do banco de dados com base nos IDs fornecidos
-//	    List<Equipe> equipes = equipeRepository.findAllById(idsEquipes);
-//	    partida.setEquipes(equipes);
-//	    
-//	    try {
-//		    partidaRepository.save(partida);
-//        } catch (Exception e) {
-//			throw new RuntimeErrorException(null, "Não foi possível salvar a partida " + partida.getId());
-//		}
+	    Partida partida = new Partida();
+	    // Recuperar as equipes do banco de dados com base nos IDs fornecidos
+	    List<Equipe> equipes = equipeRepository.findAllById(idsEquipes);
+	    partida.setEquipes(equipes);
+	    
+	    try {
+		    partidaRepository.save(partida);
+        } catch (Exception e) {
+			throw new RuntimeErrorException(null, "Não foi possível salvar a partida " + partida.getId());
+		}
 	}
 		
 	public void delete(Long id) {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.agon.tcc.dto.EquipeDTO;
 import com.agon.tcc.util.Util;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,13 +38,15 @@ public class Equipe {
 	private byte[] imagem;
 	
 	@ManyToOne
-    @JoinColumn(name = "modalidade_id")
+    @JoinColumn(name = "codigo_modalidade")
     private Modalidade modalidade;
 	
 	@OneToMany(mappedBy = "equipe")
+	@JsonIgnore
     private List<Usuario> usuarios;
 	
 	@ManyToMany(mappedBy = "equipes")
+	@JsonIgnore
     private List<Partida> partidas;
 	
 	public Equipe(EquipeDTO equipeDTO) {
