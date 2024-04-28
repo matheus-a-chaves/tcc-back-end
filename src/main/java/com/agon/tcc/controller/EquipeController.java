@@ -40,9 +40,14 @@ public class EquipeController {
 	}
 	
 	@GetMapping("/campeonato/{id}")
-	//@GetMapping("/{id}")
 	public ResponseEntity<List<EquipeDTO>> findAllEquipesByIdCampeonato (@PathVariable Long id) {
 		List<EquipeDTO> equipesDTO = this.equipeService.findAllEquipesByIdCampeonato(id);
+		return ResponseEntity.ok().body(equipesDTO);
+	}
+	
+	@GetMapping("/atletica/{id}")
+	public ResponseEntity<List<EquipeDTO>> findAllEquipesByIdAtletica (@PathVariable Long id) {
+		List<EquipeDTO> equipesDTO = this.equipeService.findAllEquipesByIdAtletica(id);
 		return ResponseEntity.ok().body(equipesDTO);
 	}
 	

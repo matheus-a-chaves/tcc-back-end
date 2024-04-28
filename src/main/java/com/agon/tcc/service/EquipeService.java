@@ -45,6 +45,13 @@ public class EquipeService {
 				.collect(Collectors.toList());
 	}
 	
+	public List<EquipeDTO> findAllEquipesByIdAtletica(Long id) {
+		return equipeRepository.findAllEquipesByIdAtletica(id)
+				.stream()
+				.map(e -> new EquipeDTO(e.getId(), e.getNome(), e.getImagem(), e.getModalidade(), e.getUsuario()))
+				.collect(Collectors.toList());
+	}
+	
 	@Transactional
 	public void create(EquipeDTO equipeDTO) {
 		equipeRepository.save(new Equipe(equipeDTO));
