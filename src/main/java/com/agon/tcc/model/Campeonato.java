@@ -58,6 +58,14 @@ public class Campeonato {
     )
     private List<Usuario> usuarios;
 	
+	@ManyToMany
+    @JoinTable(
+        name = "campeonato_partida",
+        joinColumns = @JoinColumn(name = "campeonato_id"),
+        inverseJoinColumns = @JoinColumn(name = "partida_id")
+    )
+    private List<Partida> partidas;
+	
 	public Campeonato(CampeonatoDTO campeonatoDTO) {
 		this.id = campeonatoDTO.id();
 		this.nome = campeonatoDTO.nome();
