@@ -22,16 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Modalidade {
-	
-	/*
-	FUTEBOL(1, "Futebol"),
-	FUTSAL(2, "Futsal"),
-	FUT7(3, "Fut7"),
-	BASQUETE(4, "Basquete"),
-	VOLEI(5, "Volei"),
-	HANDEBOL(6, "Handebol");
-	*/
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigoModalidade;

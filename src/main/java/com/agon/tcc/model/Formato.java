@@ -23,16 +23,6 @@ import lombok.Setter;
 @Setter
 public class Formato {
 	
-	/*
-	PONTOS_CORRIDOS(1,"Pontos Corridos"),
-	ELIMINATORIA_SIMPLES(2,"Eliminatória Simples"),
-	ELIMINATORIA_DUPLA(3,"Eliminatória Dupla"),
-	FASE_DE_GRUPOS_COM_ELIMINATORIA_DUPLA(3,"Fase de Grupos + Eliminatória Dupla"),
-	FASE_DE_GRUPOS_COM_ELIMINATORIA_SIMPLES(4, "Fase de Grupos + Eliminatória Simples"),
-	PONTOS_CORRIDOS_COM_ELIMINATORIA_SIMPLES(5, "Pontos Corridos + Eliminatória Simples"),
-	PONTOS_CORRIDOS_COM_ELIMINATORIA_DUPLA(6, "Pontos Corridos + Eliminatória Dupla");
-	*/
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigoFormato;

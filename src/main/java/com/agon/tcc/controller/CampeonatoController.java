@@ -39,6 +39,12 @@ public class CampeonatoController {
 		return ResponseEntity.ok().body(campeonatoDTO);
 	}
 	
+	@GetMapping("/atletica/{idAtletica}/modalidade/{idModalidade}")
+    public ResponseEntity<List<CampeonatoDTO>> findByAtleticaAndModalidade(@PathVariable Long idAtletica, @PathVariable Long idModalidade) {
+        List<CampeonatoDTO> campeonatosDTO = this.campeonatoService.findByUsuarioIdAndModalidadeId(idAtletica, idModalidade);
+        return ResponseEntity.ok().body(campeonatosDTO);
+    }
+	
 	@PostMapping
 	public ResponseEntity<Void> create(@RequestBody CampeonatoDTO campeonatoDTO) {
 		this.campeonatoService.create(campeonatoDTO);
