@@ -1,9 +1,6 @@
 package com.agon.tcc.repository;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.agon.tcc.model.Equipe;
@@ -11,7 +8,7 @@ import com.agon.tcc.model.Equipe;
 @Repository
 public interface EquipeRepository extends JpaRepository<Equipe, Long> {
 
-	@Query("SELECT e FROM Equipe e JOIN e.partidas p WHERE p.campeonato.id = :campeonatoId")
-    List<Equipe> findByCampeonatoId(Long campeonatoId);
+//	@Query("SELECT e FROM Equipe e JOIN e.partidas p WHERE p.campeonato.id = :campeonatoId")
+//    List<Equipe> findByCampeonatoId(Long campeonatoId);
 
 }

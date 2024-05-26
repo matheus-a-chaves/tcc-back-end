@@ -25,14 +25,14 @@ public class Modalidade {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long codigoModalidade;
+	private Long id;
 	
 	@Column(unique = true)
-	private String descricaoModalidade;
+	private String nome;
 	
 	public Modalidade(ModalidadeDTO modalidadeDTO) {
-		this.codigoModalidade = modalidadeDTO.codigoModalidade();
-		this.descricaoModalidade = modalidadeDTO.descricaoModalidade();
+		this.id = modalidadeDTO.id();
+		this.nome = modalidadeDTO.nome();
 	}
 
 }

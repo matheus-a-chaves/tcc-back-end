@@ -23,7 +23,7 @@ public class FormatoService {
     public List<FormatoDTO> findAll() {
     	return formatoRepository.findAll()
 				.stream()
-				.map(f -> new FormatoDTO(f.getCodigoFormato(), f.getDescricaoFormato()))
+				.map(f -> new FormatoDTO(f.getId(), f.getNome()))
 				.collect(Collectors.toList());
     }
     
@@ -31,7 +31,7 @@ public class FormatoService {
 		Optional<Formato> formato = formatoRepository.findById(id);
 		if (formato.isPresent()) {
 			Formato f = formato.get();
-			return new FormatoDTO(f.getCodigoFormato(), f.getDescricaoFormato());
+			return new FormatoDTO(f.getId(), f.getNome());
 		} else {
 			return null;
 		}
@@ -44,8 +44,8 @@ public class FormatoService {
 	
 	@Transactional
 	public void update(FormatoDTO formatoDTO) {
-		Formato novoFormato = new Formato(findById(formatoDTO.codigoFormato()));
-		novoFormato.setDescricaoFormato(formatoDTO.descricaoFormato());
+		Formato novoFormato = new Formato(findById(formatoDTO.id()));
+		novoFormato.setNome(formatoDTO.nome());
 		this.formatoRepository.save(novoFormato);
 	}
 	
