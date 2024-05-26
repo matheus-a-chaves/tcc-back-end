@@ -36,10 +36,15 @@ public class Campeonato {
 	private Long id;
 		
 	private String nome;
+	
 	private Integer quantidadeEquipes;
+	
 	private LocalDate dataInicio;
+	
 	private LocalDate dataFim;
+	
 	private byte[] regulamento;
+	
 	private byte[] imagemCampeonato;
 	
 	@ManyToOne

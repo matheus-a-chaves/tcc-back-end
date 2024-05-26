@@ -39,15 +39,15 @@ public class PartidaController {
 		return ResponseEntity.ok().body(partidaDTO);
 	}
 	
-	@GetMapping("/campeonato/{id}")
-	public ResponseEntity<List<PartidaDTO>> findByCampeonato(@PathVariable Long id) {
-		List<PartidaDTO> partidasDTO = this.partidaService.findByCampeonato(id);
-		return ResponseEntity.ok().body(partidasDTO);
-	}
+//	@GetMapping("/campeonato/{id}")
+//	public ResponseEntity<List<PartidaDTO>> findByCampeonato(@PathVariable Long id) {
+//		List<PartidaDTO> partidasDTO = this.partidaService.findByCampeonato(id);
+//		return ResponseEntity.ok().body(partidasDTO);
+//	}
 	
 	@PostMapping
-	public ResponseEntity<Void> create(@RequestBody PartidaDTO partidaDTO, @RequestBody List<Long> idsEquipes) {
-        partidaService.create(partidaDTO, idsEquipes);
+	public ResponseEntity<Void> create(@RequestBody PartidaDTO partidaDTO) {
+        partidaService.create(partidaDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
         		.path("/agon/partidas/{id}")
         		.buildAndExpand(partidaDTO.id())
@@ -57,7 +57,8 @@ public class PartidaController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody PartidaDTO partidaDTO, @PathVariable Long id) {
-		this.partidaService.update(new PartidaDTO(id, partidaDTO.dataPartida(), partidaDTO.endereco(), null, partidaDTO.placarA(), partidaDTO.placarB()));
+		this.partidaService.update(new PartidaDTO(id, partidaDTO.dataPartida(), partidaDTO.endereco(), partidaDTO.etapaCampeonato(), 
+												  partidaDTO.grupo(), partidaDTO.dadosPartidas()));
 		return ResponseEntity.noContent().build();
 	}
 	

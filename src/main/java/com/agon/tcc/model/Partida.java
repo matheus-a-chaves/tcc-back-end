@@ -4,19 +4,17 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.agon.tcc.dto.PartidaDTO;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,33 +41,24 @@ public class Partida {
 	private Endereco endereco;
 	
 	@ManyToOne
-    @JoinColumn(name = "campeonato_id")
-    private Campeonato campeonato;
-	
-	@OneToOne(mappedBy = "partida", cascade = CascadeType.ALL)
-    private Resultado resultado;
-	
-	@ManyToMany
-    @JoinTable(
-        name = "partida_equipe",
-        joinColumns = @JoinColumn(name = "partida_id"),
-        inverseJoinColumns = @JoinColumn(name = "equipe_id")
-    )
-    private List<Equipe> equipes;
-	
-	@Column(nullable = false, columnDefinition = "INT DEFAULT 0")
-    private Integer placarA;
+    @JoinColumn(name = "etapa_campeonato_id")
+    private EtapaCampeonato etapaCampeonato;
     
-    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
-    private Integer placarB;
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "grupo_id", nullable = true)
+    private Grupo grupo;
+    
+    @OneToMany(mappedBy = "partida", cascade = CascadeType.ALL)
+    @JsonManagedReference("partida-dadosPartida")
+    private List<DadosPartida> dadosPartidas;
 	
 	public Partida(PartidaDTO partidaDTO) {
 		this.id = partidaDTO.id();
 		this.dataPartida = partidaDTO.dataPartida();
 		this.endereco = partidaDTO.endereco();
-		this.equipes = partidaDTO.equipes();
-		this.placarA = partidaDTO.placarA();
-		this.placarB = partidaDTO.placarB();
+		this.etapaCampeonato = partidaDTO.etapaCampeonato();
+		this.grupo = partidaDTO.grupo();
+		this.dadosPartidas = partidaDTO.dadosPartidas();
 	}
 	
 }

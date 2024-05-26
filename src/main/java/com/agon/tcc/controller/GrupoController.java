@@ -16,48 +16,48 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.agon.tcc.dto.ModalidadeDTO;
-import com.agon.tcc.service.ModalidadeService;
+import com.agon.tcc.dto.GrupoDTO;
+import com.agon.tcc.service.GrupoService;
 
 @RestController
 @Validated
-@RequestMapping("/agon/modalidades")
-public class ModalidadeController {
-	
-    @Autowired
-    private ModalidadeService modalidadeService;
+@RequestMapping("/agon/grupos")
+public class GrupoController {
 
-    @GetMapping
-    public ResponseEntity<List<ModalidadeDTO>> findAll() {
-        List<ModalidadeDTO> modalidadeDTO = this.modalidadeService.findAll();
-        return ResponseEntity.ok().body(modalidadeDTO);
-    }
-    
-    @GetMapping("/{id}")
-	public ResponseEntity<ModalidadeDTO> findById(@PathVariable Long id) {
-		ModalidadeDTO modalidadeDTO = this.modalidadeService.findById(id);
-		return ResponseEntity.ok().body(modalidadeDTO);
+	@Autowired
+	private GrupoService grupoService;
+	
+	@GetMapping
+	public ResponseEntity<List<GrupoDTO>> findAll() {
+		List<GrupoDTO> grupoDTO = this.grupoService.findAll();
+		return ResponseEntity.ok().body(grupoDTO);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<GrupoDTO> findById(@PathVariable Long id) {
+		GrupoDTO grupoDTO = this.grupoService.findById(id);
+		return ResponseEntity.ok().body(grupoDTO);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> create(@RequestBody ModalidadeDTO modalidadeDTO) {
-		this.modalidadeService.create(modalidadeDTO);
+	public ResponseEntity<Void> create(@RequestBody GrupoDTO grupoDTO/*, @RequestBody List<Long> idsEquipes*/) {
+		this.grupoService.create(grupoDTO/*, idsEquipes*/);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/agon/formatos/{id}")
-				.buildAndExpand(modalidadeDTO.id())
+				.path("/agon/grupos/{id}")
+				.buildAndExpand(grupoDTO.id())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Void> update(@RequestBody ModalidadeDTO modalidadeDTO, @PathVariable Long id) {
-		this.modalidadeService.update(new ModalidadeDTO(id, modalidadeDTO.nome()));
+	public ResponseEntity<Void> update(@RequestBody GrupoDTO grupoDTO, @PathVariable Long id) {
+		this.grupoService.update(new GrupoDTO(id, grupoDTO.nome(), grupoDTO.totalJogos(), grupoDTO.campeonato(), grupoDTO.equipesGrupos(), grupoDTO.partidas()));
 		return ResponseEntity.noContent().build();
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		this.modalidadeService.delete(id);
+		this.grupoService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 }

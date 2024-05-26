@@ -16,56 +16,50 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.agon.tcc.dto.EquipeDTO;
-import com.agon.tcc.service.EquipeService;
+import com.agon.tcc.dto.EquipeGrupoDTO;
+import com.agon.tcc.service.EquipeGrupoService;
 
 @RestController
 @Validated
-@RequestMapping("/agon/times")
-public class EquipeController {
-	
+@RequestMapping("/agon/timesgrupo")
+public class EquipeGrupoController {
+
 	@Autowired
-	private EquipeService equipeService;
+	private EquipeGrupoService equipeGrupoService;
 	
 	@GetMapping
-	public ResponseEntity<List<EquipeDTO>> findAll() {
-		List<EquipeDTO> equipesDTO = this.equipeService.findAll();
+	public ResponseEntity<List<EquipeGrupoDTO>> findAll() {
+		List<EquipeGrupoDTO> equipesDTO = this.equipeGrupoService.findAll();
 		return ResponseEntity.ok().body(equipesDTO);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<EquipeDTO> findById(@PathVariable Long id) {
-		EquipeDTO equipeDTO = this.equipeService.findById(id);
-		return ResponseEntity.ok().body(equipeDTO);
+	public ResponseEntity<EquipeGrupoDTO> findById(@PathVariable Long id) {
+		EquipeGrupoDTO equipeGrupoDTO = this.equipeGrupoService.findById(id);
+		return ResponseEntity.ok().body(equipeGrupoDTO);
 	}
 	
-//	@GetMapping("/campeonato/{id}")
-//	public ResponseEntity<List<EquipeDTO>> findAllEquipesByIdCampeonato (@PathVariable Long id) {
-//		List<EquipeDTO> equipesDTO = this.equipeService.findAllEquipesByIdCampeonato(id);
-//		return ResponseEntity.ok().body(equipesDTO);
-//	}
-	
 	@PostMapping
-	public ResponseEntity<Void> create(@RequestBody EquipeDTO equipeDTO) {
-		this.equipeService.create(equipeDTO);
+	public ResponseEntity<Void> create(@RequestBody EquipeGrupoDTO equipeGrupoDTO) {
+		this.equipeGrupoService.create(equipeGrupoDTO);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/agon/times/{id}")
-				.buildAndExpand(equipeDTO.id())
+				.path("/agon/timesgrupo/{id}")
+				.buildAndExpand(equipeGrupoDTO.id())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Void> update(@RequestBody EquipeDTO equipeDTO, @PathVariable Long id) {
-		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.equipeGrupos(), 
-												equipeDTO.usuarios(), equipeDTO.dadosPartidas()));
+	public ResponseEntity<Void> update(@RequestBody EquipeGrupoDTO equipeGrupoDTO, @PathVariable Long id) {
+		this.equipeGrupoService.update(new EquipeGrupoDTO(id, equipeGrupoDTO.equipe(), equipeGrupoDTO.grupo(), equipeGrupoDTO.pontos(), 
+														  equipeGrupoDTO.qtdJogos(), equipeGrupoDTO.vitorias(), equipeGrupoDTO.empates(), 
+														  equipeGrupoDTO.derrotas(), equipeGrupoDTO.saldoGols()));
 		return ResponseEntity.noContent().build();
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		this.equipeService.delete(id);
+		this.equipeGrupoService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
-
 }

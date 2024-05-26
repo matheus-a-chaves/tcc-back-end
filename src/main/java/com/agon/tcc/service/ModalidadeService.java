@@ -23,7 +23,7 @@ public class ModalidadeService {
     public List<ModalidadeDTO> findAll() {
     	return modalidadeRepository.findAll()
 				.stream()
-				.map(m -> new ModalidadeDTO(m.getCodigoModalidade(), m.getDescricaoModalidade()))
+				.map(m -> new ModalidadeDTO(m.getId(), m.getNome()))
 				.collect(Collectors.toList());
     }
     
@@ -31,7 +31,7 @@ public class ModalidadeService {
 		Optional<Modalidade> modalidade = modalidadeRepository.findById(id);
 		if (modalidade.isPresent()) {
 			Modalidade m = modalidade.get();
-			return new ModalidadeDTO(m.getCodigoModalidade(), m.getDescricaoModalidade());
+			return new ModalidadeDTO(m.getId(), m.getNome());
 		} else {
 			return null;
 		}
@@ -44,8 +44,7 @@ public class ModalidadeService {
 	
 	@Transactional
 	public void update(ModalidadeDTO modalidadeDTO) {
-		Modalidade novaModalidade = new Modalidade(findById(modalidadeDTO.codigoModalidade()));
-		novaModalidade.setDescricaoModalidade(modalidadeDTO.descricaoModalidade());
+		Modalidade novaModalidade = new Modalidade(findById(modalidadeDTO.id()));
 		this.modalidadeRepository.save(novaModalidade);
 	}
 	
