@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agon.tcc.dto.EquipeDTO;
+import com.agon.tcc.dto.UsuarioDTO;
+import com.agon.tcc.model.Usuario;
 import com.agon.tcc.service.EquipeService;
+import com.agon.tcc.service.UsuarioService;
 
 @RestController
 @Validated
@@ -26,6 +29,9 @@ public class EquipeController {
 	
 	@Autowired
 	private EquipeService equipeService;
+	
+	@Autowired
+	private UsuarioService usuarioService;
 	
 	@GetMapping
 	public ResponseEntity<List<EquipeDTO>> findAll() {
@@ -39,11 +45,11 @@ public class EquipeController {
 		return ResponseEntity.ok().body(equipeDTO);
 	}
 	
-//	@GetMapping("/campeonato/{id}")
-//	public ResponseEntity<List<EquipeDTO>> findAllEquipesByIdCampeonato (@PathVariable Long id) {
-//		List<EquipeDTO> equipesDTO = this.equipeService.findAllEquipesByIdCampeonato(id);
-//		return ResponseEntity.ok().body(equipesDTO);
-//	}
+	@GetMapping("/equipe/{id}/jogadores")
+	public ResponseEntity<List<UsuarioDTO>> findJogadoresByEquipe (@PathVariable Long id) {
+		List<UsuarioDTO> usuariosDTO = this.usuarioService.findAllJogadoresByEquipe(id);
+		return ResponseEntity.ok().body(usuariosDTO);
+	}
 	
 	@PostMapping
 	public ResponseEntity<Void> create(@RequestBody EquipeDTO equipeDTO) {
@@ -57,8 +63,9 @@ public class EquipeController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody EquipeDTO equipeDTO, @PathVariable Long id) {
-		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.equipeGrupos(), 
-												equipeDTO.usuarios(), equipeDTO.dadosPartidas()));
+		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade(),
+//												equipeDTO.equipeGrupos(), equipeDTO.usuarios(), equipeDTO.dadosPartidas()));
+												equipeDTO.equipeGrupos(), equipeDTO.dadosPartidas()));
 		return ResponseEntity.noContent().build();
 	}
 	

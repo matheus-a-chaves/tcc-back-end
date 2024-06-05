@@ -38,12 +38,15 @@ public class Equipe {
 	
 	@Column(name = "imagem")
 	private byte[] imagem;
+	
+	@Column(name = "modalidade")
+	private Long modalidade;
 
 	@OneToMany(mappedBy = "equipe")
 	private List<EquipeGrupo> equipeGrupos;
 	
-	@OneToMany(mappedBy = "equipe")
-    private List<Usuario> usuarios;
+//	@OneToMany(mappedBy = "equipe")
+//    private List<Usuario> usuarios;
 	
 	@OneToMany(mappedBy = "equipe", cascade = CascadeType.ALL)
 	@JsonManagedReference("equipe-dadosPartida")
@@ -57,8 +60,9 @@ public class Equipe {
 		} catch (Exception e) {
 			this.imagem = null;
 		}
+		this.modalidade	= equipeDTO.modalidade();
 		this.equipeGrupos = equipeDTO.equipeGrupos();
-		this.usuarios = equipeDTO.usuarios();
+//		this.usuarios = equipeDTO.usuarios();
 		this.dadosPartidas = equipeDTO.dadosPartidas();
 	}
 }

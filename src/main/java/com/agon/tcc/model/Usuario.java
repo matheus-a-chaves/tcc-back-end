@@ -1,5 +1,9 @@
 package com.agon.tcc.model;
 
+import com.agon.tcc.dto.EquipeDTO;
+import com.agon.tcc.dto.UsuarioDTO;
+import com.agon.tcc.util.Util;
+
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,10 +37,18 @@ public class Usuario {
 	private byte[] imagemPerfil;
 	
 	@Embedded
-	private Endereco endereco;
+	private Long endereco;
 	
-	@ManyToOne
-    @JoinColumn(name = "equipe_id")
-    private Equipe equipe;
+	public Usuario(UsuarioDTO usuarioDTO) {
+		this.id = usuarioDTO.id();
+		this.nome = usuarioDTO.nome();
+		this.cpf = usuarioDTO.cpf();
+		this.cnpj = usuarioDTO.cnpj();
+		try {
+			this.imagemPerfil = Util.convertToByte(usuarioDTO.imagemPerfil());
+		} catch (Exception e) {
+			this.imagemPerfil = null;
+		}
+	}
 
 }

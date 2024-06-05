@@ -9,8 +9,9 @@ import com.agon.tcc.model.Usuario;
 public record EquipeDTO(Long id, 
 						String nome, 
 						String imagem,
+						Long modalidade,
 						List<EquipeGrupo> equipeGrupos,
-						List<Usuario> usuarios,
+//						List<Usuario> usuarios,
 						List<DadosPartida> dadosPartidas) {
 
 }

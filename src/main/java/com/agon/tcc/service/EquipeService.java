@@ -24,7 +24,8 @@ public class EquipeService {
 		
 	private EquipeDTO converteDados(Equipe equipe) throws Exception {
         return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), 
-        					 equipe.getEquipeGrupos(), equipe.getUsuarios(), equipe.getDadosPartidas());
+//        					 equipe.getModalidade(), equipe.getEquipeGrupos(), equipe.getUsuarios(), equipe.getDadosPartidas());
+        					 equipe.getModalidade(), equipe.getEquipeGrupos(), equipe.getDadosPartidas());
     }
 	
 	public List<EquipeDTO> findAll() {
@@ -32,12 +33,14 @@ public class EquipeService {
 				.stream()
 				.map(e -> {
 					try {
-						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), 
-											 e.getEquipeGrupos(), e.getUsuarios(), e.getDadosPartidas());
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(),
+//											 e.getEquipeGrupos(), e.getUsuarios(), e.getDadosPartidas());
+											 e.getEquipeGrupos(), e.getDadosPartidas());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-					return new EquipeDTO(e.getId(), e.getNome(), null, e.getEquipeGrupos(), e.getUsuarios(), e.getDadosPartidas());
+//					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getUsuarios(), e.getDadosPartidas());
+					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
 				})
 				.collect(Collectors.toList());
 	}
@@ -54,20 +57,6 @@ public class EquipeService {
 		}
 		return null;
 	}
-	
-//	public List<EquipeDTO> findAllEquipesByIdCampeonato(Long id) {
-//		return equipeRepository.findByCampeonatoId(id)
-//				.stream()
-//				.map(e -> {
-//					try {
-//						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), 
-//								 			 e.getEquipeGrupos(), e.getUsuarios(), e.getDadosPartidas());
-//					} catch (Exception ex) {
-//						throw new RuntimeErrorException(null, "Erro na consulta: " + ex);
-//					}
-//				})
-//				.collect(Collectors.toList());
-//	}
 	
 	@Transactional
 	public void create(EquipeDTO equipeDTO) {
