@@ -18,7 +18,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agon.tcc.dto.EquipeDTO;
 import com.agon.tcc.dto.UsuarioDTO;
-import com.agon.tcc.model.Usuario;
 import com.agon.tcc.service.EquipeService;
 import com.agon.tcc.service.UsuarioService;
 
@@ -45,10 +44,22 @@ public class EquipeController {
 		return ResponseEntity.ok().body(equipeDTO);
 	}
 	
-	@GetMapping("/equipe/{id}/jogadores")
+	@GetMapping("/{id}/jogadores")
 	public ResponseEntity<List<UsuarioDTO>> findJogadoresByEquipe (@PathVariable Long id) {
 		List<UsuarioDTO> usuariosDTO = this.usuarioService.findAllJogadoresByEquipe(id);
 		return ResponseEntity.ok().body(usuariosDTO);
+	}
+	
+	@GetMapping("/campeonato/{id}")
+	public ResponseEntity<List<EquipeDTO>> findAllTimesByIdCampeonato (@PathVariable Long id) {
+		List<EquipeDTO> equipesDTO = this.equipeService.findAllTimesByIdCampeonato(id);
+		return ResponseEntity.ok().body(equipesDTO);
+	}
+	
+	@GetMapping("/atletica/{id}")
+	public ResponseEntity<List<EquipeDTO>> findAllTimesByIdAtletica (@PathVariable Long id) {
+		List<EquipeDTO> equipesDTO = this.equipeService.findAllTimesByIdAtletica(id);
+		return ResponseEntity.ok().body(equipesDTO);
 	}
 	
 	@PostMapping
@@ -63,9 +74,8 @@ public class EquipeController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody EquipeDTO equipeDTO, @PathVariable Long id) {
-		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade(),
-//												equipeDTO.equipeGrupos(), equipeDTO.usuarios(), equipeDTO.dadosPartidas()));
-												equipeDTO.equipeGrupos(), equipeDTO.dadosPartidas()));
+		//this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade(), equipeDTO.equipeGrupos(), equipeDTO.dadosPartidas()));
+		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade()));
 		return ResponseEntity.noContent().build();
 	}
 	

@@ -11,7 +11,7 @@ import com.agon.tcc.model.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	
-	@Query(value = "SELECT u FROM Usuario u JOIN Membros m ON u.id = m.id_jogador WHERE m.id_equipe = :idEquipe", nativeQuery  = true)
+	@Query(value = "SELECT u.* FROM Usuario u JOIN Membros m ON u.id = m.id_jogador WHERE m.id_equipe = :idEquipe", nativeQuery  = true)
 	List<Usuario> findAllJogadoresByEquipe(Long idEquipe);
 	
 }

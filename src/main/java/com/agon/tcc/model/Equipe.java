@@ -12,6 +12,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -39,18 +41,16 @@ public class Equipe {
 	@Column(name = "imagem")
 	private byte[] imagem;
 	
-	@Column(name = "modalidade")
-	private Long modalidade;
+	@ManyToOne
+	@JoinColumn(name = "codigo_modalidade")
+	private Modalidade modalidade;
 
-	@OneToMany(mappedBy = "equipe")
-	private List<EquipeGrupo> equipeGrupos;
-	
 //	@OneToMany(mappedBy = "equipe")
-//    private List<Usuario> usuarios;
-	
-	@OneToMany(mappedBy = "equipe", cascade = CascadeType.ALL)
-	@JsonManagedReference("equipe-dadosPartida")
-    private List<DadosPartida> dadosPartidas;
+//	private List<EquipeGrupo> equipeGrupos;
+//	
+//	@OneToMany(mappedBy = "equipe", cascade = CascadeType.ALL)
+//	@JsonManagedReference("equipe-dadosPartida")
+//    private List<DadosPartida> dadosPartidas;
 		
 	public Equipe(EquipeDTO equipeDTO) {
 		this.id = equipeDTO.id();
@@ -61,8 +61,7 @@ public class Equipe {
 			this.imagem = null;
 		}
 		this.modalidade	= equipeDTO.modalidade();
-		this.equipeGrupos = equipeDTO.equipeGrupos();
-//		this.usuarios = equipeDTO.usuarios();
-		this.dadosPartidas = equipeDTO.dadosPartidas();
+//		this.equipeGrupos = equipeDTO.equipeGrupos();
+//		this.dadosPartidas = equipeDTO.dadosPartidas();
 	}
 }

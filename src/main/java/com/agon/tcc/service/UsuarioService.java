@@ -23,19 +23,21 @@ public class UsuarioService {
 	private UsuarioRepository usuarioRepository;
 	
 	private UsuarioDTO converteDados(Usuario user) throws Exception {
-        return new UsuarioDTO(user.getId(), user.getNome(), user.getCpf(), user.getCnpj(), Util.convertToString(user.getImagemPerfil()), user.getEndereco());
+        return new UsuarioDTO(user.getId(), user.getNome(), user.getCpf(), user.getCnpj(), Util.convertToString(user.getImagemPerfil()),
+        						user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario());
     }
 	
 	public List<UsuarioDTO> findAll() {
 		return usuarioRepository.findAll()
 				.stream()
-				.map(u -> {
+				.map(user -> {
 					try {
-						return new UsuarioDTO(u.getId(), u.getNome(), u.getCpf(), u.getCnpj(), Util.convertToString(u.getImagemPerfil()), u.getEndereco());
+						return new UsuarioDTO(user.getId(), user.getNome(), user.getCpf(), user.getCnpj(), Util.convertToString(user.getImagemPerfil()),
+        						user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-					return new UsuarioDTO(u.getId(), u.getNome(), u.getCpf(), u.getCnpj(), null, u.getEndereco());
+					return new UsuarioDTO(user.getId(), user.getNome(), user.getCpf(), user.getCnpj(), null, user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario() );
 				})
 				.collect(Collectors.toList());
 	}
@@ -64,13 +66,20 @@ public class UsuarioService {
 		usuario.setNome(usuarioDTO.nome());
 		usuario.setCpf(usuarioDTO.cpf());
 		usuario.setCnpj(usuarioDTO.cnpj());
+		usuario.setBairro(usuarioDTO.bairro());
+		usuario.setCep(usuarioDTO.cep());
+		usuario.setCidade(usuarioDTO.cidade());
+		usuario.setEstado(usuarioDTO.estado());
+		usuario.setNumero(usuarioDTO.numero());
+		usuario.setRua(usuarioDTO.rua());
+		usuario.setTipoUsuario(usuarioDTO.tipoUsuario());
 		try {
 			usuario.setImagemPerfil(Util.convertToByte(usuarioDTO.imagemPerfil()));
+			
     		this.usuarioRepository.save(usuario);
 		} catch (Exception e) {
 			throw new RuntimeErrorException(null, "Não foi possível atualizar o usuario " + usuario.getId() + e);
 		}
-		usuario.setEndereco(usuarioDTO.endereco());
 	}
 	
 	public void delete(Long id) {
@@ -86,13 +95,14 @@ public class UsuarioService {
 	public List<UsuarioDTO> findAllJogadoresByEquipe(Long id) {
 		return usuarioRepository.findAllJogadoresByEquipe(id)
 				.stream()
-				.map(u -> {
+				.map(user -> {
 					try {
-						return new UsuarioDTO(u.getId(), u.getNome(), u.getCpf(), u.getCnpj(), Util.convertToString(u.getImagemPerfil()), u.getEndereco());
+						return new UsuarioDTO(user.getId(), user.getNome(), user.getCpf(), user.getCnpj(), Util.convertToString(user.getImagemPerfil()),
+        						user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-					return new UsuarioDTO(u.getId(), u.getNome(), u.getCpf(), u.getCnpj(), null, u.getEndereco());
+					return new UsuarioDTO(user.getId(), user.getNome(), user.getCpf(), user.getCnpj(), null, user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario() );
 				})
 				.collect(Collectors.toList());
 	}

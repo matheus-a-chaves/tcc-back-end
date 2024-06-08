@@ -5,6 +5,12 @@ public record UsuarioDTO(Long id,
 						String cpf,
 						String cnpj,
 						String imagemPerfil,
-						Long endereco) {
+						String bairro,
+						String cep,
+						String cidade,
+						String estado,
+						Integer numero,
+						String rua,
+						Integer tipoUsuario) {
 	
 }

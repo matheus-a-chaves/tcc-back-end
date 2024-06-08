@@ -23,9 +23,8 @@ public class EquipeService {
 	private EquipeRepository equipeRepository;
 		
 	private EquipeDTO converteDados(Equipe equipe) throws Exception {
-        return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), 
-//        					 equipe.getModalidade(), equipe.getEquipeGrupos(), equipe.getUsuarios(), equipe.getDadosPartidas());
-        					 equipe.getModalidade(), equipe.getEquipeGrupos(), equipe.getDadosPartidas());
+        //return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), equipe.getModalidade(), equipe.getEquipeGrupos(), equipe.getDadosPartidas());
+		return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), equipe.getModalidade());
     }
 	
 	public List<EquipeDTO> findAll() {
@@ -33,14 +32,13 @@ public class EquipeService {
 				.stream()
 				.map(e -> {
 					try {
-						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(),
-//											 e.getEquipeGrupos(), e.getUsuarios(), e.getDadosPartidas());
-											 e.getEquipeGrupos(), e.getDadosPartidas());
+						//return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-//					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getUsuarios(), e.getDadosPartidas());
-					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
+					//return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
+					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
 				})
 				.collect(Collectors.toList());
 	}
@@ -58,22 +56,40 @@ public class EquipeService {
 		return null;
 	}
 	
+	public List<EquipeDTO> findAllTimesByIdCampeonato(Long id) {
+		return equipeRepository.findAllTimesByIdCampeonato(id)
+				.stream()
+				.map(e -> {
+					try {
+						//return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					//return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
+					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
+				})
+				.collect(Collectors.toList());
+	}
+	
+	public List<EquipeDTO> findAllTimesByIdAtletica(Long id) {
+		return equipeRepository.findAllTimesByIdAtletica(id)
+				.stream()
+				.map(e -> {
+					try {
+						//return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					//return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
+					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
+				})
+				.collect(Collectors.toList());
+	}
+	
 	@Transactional
 	public void create(EquipeDTO equipeDTO) {
-//		Modalidade modalidade = modalidadeRepository.findById(equipeDTO.modalidade().getId())
-//                .orElseThrow(() -> new EntityNotFoundException("Modalidade not found: " + equipeDTO.modalidade().getId()));
-		
-//        Equipe equipe = new Equipe();
-//        equipe.setNome(equipeDTO.nome());
-//        try {
-//        	equipe.setImagem(Util.convertToByte(equipeDTO.imagem()));
-//        } catch (Exception e) {
-//			throw new RuntimeErrorException(null, "Não foi possível atualizar a grupo " + equipe.getId() + e);
-//		}
-//        equipe.setModalidade(modalidade);
-//        equipe.setEquipeGrupos(equipeDTO.equipeGrupos());
-//        equipe.setUsuarios(equipeDTO.usuarios());
-//        equipe.setPartidas(equipeDTO.partidas());
 		equipeRepository.save(new Equipe(equipeDTO));
 	}
 	
@@ -81,11 +97,12 @@ public class EquipeService {
 	public void update(EquipeDTO equipeDTO) {
 		Equipe equipe = new Equipe(findById(equipeDTO.id()));
 		equipe.setNome(equipeDTO.nome());
+		equipe.setModalidade(equipeDTO.modalidade());
 		try {
 			equipe.setImagem(Util.convertToByte(equipeDTO.imagem()));
     		this.equipeRepository.save(equipe);
 		} catch (Exception e) {
-			throw new RuntimeErrorException(null, "Não foi possível atualizar a grupo " + equipe.getId() + e);
+			throw new RuntimeErrorException(null, "Não foi possível atualizar a equipe " + equipe.getId() + e);
 		}
 	}
 	
