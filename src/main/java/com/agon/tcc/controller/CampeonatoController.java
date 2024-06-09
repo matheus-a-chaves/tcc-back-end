@@ -67,4 +67,13 @@ public class CampeonatoController {
 		this.campeonatoService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
+	
+	/*
+	 * Endpoint de inicialização do Campeonato
+	 */
+	@PostMapping("/{id}/iniciar")
+    public ResponseEntity<Void> iniciarCampeonato(@PathVariable Long id) throws Exception {
+        campeonatoService.iniciarCampeonato(id);
+        return ResponseEntity.ok().build();
+    }
 }
