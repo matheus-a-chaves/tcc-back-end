@@ -1,6 +1,7 @@
 package com.agon.tcc.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,5 +14,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	
 	@Query(value = "SELECT u.* FROM Usuario u JOIN Membros m ON u.id = m.id_jogador WHERE m.id_equipe = :idEquipe", nativeQuery  = true)
 	List<Usuario> findAllJogadoresByEquipe(Long idEquipe);
+
+	Usuario findByCpf(String cpf);
+
+	Usuario findByCnpj(String cnpj);
 	
 }

@@ -57,9 +57,27 @@ public class Usuario {
     
 	@Column(name = "rua")
     private String rua;
-    
+	
 	@Column(name = "tipo_usuario", nullable = false)
 	private Integer tipoUsuario;
+	
+	
+	public Usuario(String nome, String cpf, String cnpj, String imagemPerfil, String bairro, String cep, String cidade, String estado, Integer numero, String rua) {
+		this.nome = nome;
+        this.cpf = cpf;
+        this.cnpj = cnpj;
+        try {
+            this.imagemPerfil = Util.convertToByte(imagemPerfil);
+        } catch (Exception e) {
+            this.imagemPerfil = null;
+        }
+        this.bairro = bairro;
+        this.cep = cep;
+        this.cidade = cidade;
+        this.estado = estado;
+        this.numero = numero;
+        this.rua = rua;
+	}	
 	
     public Usuario(UsuarioDTO usuarioDTO) {
         this.id = usuarioDTO.id();

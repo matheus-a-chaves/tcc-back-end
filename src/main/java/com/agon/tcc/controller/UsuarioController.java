@@ -39,15 +39,15 @@ public class UsuarioController {
 		return ResponseEntity.ok().body(usuarioDTO);
 	}
 	
-	@PostMapping
-	public ResponseEntity<Void> create(@RequestBody UsuarioDTO usuarioDTO) {
-		this.usuarioService.create(usuarioDTO);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/agon/usuarios/{id}")
-				.buildAndExpand(usuarioDTO.id())
-				.toUri();
-		return ResponseEntity.created(uri).build();
-	}
+//	@PostMapping
+//	public ResponseEntity<Void> create(@RequestBody UsuarioDTO usuarioDTO, String login, String senha) {
+//		this.usuarioService.create(usuarioDTO, login, senha);
+//		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+//				.path("/agon/usuarios/{id}")
+//				.buildAndExpand(usuarioDTO.id())
+//				.toUri();
+//		return ResponseEntity.created(uri).build();
+//	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody UsuarioDTO usuarioDTO, @PathVariable Long id) {
