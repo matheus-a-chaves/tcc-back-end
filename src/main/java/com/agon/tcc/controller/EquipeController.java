@@ -2,8 +2,10 @@ package com.agon.tcc.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +22,8 @@ import com.agon.tcc.dto.EquipeDTO;
 import com.agon.tcc.dto.UsuarioDTO;
 import com.agon.tcc.service.EquipeService;
 import com.agon.tcc.service.UsuarioService;
+
+import jakarta.transaction.Transactional;
 
 @RestController
 @Validated
@@ -62,14 +66,38 @@ public class EquipeController {
 		return ResponseEntity.ok().body(equipesDTO);
 	}
 	
-	@PostMapping
-	public ResponseEntity<Void> create(@RequestBody EquipeDTO equipeDTO) {
+	@PostMapping("/atletica/{id}")
+	@Transactional
+	public ResponseEntity<Void> create(@RequestBody EquipeDTO equipeDTO, @PathVariable Long id) {
 		this.equipeService.create(equipeDTO);
+		
+		EquipeDTO equipe = this.equipeService.findByNome(equipeDTO.nome());
+		
+		this.equipeService.createMembros(equipe.id(), id);
+		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/agon/times/{id}")
 				.buildAndExpand(equipeDTO.id())
 				.toUri();
 		return ResponseEntity.created(uri).build();
+	}
+	
+	@PostMapping("/{idEquipe}/atletica/{idAtletica}/jogador/{idJogador}/adicionar")
+	@Transactional
+	public ResponseEntity<Void> adicionarJogador(@PathVariable Long idJogador, @PathVariable Long idEquipe, @PathVariable Long idAtletica) {
+		if(this.equipeService.adicionarJogador(idJogador, idEquipe, idAtletica))
+			return ResponseEntity.ok().build();
+		else
+			return ResponseEntity.badRequest().build();
+	}
+	
+	@PostMapping("/{idEquipe}/atletica/{idAtletica}/jogador/remover")
+	@Transactional
+	public ResponseEntity<Void> removerJogador(@PathVariable Long idEquipe, @PathVariable Long idAtletica) {
+		if(this.equipeService.removerJogador(idEquipe, idAtletica))
+			return ResponseEntity.ok().build();
+		else
+			return ResponseEntity.badRequest().build();
 	}
 	
 	@PutMapping("/{id}")

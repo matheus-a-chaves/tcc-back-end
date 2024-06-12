@@ -1,20 +1,14 @@
 package com.agon.tcc.model;
 
-import java.util.List;
 
 import com.agon.tcc.dto.EquipeDTO;
 import com.agon.tcc.util.Util;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,9 +35,8 @@ public class Equipe {
 	@Column(name = "imagem")
 	private byte[] imagem;
 	
-	@ManyToOne
-	@JoinColumn(name = "codigo_modalidade")
-	private Modalidade modalidade;
+	@Column(name = "codigo_modalidade")
+	private Long modalidade;
 
 //	@OneToMany(mappedBy = "equipe")
 //	private List<EquipeGrupo> equipeGrupos;

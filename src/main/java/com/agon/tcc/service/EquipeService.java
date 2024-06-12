@@ -10,8 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.agon.tcc.dto.EquipeDTO;
+import com.agon.tcc.dto.MembroDTO;
 import com.agon.tcc.model.Equipe;
+import com.agon.tcc.model.Membro;
 import com.agon.tcc.repository.EquipeRepository;
+import com.agon.tcc.repository.MembroRepository;
 import com.agon.tcc.util.Util;
 
 import jakarta.transaction.Transactional;
@@ -21,6 +24,12 @@ public class EquipeService {
 
 	@Autowired
 	private EquipeRepository equipeRepository;
+	
+	@Autowired
+	private MembroService membroService;
+	
+	@Autowired
+	private MembroRepository membroRepository;
 		
 	private EquipeDTO converteDados(Equipe equipe) throws Exception {
         //return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), equipe.getModalidade(), equipe.getEquipeGrupos(), equipe.getDadosPartidas());
@@ -45,6 +54,19 @@ public class EquipeService {
 	
 	public EquipeDTO findById(Long id) {
 		Optional<Equipe> equipe = equipeRepository.findById(id);
+		if (equipe.isPresent()) {
+			Equipe eq = equipe.get();
+			try {
+				return converteDados(eq);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	public EquipeDTO findByNome(String nome) {
+		Optional<Equipe> equipe = equipeRepository.findByNome(nome);
 		if (equipe.isPresent()) {
 			Equipe eq = equipe.get();
 			try {
@@ -89,8 +111,51 @@ public class EquipeService {
 	}
 	
 	@Transactional
+	public boolean adicionarJogador(Long idJogador, Long idEquipe, Long idAtletica) {
+		try {
+			MembroDTO membroDTO =  this.membroService.findByIdEquipeAndIdAtletica(idEquipe, idAtletica);
+			if(membroDTO != null) {
+				Membro membro = new Membro(this.membroService.findById(membroDTO.id()));
+				if(membro.getIdJogador() == null) {
+					membro.setIdJogador(idJogador);
+					this.membroRepository.save(membro);
+					
+					return true;
+				}
+			}
+		} catch(Exception ex) {
+			return false;
+		}
+		return false;
+	}
+	
+	@Transactional
+	public boolean removerJogador(Long idEquipe, Long idAtletica) {
+		try {
+			MembroDTO membroDTO =  this.membroService.findByIdEquipeAndIdAtletica(idEquipe, idAtletica);
+			if(membroDTO != null) {
+				Membro membro = new Membro(this.membroService.findById(membroDTO.id()));
+				if(membro.getIdJogador() != null) {
+					membro.setIdJogador(null);
+					this.membroRepository.save(membro);
+					
+					return true;
+				}
+			}
+		}catch(Exception ex) {
+			return false;
+		}
+		return false;
+	}
+	
+	@Transactional
 	public void create(EquipeDTO equipeDTO) {
 		equipeRepository.save(new Equipe(equipeDTO));
+	}
+	
+	@Transactional
+	public void createMembros(Long idEquipe, Long idAtletica) {
+		equipeRepository.saveMembros(idEquipe, idAtletica);
 	}
 	
 	@Transactional
