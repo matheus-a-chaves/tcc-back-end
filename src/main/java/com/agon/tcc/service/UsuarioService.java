@@ -9,6 +9,7 @@ import javax.management.RuntimeErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.agon.tcc.dto.RegisterDTO;
 import com.agon.tcc.dto.UsuarioDTO;
 import com.agon.tcc.model.Usuario;
 import com.agon.tcc.repository.UsuarioRepository;
@@ -23,8 +24,19 @@ public class UsuarioService {
 	private UsuarioRepository usuarioRepository;
 	
 	private UsuarioDTO converteDados(Usuario user) throws Exception {
-        return new UsuarioDTO(user.getId(), user.getNome(), user.getCpf(), user.getCnpj(), Util.convertToString(user.getImagemPerfil()),
-        						user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario());
+        return new UsuarioDTO(user.getId(), 
+        						user.getNome(), 
+        						user.getDataNascimento(),
+        						(user.getCpf() != null ? user.getCpf() : null), 
+        						(user.getCnpj() != null ? user.getCnpj() : null), 
+        						(user.getImagemPerfil() != null ? Util.convertToString(user.getImagemPerfil()) : null),
+        						user.getBairro(), 
+        						user.getCep(),
+        						user.getCidade(), 
+        						user.getEstado(),
+        						user.getNumero(),  
+        						user.getRua(),
+        						user.getTipoUsuario());
     }
 	
 	public List<UsuarioDTO> findAll() {
@@ -32,12 +44,13 @@ public class UsuarioService {
 				.stream()
 				.map(user -> {
 					try {
-						return new UsuarioDTO(user.getId(), user.getNome(), user.getCpf(), user.getCnpj(), Util.convertToString(user.getImagemPerfil()),
-        						user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario());
+//						return new UsuarioDTO(user.getId(), user.getNome(), user.getDataNascimento(), user.getCpf(), user.getCnpj(), Util.convertToString(user.getImagemPerfil()),
+//        						user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario());
+						return converteDados(user);
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-					return new UsuarioDTO(user.getId(), user.getNome(), user.getCpf(), user.getCnpj(), null, user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario() );
+					return new UsuarioDTO(user.getId(), user.getNome(), user.getDataNascimento(), user.getCpf(), user.getCnpj(), null, user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario() );
 				})
 				.collect(Collectors.toList());
 	}
@@ -56,23 +69,24 @@ public class UsuarioService {
 	}
 	
 	@Transactional
-	public void create(UsuarioDTO usuarioDTO) {
-		usuarioRepository.save(new Usuario(usuarioDTO));
+	public void create(Usuario user) {
+		usuarioRepository.save(user);
 	}
 	
 	@Transactional
 	public void update(UsuarioDTO usuarioDTO) {
 		Usuario usuario = new Usuario(findById(usuarioDTO.id()));
 		usuario.setNome(usuarioDTO.nome());
-		usuario.setCpf(usuarioDTO.cpf());
-		usuario.setCnpj(usuarioDTO.cnpj());
+		usuario.setDataNascimento(usuarioDTO.dataNascimento());
+		//usuario.setCpf(usuarioDTO.cpf() != null ? usuarioDTO.cpf() : null);
+		//usuario.setCnpj(usuarioDTO.cnpj() != null ? usuarioDTO.cnpj() : null);
 		usuario.setBairro(usuarioDTO.bairro());
 		usuario.setCep(usuarioDTO.cep());
 		usuario.setCidade(usuarioDTO.cidade());
 		usuario.setEstado(usuarioDTO.estado());
 		usuario.setNumero(usuarioDTO.numero());
 		usuario.setRua(usuarioDTO.rua());
-		usuario.setTipoUsuario(usuarioDTO.tipoUsuario());
+		//usuario.setTipoUsuario(usuarioDTO.tipoUsuario());
 		try {
 			usuario.setImagemPerfil(Util.convertToByte(usuarioDTO.imagemPerfil()));
 			
@@ -97,14 +111,23 @@ public class UsuarioService {
 				.stream()
 				.map(user -> {
 					try {
-						return new UsuarioDTO(user.getId(), user.getNome(), user.getCpf(), user.getCnpj(), Util.convertToString(user.getImagemPerfil()),
-        						user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario());
+//						return new UsuarioDTO(user.getId(), user.getNome(), user.getDataNascimento(), user.getCpf(), user.getCnpj(), Util.convertToString(user.getImagemPerfil()),
+//        						user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario());
+						return converteDados(user);
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-					return new UsuarioDTO(user.getId(), user.getNome(), user.getCpf(), user.getCnpj(), null, user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario() );
+					return new UsuarioDTO(user.getId(), user.getNome(), user.getDataNascimento(), user.getCpf(), user.getCnpj(), null, user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario() );
 				})
 				.collect(Collectors.toList());
+	}
+	
+	public Usuario findByCpf(String cpf) {
+		return usuarioRepository.findByCpf(cpf);
+	}
+	
+	public Usuario findByCnpj(String cnpj) {
+		return usuarioRepository.findByCnpj(cnpj);
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.agon.tcc.model;
 
+import java.util.Date;
+
 import com.agon.tcc.dto.UsuarioDTO;
 import com.agon.tcc.util.Util;
 
@@ -61,9 +63,13 @@ public class Usuario {
 	@Column(name = "tipo_usuario", nullable = false)
 	private Integer tipoUsuario;
 	
+	@Column(name = "dt_Nascimento")
+    private Date dataNascimento;
 	
-	public Usuario(String nome, String cpf, String cnpj, String imagemPerfil, String bairro, String cep, String cidade, String estado, Integer numero, String rua) {
+	
+	public Usuario(String nome, Date dataNascimento,String cpf, String cnpj, String imagemPerfil, String bairro, String cep, String cidade, String estado, Integer numero, String rua) {
 		this.nome = nome;
+		this.dataNascimento = dataNascimento;
         this.cpf = cpf;
         this.cnpj = cnpj;
         try {
@@ -82,6 +88,7 @@ public class Usuario {
     public Usuario(UsuarioDTO usuarioDTO) {
         this.id = usuarioDTO.id();
         this.nome = usuarioDTO.nome();
+        this.dataNascimento = usuarioDTO.dataNascimento();
         this.cpf = usuarioDTO.cpf();
         this.cnpj = usuarioDTO.cnpj();
         this.bairro = usuarioDTO.bairro();
