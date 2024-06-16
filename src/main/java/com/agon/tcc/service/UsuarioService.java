@@ -17,6 +17,8 @@ import com.agon.tcc.util.Util;
 
 import jakarta.transaction.Transactional;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 @Service
 public class UsuarioService {
 	
@@ -76,20 +78,20 @@ public class UsuarioService {
 	@Transactional
 	public void update(UsuarioDTO usuarioDTO) {
 		Usuario usuario = new Usuario(findById(usuarioDTO.id()));
+		try {
 		usuario.setNome(usuarioDTO.nome());
 		usuario.setDataNascimento(usuarioDTO.dataNascimento());
-		//usuario.setCpf(usuarioDTO.cpf() != null ? usuarioDTO.cpf() : null);
-		//usuario.setCnpj(usuarioDTO.cnpj() != null ? usuarioDTO.cnpj() : null);
 		usuario.setBairro(usuarioDTO.bairro());
 		usuario.setCep(usuarioDTO.cep());
 		usuario.setCidade(usuarioDTO.cidade());
 		usuario.setEstado(usuarioDTO.estado());
 		usuario.setNumero(usuarioDTO.numero());
 		usuario.setRua(usuarioDTO.rua());
-		//usuario.setTipoUsuario(usuarioDTO.tipoUsuario());
-		try {
-			usuario.setImagemPerfil(Util.convertToByte(usuarioDTO.imagemPerfil()));
-			
+
+			if (!isBlank(usuarioDTO.imagemPerfil())){
+				usuario.setImagemPerfil(Util.convertToByte(usuarioDTO.imagemPerfil()));
+
+			}
     		this.usuarioRepository.save(usuario);
 		} catch (Exception e) {
 			throw new RuntimeErrorException(null, "Não foi possível atualizar o usuario " + usuario.getId() + e);
