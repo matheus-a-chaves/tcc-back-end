@@ -45,4 +45,8 @@ public class MembroService {
 		return null;
 	}
 	
+	public void save(Membro membro) {
+		this.membroRepository.save(membro);
+	}
+	
 }

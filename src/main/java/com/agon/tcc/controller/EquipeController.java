@@ -82,10 +82,10 @@ public class EquipeController {
 		return ResponseEntity.created(uri).build();
 	}
 	
-	@PostMapping("/{idEquipe}/atletica/{idAtletica}/jogador/{idJogador}/adicionar")
+	@PostMapping("/{idEquipe}/atletica/{idAtletica}/jogador/adicionar")
 	@Transactional
-	public ResponseEntity<Void> adicionarJogador(@PathVariable Long idJogador, @PathVariable Long idEquipe, @PathVariable Long idAtletica) {
-		if(this.equipeService.adicionarJogador(idJogador, idEquipe, idAtletica))
+	public ResponseEntity<Void> adicionarJogador(@RequestBody String cpfJogador, @PathVariable Long idEquipe, @PathVariable Long idAtletica) {
+		if(this.equipeService.adicionarJogador(cpfJogador, idEquipe, idAtletica))
 			return ResponseEntity.ok().build();
 		else
 			return ResponseEntity.badRequest().build();

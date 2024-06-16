@@ -13,6 +13,7 @@ import com.agon.tcc.dto.EquipeDTO;
 import com.agon.tcc.dto.MembroDTO;
 import com.agon.tcc.model.Equipe;
 import com.agon.tcc.model.Membro;
+import com.agon.tcc.model.Usuario;
 import com.agon.tcc.repository.EquipeRepository;
 import com.agon.tcc.repository.MembroRepository;
 import com.agon.tcc.util.Util;
@@ -29,8 +30,8 @@ public class EquipeService {
 	private MembroService membroService;
 	
 	@Autowired
-	private MembroRepository membroRepository;
-		
+	private UsuarioService usuarioService;
+	
 	private EquipeDTO converteDados(Equipe equipe) throws Exception {
         //return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), equipe.getModalidade(), equipe.getEquipeGrupos(), equipe.getDadosPartidas());
 		return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), equipe.getModalidade());
@@ -111,15 +112,16 @@ public class EquipeService {
 	}
 	
 	@Transactional
-	public boolean adicionarJogador(Long idJogador, Long idEquipe, Long idAtletica) {
+	//public boolean adicionarJogador(Long idJogador, Long idEquipe, Long idAtletica) {
+	public boolean adicionarJogador(String cpfJogador, Long idEquipe, Long idAtletica) {
 		try {
 			MembroDTO membroDTO =  this.membroService.findByIdEquipeAndIdAtletica(idEquipe, idAtletica);
 			if(membroDTO != null) {
 				Membro membro = new Membro(this.membroService.findById(membroDTO.id()));
 				if(membro.getIdJogador() == null) {
-					membro.setIdJogador(idJogador);
-					this.membroRepository.save(membro);
-					
+					Usuario usuario = this.usuarioService.findByCpf(cpfJogador);
+					membro.setIdJogador(usuario.getId());
+					this.membroService.save(membro);
 					return true;
 				}
 			}
@@ -137,8 +139,7 @@ public class EquipeService {
 				Membro membro = new Membro(this.membroService.findById(membroDTO.id()));
 				if(membro.getIdJogador() != null) {
 					membro.setIdJogador(null);
-					this.membroRepository.save(membro);
-					
+					this.membroService.save(membro);
 					return true;
 				}
 			}
