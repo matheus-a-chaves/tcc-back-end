@@ -20,7 +20,7 @@ import com.agon.tcc.dto.EquipeDTO;
 import com.agon.tcc.dto.UsuarioDTO;
 import com.agon.tcc.service.EquipeService;
 import com.agon.tcc.service.UsuarioService;
-
+import java.util.Map;
 import jakarta.transaction.Transactional;
 
 @RestController
@@ -82,7 +82,8 @@ public class EquipeController {
 	
 	@PostMapping("/{idEquipe}/atletica/{idAtletica}/jogador/adicionar")
 	@Transactional
-	public ResponseEntity<Void> adicionarJogador(@RequestBody String cpfJogador, @PathVariable Long idEquipe, @PathVariable Long idAtletica) {
+	public ResponseEntity<Void> adicionarJogador(@RequestBody Map<String, String> cpfValue, @PathVariable Long idEquipe, @PathVariable Long idAtletica) {
+		 String cpfJogador = cpfValue.get("cpf");
 		if(this.equipeService.adicionarJogador(cpfJogador, idEquipe, idAtletica))
 			return ResponseEntity.ok().build();
 		else
