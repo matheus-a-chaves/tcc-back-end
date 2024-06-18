@@ -36,6 +36,12 @@ public class Membro {
 	@Column(name = "id_jogador")
 	private Long idJogador;
 	
+	public Membro(Long idEquipe, Long idAtletica, Long idJogador) {
+		this.idEquipe = idEquipe;
+		this.idAtletica = idAtletica;
+		this.idJogador = idJogador;
+	}
+	
 	public Membro(MembroDTO membroDTO) {
 		this.id = membroDTO.id();
 		this.idEquipe = membroDTO.idEquipe();

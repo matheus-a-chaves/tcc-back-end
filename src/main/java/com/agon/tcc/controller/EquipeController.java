@@ -2,10 +2,8 @@ package com.agon.tcc.controller;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -93,8 +91,8 @@ public class EquipeController {
 	
 	@PostMapping("/{idEquipe}/atletica/{idAtletica}/jogador/remover")
 	@Transactional
-	public ResponseEntity<Void> removerJogador(@PathVariable Long idEquipe, @PathVariable Long idAtletica) {
-		if(this.equipeService.removerJogador(idEquipe, idAtletica))
+	public ResponseEntity<Void> removerJogador(@RequestBody String cpfJogador, @PathVariable Long idEquipe, @PathVariable Long idAtletica) {
+		if(this.equipeService.removerJogador(cpfJogador,  idEquipe, idAtletica))
 			return ResponseEntity.ok().build();
 		else
 			return ResponseEntity.badRequest().build();

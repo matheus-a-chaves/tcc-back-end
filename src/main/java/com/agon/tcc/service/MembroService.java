@@ -2,6 +2,8 @@ package com.agon.tcc.service;
 
 import java.util.Optional;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +34,8 @@ public class MembroService {
 		return null;
 	}
 	
-	public MembroDTO findByIdEquipeAndIdAtletica(Long idEquipe, Long idAtletica) {
-		Optional<Membro> membro = membroRepository.findByIdEquipeAndIdAtletica(idEquipe, idAtletica);
+	public MembroDTO findByIdEquipeAndIdAtleticaAndIdJogador(Long idEquipe, Long idAtletica, Long idJogador) {
+		Optional<Membro> membro = membroRepository.findByIdEquipeAndIdAtleticaAndIdJogador(idEquipe, idAtletica, idJogador);
 		if (membro.isPresent()) {
 			Membro aux = membro.get();
 			try {
@@ -47,6 +49,16 @@ public class MembroService {
 	
 	public void save(Membro membro) {
 		this.membroRepository.save(membro);
+	}
+	
+	public void delete(Long id) {
+		if (findById(id) != null) {
+			try {
+				this.membroRepository.deleteById(id);
+			} catch (Exception e) {
+				throw new RuntimeErrorException(null, "Não é possível excluir pois há entidades relacionadas!");
+			}
+		}
 	}
 	
 }

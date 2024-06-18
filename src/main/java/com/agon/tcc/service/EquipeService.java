@@ -115,38 +115,27 @@ public class EquipeService {
 	//public boolean adicionarJogador(Long idJogador, Long idEquipe, Long idAtletica) {
 	public boolean adicionarJogador(String cpfJogador, Long idEquipe, Long idAtletica) {
 		try {
-			MembroDTO membroDTO =  this.membroService.findByIdEquipeAndIdAtletica(idEquipe, idAtletica);
-			if(membroDTO != null) {
-				Membro membro = new Membro(this.membroService.findById(membroDTO.id()));
-				if(membro.getIdJogador() == null) {
-					Usuario usuario = this.usuarioService.findByCpf(cpfJogador);
-					membro.setIdJogador(usuario.getId());
-					this.membroService.save(membro);
-					return true;
-				}
-			}
+				Usuario usuario = this.usuarioService.findByCpf(cpfJogador);
+				Membro membro = new Membro(idEquipe,  idAtletica, usuario.getId());
+				this.membroService.save(membro);
+					
+				return true;
 		} catch(Exception ex) {
 			return false;
 		}
-		return false;
 	}
 	
 	@Transactional
-	public boolean removerJogador(Long idEquipe, Long idAtletica) {
+	public boolean removerJogador(String cpfJogador, Long idEquipe, Long idAtletica) {
 		try {
-			MembroDTO membroDTO =  this.membroService.findByIdEquipeAndIdAtletica(idEquipe, idAtletica);
-			if(membroDTO != null) {
-				Membro membro = new Membro(this.membroService.findById(membroDTO.id()));
-				if(membro.getIdJogador() != null) {
-					membro.setIdJogador(null);
-					this.membroService.save(membro);
-					return true;
-				}
-			}
+			Usuario usuario = this.usuarioService.findByCpf(cpfJogador);
+			MembroDTO membroDTO =  this.membroService.findByIdEquipeAndIdAtleticaAndIdJogador(idEquipe, idAtletica, usuario.getId());
+			this.membroService.delete(membroDTO.id());
+			
+			return true;
 		}catch(Exception ex) {
 			return false;
 		}
-		return false;
 	}
 	
 	@Transactional
