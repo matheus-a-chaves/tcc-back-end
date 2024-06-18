@@ -64,6 +64,12 @@ public class EquipeController {
 		return ResponseEntity.ok().body(equipesDTO);
 	}
 	
+	@GetMapping("/jogador/{id}")
+	public ResponseEntity<List<EquipeDTO>> findAllTimesByIdJogador (@PathVariable Long id) {
+		List<EquipeDTO> equipesDTO = this.equipeService.findAllTimesByIdJogador(id);
+		return ResponseEntity.ok().body(equipesDTO);
+	}
+	
 	@PostMapping("/atletica/{id}")
 	@Transactional
 	public ResponseEntity<Void> create(@RequestBody EquipeDTO equipeDTO, @PathVariable Long id) {

@@ -111,6 +111,20 @@ public class EquipeService {
 				.collect(Collectors.toList());
 	}
 	
+	public List<EquipeDTO> findAllTimesByIdJogador(Long id) {
+		return equipeRepository.findAllTimesByIdJogador(id)
+				.stream()
+				.map(e -> {
+					try {
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
+				})
+				.collect(Collectors.toList());
+	}
+	
 	@Transactional
 	//public boolean adicionarJogador(Long idJogador, Long idEquipe, Long idAtletica) {
 	public boolean adicionarJogador(String cpfJogador, Long idEquipe, Long idAtletica) {
