@@ -9,7 +9,7 @@ import com.agon.tcc.model.Membro;
 
 public interface MembroRepository extends JpaRepository<Membro, Long>{
 	
-	@Query(value = "SELECT m.* FROM Membros m WHERE m.id_equipe = :idEquipe AND m.id_atletica = :idAtletica AND m.id_jogador = :idJogador", nativeQuery  = true)
+	//@Query(value = "SELECT m.* FROM Membros m WHERE m.id_equipe = :idEquipe AND m.id_atletica = :idAtletica AND m.id_jogador = :idJogador", nativeQuery  = true)
 	Optional<Membro> findByIdEquipeAndIdAtleticaAndIdJogador(Long idEquipe, Long idAtletica, Long idJogador);
 
 }

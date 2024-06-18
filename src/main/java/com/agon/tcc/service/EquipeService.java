@@ -126,10 +126,9 @@ public class EquipeService {
 	}
 	
 	@Transactional
-	public boolean removerJogador(String cpfJogador, Long idEquipe, Long idAtletica) {
+	public boolean removerJogador(Long idJogador, Long idEquipe, Long idAtletica) {
 		try {
-			Usuario usuario = this.usuarioService.findByCpf(cpfJogador);
-			MembroDTO membroDTO =  this.membroService.findByIdEquipeAndIdAtleticaAndIdJogador(idEquipe, idAtletica, usuario.getId());
+			MembroDTO membroDTO =  this.membroService.findByIdEquipeAndIdAtleticaAndIdJogador(idEquipe, idAtletica, idJogador);
 			this.membroService.delete(membroDTO.id());
 			
 			return true;

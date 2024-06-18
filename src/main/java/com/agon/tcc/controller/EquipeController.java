@@ -89,10 +89,10 @@ public class EquipeController {
 			return ResponseEntity.badRequest().build();
 	}
 	
-	@PostMapping("/{idEquipe}/atletica/{idAtletica}/jogador/remover")
+	@PostMapping("/{idEquipe}/atletica/{idAtletica}/jogador/{idJogador}/remover")
 	@Transactional
-	public ResponseEntity<Void> removerJogador(@RequestBody String cpfJogador, @PathVariable Long idEquipe, @PathVariable Long idAtletica) {
-		if(this.equipeService.removerJogador(cpfJogador,  idEquipe, idAtletica))
+	public ResponseEntity<Void> removerJogador(@PathVariable Long idJogador, @PathVariable Long idEquipe, @PathVariable Long idAtletica) {
+		if(this.equipeService.removerJogador(idJogador,  idEquipe, idAtletica))
 			return ResponseEntity.ok().build();
 		else
 			return ResponseEntity.badRequest().build();
