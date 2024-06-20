@@ -1,6 +1,7 @@
 package com.agon.tcc.model;
 
 import com.agon.tcc.dto.EquipeGrupoDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,6 +32,7 @@ public class EquipeGrupo {
 	
 	@ManyToOne
 	@JoinColumn(name = "equipe_id")
+	@JsonBackReference
 	private Equipe equipe;
 
 	@ManyToOne

@@ -10,8 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.agon.tcc.dto.EquipeDTO;
+import com.agon.tcc.dto.MembroDTO;
 import com.agon.tcc.model.Equipe;
+import com.agon.tcc.model.Membro;
+import com.agon.tcc.model.Usuario;
 import com.agon.tcc.repository.EquipeRepository;
+import com.agon.tcc.repository.MembroRepository;
 import com.agon.tcc.util.Util;
 
 import jakarta.transaction.Transactional;
@@ -21,10 +25,16 @@ public class EquipeService {
 
 	@Autowired
 	private EquipeRepository equipeRepository;
-		
+	
+	@Autowired
+	private MembroService membroService;
+	
+	@Autowired
+	private UsuarioService usuarioService;
+	
 	private EquipeDTO converteDados(Equipe equipe) throws Exception {
-        return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), 
-        					 equipe.getEquipeGrupos(), equipe.getUsuarios(), equipe.getDadosPartidas());
+        //return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), equipe.getModalidade(), equipe.getEquipeGrupos(), equipe.getDadosPartidas());
+		return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), equipe.getModalidade());
     }
 	
 	public List<EquipeDTO> findAll() {
@@ -32,12 +42,13 @@ public class EquipeService {
 				.stream()
 				.map(e -> {
 					try {
-						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), 
-											 e.getEquipeGrupos(), e.getUsuarios(), e.getDadosPartidas());
+						//return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-					return new EquipeDTO(e.getId(), e.getNome(), null, e.getEquipeGrupos(), e.getUsuarios(), e.getDadosPartidas());
+					//return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
+					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
 				})
 				.collect(Collectors.toList());
 	}
@@ -55,48 +66,111 @@ public class EquipeService {
 		return null;
 	}
 	
-//	public List<EquipeDTO> findAllEquipesByIdCampeonato(Long id) {
-//		return equipeRepository.findByCampeonatoId(id)
-//				.stream()
-//				.map(e -> {
-//					try {
-//						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), 
-//								 			 e.getEquipeGrupos(), e.getUsuarios(), e.getDadosPartidas());
-//					} catch (Exception ex) {
-//						throw new RuntimeErrorException(null, "Erro na consulta: " + ex);
-//					}
-//				})
-//				.collect(Collectors.toList());
-//	}
+	public EquipeDTO findByNome(String nome) {
+		Optional<Equipe> equipe = equipeRepository.findByNome(nome);
+		if (equipe.isPresent()) {
+			Equipe eq = equipe.get();
+			try {
+				return converteDados(eq);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	public List<EquipeDTO> findAllTimesByIdCampeonato(Long id) {
+		return equipeRepository.findAllTimesByIdCampeonato(id)
+				.stream()
+				.map(e -> {
+					try {
+						//return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					//return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
+					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
+				})
+				.collect(Collectors.toList());
+	}
+	
+	public List<EquipeDTO> findAllTimesByIdAtletica(Long id) {
+		return equipeRepository.findAllTimesByIdAtletica(id)
+				.stream()
+				.map(e -> {
+					try {
+						//return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					//return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
+					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
+				})
+				.collect(Collectors.toList());
+	}
+	
+	public List<EquipeDTO> findAllTimesByIdJogador(Long id) {
+		return equipeRepository.findAllTimesByIdJogador(id)
+				.stream()
+				.map(e -> {
+					try {
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
+				})
+				.collect(Collectors.toList());
+	}
+	
+	@Transactional
+	//public boolean adicionarJogador(Long idJogador, Long idEquipe, Long idAtletica) {
+	public boolean adicionarJogador(String cpfJogador, Long idEquipe, Long idAtletica) {
+		try {
+				Usuario usuario = this.usuarioService.findByCpf(cpfJogador);
+				Membro membro = new Membro(idEquipe,  idAtletica, usuario.getId());
+				this.membroService.save(membro);
+					
+				return true;
+		} catch(Exception ex) {
+			return false;
+		}
+	}
+	
+	@Transactional
+	public boolean removerJogador(Long idJogador, Long idEquipe, Long idAtletica) {
+		try {
+			MembroDTO membroDTO =  this.membroService.findByIdEquipeAndIdAtleticaAndIdJogador(idEquipe, idAtletica, idJogador);
+			this.membroService.delete(membroDTO.id());
+			
+			return true;
+		}catch(Exception ex) {
+			return false;
+		}
+	}
 	
 	@Transactional
 	public void create(EquipeDTO equipeDTO) {
-//		Modalidade modalidade = modalidadeRepository.findById(equipeDTO.modalidade().getId())
-//                .orElseThrow(() -> new EntityNotFoundException("Modalidade not found: " + equipeDTO.modalidade().getId()));
-		
-//        Equipe equipe = new Equipe();
-//        equipe.setNome(equipeDTO.nome());
-//        try {
-//        	equipe.setImagem(Util.convertToByte(equipeDTO.imagem()));
-//        } catch (Exception e) {
-//			throw new RuntimeErrorException(null, "Não foi possível atualizar a grupo " + equipe.getId() + e);
-//		}
-//        equipe.setModalidade(modalidade);
-//        equipe.setEquipeGrupos(equipeDTO.equipeGrupos());
-//        equipe.setUsuarios(equipeDTO.usuarios());
-//        equipe.setPartidas(equipeDTO.partidas());
 		equipeRepository.save(new Equipe(equipeDTO));
+	}
+	
+	@Transactional
+	public void createMembros(Long idEquipe, Long idAtletica) {
+		equipeRepository.saveMembros(idEquipe, idAtletica);
 	}
 	
 	@Transactional
 	public void update(EquipeDTO equipeDTO) {
 		Equipe equipe = new Equipe(findById(equipeDTO.id()));
 		equipe.setNome(equipeDTO.nome());
+		equipe.setModalidade(equipeDTO.modalidade());
 		try {
 			equipe.setImagem(Util.convertToByte(equipeDTO.imagem()));
     		this.equipeRepository.save(equipe);
 		} catch (Exception e) {
-			throw new RuntimeErrorException(null, "Não foi possível atualizar a grupo " + equipe.getId() + e);
+			throw new RuntimeErrorException(null, "Não foi possível atualizar a equipe " + equipe.getId() + e);
 		}
 	}
 	

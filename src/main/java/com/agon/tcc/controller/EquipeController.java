@@ -17,7 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agon.tcc.dto.EquipeDTO;
+import com.agon.tcc.dto.UsuarioDTO;
 import com.agon.tcc.service.EquipeService;
+import com.agon.tcc.service.UsuarioService;
+import java.util.Map;
+import jakarta.transaction.Transactional;
 
 @RestController
 @Validated
@@ -26,6 +30,9 @@ public class EquipeController {
 	
 	@Autowired
 	private EquipeService equipeService;
+	
+	@Autowired
+	private UsuarioService usuarioService;
 	
 	@GetMapping
 	public ResponseEntity<List<EquipeDTO>> findAll() {
@@ -39,15 +46,39 @@ public class EquipeController {
 		return ResponseEntity.ok().body(equipeDTO);
 	}
 	
-//	@GetMapping("/campeonato/{id}")
-//	public ResponseEntity<List<EquipeDTO>> findAllEquipesByIdCampeonato (@PathVariable Long id) {
-//		List<EquipeDTO> equipesDTO = this.equipeService.findAllEquipesByIdCampeonato(id);
-//		return ResponseEntity.ok().body(equipesDTO);
-//	}
+	@GetMapping("/{id}/jogadores")
+	public ResponseEntity<List<UsuarioDTO>> findJogadoresByEquipe (@PathVariable Long id) {
+		List<UsuarioDTO> usuariosDTO = this.usuarioService.findAllJogadoresByEquipe(id);
+		return ResponseEntity.ok().body(usuariosDTO);
+	}
 	
-	@PostMapping
-	public ResponseEntity<Void> create(@RequestBody EquipeDTO equipeDTO) {
+	@GetMapping("/campeonato/{id}")
+	public ResponseEntity<List<EquipeDTO>> findAllTimesByIdCampeonato (@PathVariable Long id) {
+		List<EquipeDTO> equipesDTO = this.equipeService.findAllTimesByIdCampeonato(id);
+		return ResponseEntity.ok().body(equipesDTO);
+	}
+	
+	@GetMapping("/atletica/{id}")
+	public ResponseEntity<List<EquipeDTO>> findAllTimesByIdAtletica (@PathVariable Long id) {
+		List<EquipeDTO> equipesDTO = this.equipeService.findAllTimesByIdAtletica(id);
+		return ResponseEntity.ok().body(equipesDTO);
+	}
+	
+	@GetMapping("/jogador/{id}")
+	public ResponseEntity<List<EquipeDTO>> findAllTimesByIdJogador (@PathVariable Long id) {
+		List<EquipeDTO> equipesDTO = this.equipeService.findAllTimesByIdJogador(id);
+		return ResponseEntity.ok().body(equipesDTO);
+	}
+	
+	@PostMapping("/atletica/{id}")
+	@Transactional
+	public ResponseEntity<Void> create(@RequestBody EquipeDTO equipeDTO, @PathVariable Long id) {
 		this.equipeService.create(equipeDTO);
+		
+		EquipeDTO equipe = this.equipeService.findByNome(equipeDTO.nome());
+		
+		this.equipeService.createMembros(equipe.id(), id);
+		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/agon/times/{id}")
 				.buildAndExpand(equipeDTO.id())
@@ -55,10 +86,29 @@ public class EquipeController {
 		return ResponseEntity.created(uri).build();
 	}
 	
+	@PostMapping("/{idEquipe}/atletica/{idAtletica}/jogador/adicionar")
+	@Transactional
+	public ResponseEntity<Void> adicionarJogador(@RequestBody Map<String, String> cpfValue, @PathVariable Long idEquipe, @PathVariable Long idAtletica) {
+		 String cpfJogador = cpfValue.get("cpf");
+		if(this.equipeService.adicionarJogador(cpfJogador, idEquipe, idAtletica))
+			return ResponseEntity.ok().build();
+		else
+			return ResponseEntity.badRequest().build();
+	}
+	
+	@PostMapping("/{idEquipe}/atletica/{idAtletica}/jogador/{idJogador}/remover")
+	@Transactional
+	public ResponseEntity<Void> removerJogador(@PathVariable Long idJogador, @PathVariable Long idEquipe, @PathVariable Long idAtletica) {
+		if(this.equipeService.removerJogador(idJogador,  idEquipe, idAtletica))
+			return ResponseEntity.ok().build();
+		else
+			return ResponseEntity.badRequest().build();
+	}
+	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody EquipeDTO equipeDTO, @PathVariable Long id) {
-		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.equipeGrupos(), 
-												equipeDTO.usuarios(), equipeDTO.dadosPartidas()));
+		//this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade(), equipeDTO.equipeGrupos(), equipeDTO.dadosPartidas()));
+		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade()));
 		return ResponseEntity.noContent().build();
 	}
 	
