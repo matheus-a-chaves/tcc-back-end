@@ -1,7 +1,9 @@
 package com.agon.tcc.util;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 import com.agon.tcc.dto.RegisterDTO;
 import com.agon.tcc.model.Usuario;
@@ -43,6 +45,24 @@ public class Util {
 		}
 		
 		return usuario;
+	}
+	
+	public static List<String> recuperaDadosLogin (String data) {
+		 
+	    data = data.replace("{", "").replace("}", "");
+	    String[] keyValuePairs = data.split(",");
+	    
+	    List<String> values = new ArrayList<String>();
+	    
+	    for (int i = 0; i < keyValuePairs.length; i++) {
+	        String[] keyValue = keyValuePairs[i].split(":");
+	        if (keyValue.length == 2) {
+	        	values.add(keyValue[1].replace("\"", ""));
+	        } else {
+	            throw new IllegalArgumentException("Par chave-valor inválido: " + keyValuePairs[i]);
+	        }
+	    }
+	    return values;
 	}
 
 }

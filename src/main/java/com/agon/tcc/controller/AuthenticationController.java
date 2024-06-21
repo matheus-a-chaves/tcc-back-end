@@ -45,16 +45,17 @@ public class AuthenticationController {
 			var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
 	        var auth = this.authenticationManager.authenticate(usernamePassword);
 	         
-	 		var token = tokenService.generateToken((Login) auth.getPrincipal());
+	 		//var token = tokenService.generateToken((Login) auth.getPrincipal());
 	 		 
 	 		Optional<Login> loginOptional = loginRepository.findLogin(data.login());
 	 		Login login = loginOptional.get();
 	 		UsuarioDTO usuarioDTO = usuarioService.findById(login.getUsuario());
 	        
 	 		HttpHeaders headers = new HttpHeaders();
-	 		headers.setBearerAuth(token);
+	 		//headers.setBearerAuth(token);
 	 		return new ResponseEntity<>(usuarioDTO, headers, HttpStatus.OK);
 		} catch(Exception ex) {
+			ex.printStackTrace();
 			return ResponseEntity.badRequest().body("Erro ao autenticar o usuário! Usuário ou senha inválidos.");
 		}
 	}

@@ -16,7 +16,6 @@ public class AuthorizationService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
 		return loginRepository.findByLogin(username);
 	}
 

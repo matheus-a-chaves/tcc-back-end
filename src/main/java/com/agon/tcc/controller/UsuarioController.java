@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,11 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.agon.tcc.dto.RegisterDTO;
 import com.agon.tcc.dto.UsuarioDTO;
-import com.agon.tcc.model.Login;
-import com.agon.tcc.model.Usuario;
-import com.agon.tcc.repository.LoginRepository;
 import com.agon.tcc.service.UsuarioService;
-import com.agon.tcc.util.Util;
 
 @RestController
 @Validated
@@ -31,9 +25,6 @@ public class UsuarioController {
 	
 	@Autowired
 	private UsuarioService usuarioService;
-	
-	@Autowired
-	private LoginRepository loginRepository;
 	
 	@GetMapping
 	public ResponseEntity<List<UsuarioDTO>> findAll() {
@@ -48,24 +39,24 @@ public class UsuarioController {
 	}
 	
 	@PostMapping
-	@Transactional
 	public ResponseEntity<Void> create(@RequestBody @Validated RegisterDTO data) {
-		if(this.loginRepository.findByLogin(data.login()) != null) {
+		try {
+			usuarioService.create(data);
+			return ResponseEntity.ok().build();
+		} catch (Exception ex) {
 			return ResponseEntity.badRequest().build();
 		}
-		
-		Usuario usuario = Util.createAndValidateTipoUsuario(data);
-		
-		String passwordEncrypted = new BCryptPasswordEncoder().encode(data.password());
-		
-		usuarioService.create(usuario);
-		usuario = (usuario.getCpf() != null) ? usuarioService.findByCpf(usuario.getCpf()) : usuarioService.findByCnpj(usuario.getCnpj());
-		
-		Login login = new Login(data.login(), passwordEncrypted, usuario.getId());
-		loginRepository.save(login);
-		
-		return ResponseEntity.ok().build();
 	}
+	
+	@PostMapping("/alterarsenha")
+	public ResponseEntity<Void> alterarSenha(@RequestBody @Validated String data) {
+		try {
+			this.usuarioService.alterarSenha(data);
+			return ResponseEntity.ok().build();
+		} catch (Exception ex) {
+			return ResponseEntity.badRequest().build();
+		}
+	}	
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody UsuarioDTO usuarioDTO, @PathVariable Long id) {

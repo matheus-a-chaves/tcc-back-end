@@ -7,10 +7,14 @@ import java.util.stream.Collectors;
 import javax.management.RuntimeErrorException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.agon.tcc.dto.RegisterDTO;
 import com.agon.tcc.dto.UsuarioDTO;
+import com.agon.tcc.model.Login;
 import com.agon.tcc.model.Usuario;
+import com.agon.tcc.repository.LoginRepository;
 import com.agon.tcc.repository.UsuarioRepository;
 import com.agon.tcc.util.Util;
 
@@ -21,6 +25,9 @@ public class UsuarioService {
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private LoginRepository loginRepository;
 	
 	private UsuarioDTO converteDados(Usuario user) throws Exception {
         return new UsuarioDTO(user.getId(), 
@@ -66,8 +73,24 @@ public class UsuarioService {
 	}
 	
 	@Transactional
-	public void create(Usuario user) {
-		usuarioRepository.save(user);
+	public void create(RegisterDTO data) {
+		if(this.loginRepository.findByLogin(data.login()) != null) {
+			throw new RuntimeErrorException(null, "Já existe um usuário com o mesmo e-mail.");
+		}
+		
+		try {
+			Usuario usuario = Util.createAndValidateTipoUsuario(data);
+			String passwordEncrypted = new BCryptPasswordEncoder().encode(data.password());
+			usuarioRepository.save(usuario);
+			
+			usuario = (usuario.getCpf() != null) ? this.findByCpf(usuario.getCpf()) : this.findByCnpj(usuario.getCnpj());
+			
+			Login login = new Login(data.login(), passwordEncrypted, usuario.getId());
+			loginRepository.save(login);
+		} catch(Exception ex) {
+			throw new RuntimeErrorException(null, "Erro ao criar o usuário.");
+		}
+		
 	}
 	
 	@Transactional
@@ -91,6 +114,17 @@ public class UsuarioService {
 		} catch (Exception e) {
 			throw new RuntimeErrorException(null, "Não foi possível atualizar o usuario " + usuario.getId() + e);
 		}
+	}
+	
+	@Transactional
+	public void alterarSenha(String data) {
+		List<String> dadosLogin = Util.recuperaDadosLogin(data);
+		Optional<Login> loginAux = this.loginRepository.findLogin(dadosLogin.get(0));
+		
+		String passwordEncrypted = new BCryptPasswordEncoder().encode(dadosLogin.get(1));
+		Login login = loginAux.get();
+		login.setSenha(passwordEncrypted);
+		this.loginRepository.save(login);
 	}
 	
 	public void delete(Long id) {
