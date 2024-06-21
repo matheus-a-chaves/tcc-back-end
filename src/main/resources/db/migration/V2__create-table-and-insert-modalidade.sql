@@ -1,3 +1,8 @@
+CREATE TABLE modalidade (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) UNIQUE NOT NULL
+);
+
 INSERT INTO modalidade
 (id, nome)
 VALUES(1, 'Futebol');

@@ -15,7 +15,6 @@ import com.agon.tcc.model.Equipe;
 import com.agon.tcc.model.Membro;
 import com.agon.tcc.model.Usuario;
 import com.agon.tcc.repository.EquipeRepository;
-import com.agon.tcc.repository.MembroRepository;
 import com.agon.tcc.util.Util;
 
 import jakarta.transaction.Transactional;
@@ -33,8 +32,8 @@ public class EquipeService {
 	private UsuarioService usuarioService;
 	
 	private EquipeDTO converteDados(Equipe equipe) throws Exception {
-        //return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), equipe.getModalidade(), equipe.getEquipeGrupos(), equipe.getDadosPartidas());
-		return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), equipe.getModalidade());
+        return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), equipe.getModalidade(), equipe.getEquipeGrupos(), equipe.getDadosPartidas());
+//		return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), equipe.getModalidade());
     }
 	
 	public List<EquipeDTO> findAll() {
@@ -42,13 +41,13 @@ public class EquipeService {
 				.stream()
 				.map(e -> {
 					try {
-						//return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
-						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
+//						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-					//return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
-					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
+					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
+//					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
 				})
 				.collect(Collectors.toList());
 	}
@@ -84,13 +83,13 @@ public class EquipeService {
 				.stream()
 				.map(e -> {
 					try {
-						//return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
-						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
+//						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-					//return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
-					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
+					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
+//					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
 				})
 				.collect(Collectors.toList());
 	}
@@ -100,13 +99,13 @@ public class EquipeService {
 				.stream()
 				.map(e -> {
 					try {
-						//return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
-						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
+//						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-					//return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
-					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
+					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
+//					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
 				})
 				.collect(Collectors.toList());
 	}
@@ -116,11 +115,13 @@ public class EquipeService {
 				.stream()
 				.map(e -> {
 					try {
-						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
+//						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
+					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
+//					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
 				})
 				.collect(Collectors.toList());
 	}

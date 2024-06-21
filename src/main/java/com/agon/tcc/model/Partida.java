@@ -1,6 +1,6 @@
 package com.agon.tcc.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.agon.tcc.dto.PartidaDTO;
@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,13 +36,13 @@ public class Partida {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private LocalDate dataPartida;
+	private LocalDateTime dataPartida;
 	
 	@Embedded
 	private Endereco endereco;
 	
-	@ManyToOne
-    @JoinColumn(name = "etapa_campeonato_id")
+	@ManyToOne(optional = true)
+    @JoinColumn(name = "etapa_campeonato_id", nullable = true)
     private EtapaCampeonato etapaCampeonato;
     
     @ManyToOne(optional = true)
@@ -52,6 +53,10 @@ public class Partida {
     @JsonManagedReference("partida-dadosPartida")
     private List<DadosPartida> dadosPartidas;
 	
+    @OneToOne(optional = true)
+    @JoinColumn(name = "amistoso_id", nullable = true)
+    private Amistoso amistoso;
+    
 	public Partida(PartidaDTO partidaDTO) {
 		this.id = partidaDTO.id();
 		this.dataPartida = partidaDTO.dataPartida();
@@ -59,6 +64,7 @@ public class Partida {
 		this.etapaCampeonato = partidaDTO.etapaCampeonato();
 		this.grupo = partidaDTO.grupo();
 		this.dadosPartidas = partidaDTO.dadosPartidas();
+		this.amistoso = partidaDTO.amistoso();
 	}
 	
 }

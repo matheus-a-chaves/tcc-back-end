@@ -1,14 +1,19 @@
 package com.agon.tcc.model;
 
 
+import java.util.List;
+
 import com.agon.tcc.dto.EquipeDTO;
 import com.agon.tcc.util.Util;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,12 +43,12 @@ public class Equipe {
 	@Column(name = "codigo_modalidade")
 	private Long modalidade;
 
-//	@OneToMany(mappedBy = "equipe")
-//	private List<EquipeGrupo> equipeGrupos;
-//	
-//	@OneToMany(mappedBy = "equipe", cascade = CascadeType.ALL)
-//	@JsonManagedReference("equipe-dadosPartida")
-//    private List<DadosPartida> dadosPartidas;
+	@OneToMany(mappedBy = "equipe")
+	private List<EquipeGrupo> equipeGrupos;
+	
+	@OneToMany(mappedBy = "equipe", cascade = CascadeType.ALL)
+	@JsonManagedReference("equipe-dadosPartida")
+    private List<DadosPartida> dadosPartidas;
 		
 	public Equipe(EquipeDTO equipeDTO) {
 		this.id = equipeDTO.id();
@@ -54,7 +59,7 @@ public class Equipe {
 			this.imagem = null;
 		}
 		this.modalidade	= equipeDTO.modalidade();
-//		this.equipeGrupos = equipeDTO.equipeGrupos();
-//		this.dadosPartidas = equipeDTO.dadosPartidas();
+		this.equipeGrupos = equipeDTO.equipeGrupos();
+		this.dadosPartidas = equipeDTO.dadosPartidas();
 	}
 }
