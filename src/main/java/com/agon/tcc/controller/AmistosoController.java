@@ -51,7 +51,7 @@ public class AmistosoController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody AmistosoDTO amistosoDTO, @PathVariable Long id) {
-		this.amistosoService.update(new AmistosoDTO(amistosoDTO.id(), amistosoDTO.dataHorario(), amistosoDTO.modalidade(), amistosoDTO.partida(), amistosoDTO.equipes()));
+		this.amistosoService.update(new AmistosoDTO(amistosoDTO.id(), null, null, amistosoDTO.modalidade(), null, amistosoDTO.dataHora(), amistosoDTO.partida()));
 		return ResponseEntity.noContent().build();
 	}
 	
@@ -61,4 +61,9 @@ public class AmistosoController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@PostMapping("/criar")
+    public ResponseEntity<Void> criarAmistoso(@RequestBody AmistosoDTO amistosoDTO) {
+        amistosoService.criarAmistoso(amistosoDTO);
+        return ResponseEntity.ok().build();
+    }
 }

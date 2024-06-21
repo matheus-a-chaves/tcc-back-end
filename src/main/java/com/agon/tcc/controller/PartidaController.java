@@ -58,7 +58,7 @@ public class PartidaController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody PartidaDTO partidaDTO, @PathVariable Long id) {
 		this.partidaService.update(new PartidaDTO(id, partidaDTO.dataPartida(), partidaDTO.endereco(), partidaDTO.etapaCampeonato(), 
-												  partidaDTO.grupo(), partidaDTO.dadosPartidas()));
+												  partidaDTO.grupo(), partidaDTO.dadosPartidas(), partidaDTO.amistoso()));
 		return ResponseEntity.noContent().build();
 	}
 	

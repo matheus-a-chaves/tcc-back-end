@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.agon.tcc.dto.AmistosoDTO;
 import com.agon.tcc.model.Amistoso;
+import com.agon.tcc.model.Partida;
 import com.agon.tcc.repository.AmistosoRepository;
 
 @Service
@@ -19,11 +20,14 @@ public class AmistosoService {
 
 	@Autowired
 	private AmistosoRepository amistosoRepository;
-		
+	
+	@Autowired
+	private PartidaService partidaService;
+				
 	public List<AmistosoDTO> findAll() {
 		return amistosoRepository.findAll()
 				.stream()
-				.map(a -> new AmistosoDTO(a.getId(), a.getDataHorario(), a.getModalidade(), a.getPartida(), a.getEquipes()))
+				.map(a -> new AmistosoDTO(a.getId(), a.getDataHorario(), a.getModalidade(), a.getPartida()))
 				.collect(Collectors.toList());
 	}
 	
@@ -31,7 +35,7 @@ public class AmistosoService {
 		Optional<Amistoso> amistoso = amistosoRepository.findById(id);
 		if (amistoso.isPresent()) {
 			Amistoso a = amistoso.get();
-			return new AmistosoDTO(a.getId(), a.getDataHorario(), a.getModalidade(), a.getPartida(), a.getEquipes());
+			return new AmistosoDTO(a.getId(), a.getDataHorario(), a.getModalidade(), a.getPartida());
 		}
 		return null;
 	}
@@ -57,5 +61,20 @@ public class AmistosoService {
 			}
 		}
 	}
-	    
+	
+	/**
+	 * Método para gerar o Amistoso
+	 * @param amistosoDTO
+	 */
+	public void criarAmistoso(AmistosoDTO amistosoDTO) {
+		Partida partida = partidaService.gerarPartida(amistosoDTO);
+        
+        Amistoso amistoso = new Amistoso();
+        amistoso.setDataHorario(amistosoDTO.dataHora());
+        amistoso.setStatus("PENDENTE");
+        amistoso.setModalidade(amistosoDTO.modalidade());
+        amistoso.setPartida(partida);
+
+        amistosoRepository.save(amistoso);
+    }
 }

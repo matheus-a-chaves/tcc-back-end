@@ -21,7 +21,6 @@ import com.agon.tcc.dto.UsuarioDTO;
 import com.agon.tcc.model.Login;
 import com.agon.tcc.model.Usuario;
 import com.agon.tcc.repository.LoginRepository;
-import com.agon.tcc.repository.UsuarioRepository;
 import com.agon.tcc.service.UsuarioService;
 import com.agon.tcc.util.Util;
 

@@ -25,7 +25,7 @@ import jakarta.transaction.Transactional;
 
 @RestController
 @Validated
-@RequestMapping("/agon/times")
+@RequestMapping("/agon/equipes")
 public class EquipeController {
 	
 	@Autowired
@@ -80,7 +80,7 @@ public class EquipeController {
 		this.equipeService.createMembros(equipe.id(), id);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/agon/times/{id}")
+				.path("/agon/equipes/{id}")
 				.buildAndExpand(equipeDTO.id())
 				.toUri();
 		return ResponseEntity.created(uri).build();
@@ -89,26 +89,28 @@ public class EquipeController {
 	@PostMapping("/{idEquipe}/atletica/{idAtletica}/jogador/adicionar")
 	@Transactional
 	public ResponseEntity<Void> adicionarJogador(@RequestBody Map<String, String> cpfValue, @PathVariable Long idEquipe, @PathVariable Long idAtletica) {
-		 String cpfJogador = cpfValue.get("cpf");
-		if(this.equipeService.adicionarJogador(cpfJogador, idEquipe, idAtletica))
+		String cpfJogador = cpfValue.get("cpf");
+		if (this.equipeService.adicionarJogador(cpfJogador, idEquipe, idAtletica)) {
 			return ResponseEntity.ok().build();
-		else
+		} else {
 			return ResponseEntity.badRequest().build();
+		}
 	}
 	
 	@PostMapping("/{idEquipe}/atletica/{idAtletica}/jogador/{idJogador}/remover")
 	@Transactional
 	public ResponseEntity<Void> removerJogador(@PathVariable Long idJogador, @PathVariable Long idEquipe, @PathVariable Long idAtletica) {
-		if(this.equipeService.removerJogador(idJogador,  idEquipe, idAtletica))
+		if (this.equipeService.removerJogador(idJogador,  idEquipe, idAtletica)) {
 			return ResponseEntity.ok().build();
-		else
+		} else {
 			return ResponseEntity.badRequest().build();
+		}
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody EquipeDTO equipeDTO, @PathVariable Long id) {
-		//this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade(), equipeDTO.equipeGrupos(), equipeDTO.dadosPartidas()));
-		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade()));
+		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade(), equipeDTO.equipeGrupos(), equipeDTO.dadosPartidas()));
+//		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade()));
 		return ResponseEntity.noContent().build();
 	}
 	

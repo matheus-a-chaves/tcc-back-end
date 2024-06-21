@@ -2,7 +2,6 @@ package com.agon.tcc.model;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import com.agon.tcc.dto.AmistosoDTO;
 
@@ -13,7 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -38,6 +36,9 @@ public class Amistoso {
 	@Column(name = "data_horario", nullable = true)
 	private LocalDateTime dataHorario;
 	
+	@Column(name = "status", nullable = false)
+	private String status;
+	
 	@ManyToOne
 	@JoinColumn(name = "modalidade_id", nullable = false)
 	private Modalidade modalidade;
@@ -45,20 +46,16 @@ public class Amistoso {
 	@OneToOne
 	@JoinColumn(name = "partida_id", nullable = true)
 	private Partida partida;
-	
-	@OneToMany(mappedBy = "equipe")
-    private List<Equipe> equipes;
-	
+		
 	public Amistoso(AmistosoDTO amistosoDTO) {
 		this.id = amistosoDTO.id();
 		try {
-			this.dataHorario = amistosoDTO.dataHorario();
+			this.dataHorario = amistosoDTO.dataHora();
 		} catch(DateTimeException dte) {
 			this.dataHorario = null;
 		}
 		this.modalidade = amistosoDTO.modalidade();
 		this.partida = amistosoDTO.partida();
-		this.equipes = amistosoDTO.equipes();
 	}
 	
 }

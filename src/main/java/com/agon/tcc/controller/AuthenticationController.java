@@ -41,13 +41,11 @@ public class AuthenticationController {
 	
 	@PostMapping("/login")
 	public ResponseEntity login(@RequestBody @Validated LoginDTO data) {
-		
 		try {
-	        
-	         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
-	         var auth = this.authenticationManager.authenticate(usernamePassword);
+			var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
+	        var auth = this.authenticationManager.authenticate(usernamePassword);
 	         
-	 		 var token = tokenService.generateToken((Login) auth.getPrincipal());
+	 		var token = tokenService.generateToken((Login) auth.getPrincipal());
 	 		 
 	 		Optional<Login> loginOptional = loginRepository.findLogin(data.login());
 	 		Login login = loginOptional.get();
@@ -56,7 +54,6 @@ public class AuthenticationController {
 	 		HttpHeaders headers = new HttpHeaders();
 	 		headers.setBearerAuth(token);
 	 		return new ResponseEntity<>(usuarioDTO, headers, HttpStatus.OK);
-	 		
 		} catch(Exception ex) {
 			return ResponseEntity.badRequest().body("Erro ao autenticar o usuário! Usuário ou senha inválidos.");
 		}
