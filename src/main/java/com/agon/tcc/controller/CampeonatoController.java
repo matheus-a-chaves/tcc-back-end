@@ -2,6 +2,7 @@ package com.agon.tcc.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +54,27 @@ public class CampeonatoController {
 				.buildAndExpand(campeonatoDTO.id())
 				.toUri();
 		return ResponseEntity.created(uri).build();
+	}
+	
+	@PostMapping("/{idCampeonato}/adicionar")
+	public ResponseEntity<Void> adicionarEquipe(@RequestBody Map<String, String> cnpjValue, @PathVariable Long idCampeonato) {
+		String cnpjAtletica = cnpjValue.get("cnpj");
+		try {
+			this.campeonatoService.adicionarEquipe(cnpjAtletica, idCampeonato);
+			return ResponseEntity.ok().build();
+		} catch(Exception ex) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+	
+	@PostMapping("/{idCampeonato}/usuario/{idUsuario}/remover")
+	public ResponseEntity<Void> removerEquipe(@PathVariable Long idCampeonato, @PathVariable Long idUsuario) {
+		try {
+			this.campeonatoService.removerEquipe(idCampeonato, idUsuario);
+			return ResponseEntity.ok().build();
+		} catch(Exception ex) {
+			return ResponseEntity.badRequest().build();
+		}
 	}
 	
 	@PutMapping("/{id}")

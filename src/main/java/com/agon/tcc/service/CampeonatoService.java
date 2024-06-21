@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.agon.tcc.dto.CampeonatoDTO;
 import com.agon.tcc.model.Campeonato;
+import com.agon.tcc.model.CampeonatoUsuario;
+import com.agon.tcc.model.Usuario;
 import com.agon.tcc.repository.CampeonatoRepository;
 import com.agon.tcc.util.Util;
 
@@ -29,6 +31,12 @@ public class CampeonatoService {
 
     @Autowired
     private PartidaService partidaService;
+    
+    @Autowired
+    private UsuarioService usuarioService;
+    
+    @Autowired
+    private CampeonatoUsuarioService campeonatoUsuarioService;
 	
 	private CampeonatoDTO converteDados(Campeonato camp) throws Exception {
         return new CampeonatoDTO(camp.getId(), camp.getNome(), camp.getQuantidadeEquipes(), camp.getDataInicio(), camp.getDataFim(), 
@@ -82,6 +90,23 @@ public class CampeonatoService {
 	@Transactional
 	public void create(CampeonatoDTO campeonatoDTO) {
 		campeonatoRepository.save(new Campeonato(campeonatoDTO));
+	}
+	
+	@Transactional
+	public void adicionarEquipe(String cnpjAtletica, Long idCampeonato) {
+		Usuario usuario = this.usuarioService.findByCnpj(cnpjAtletica);
+		CampeonatoUsuario campeonatoUsuarioAux = this.campeonatoUsuarioService.findByIdCampeonatoAndIdAtletica(idCampeonato, usuario.getId());
+		if(campeonatoUsuarioAux != null) {
+			throw new RuntimeErrorException(null, "Equipe já adicionada.");
+		}
+		CampeonatoUsuario campeonatoUsuario = new CampeonatoUsuario(idCampeonato, usuario.getId());
+		this.campeonatoUsuarioService.create(campeonatoUsuario);
+	}
+	
+	@Transactional
+	public void removerEquipe(Long idCampeonato, Long idUsuario) {
+		CampeonatoUsuario campeonatoUsuarioAux = this.campeonatoUsuarioService.findByIdCampeonatoAndIdAtletica(idCampeonato, idUsuario);
+		campeonatoUsuarioService.delete(campeonatoUsuarioAux.getId());
 	}
 	
 	@Transactional
