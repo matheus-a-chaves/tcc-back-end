@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.agon.tcc.dto.CampeonatoDTO;
+import com.agon.tcc.dto.EquipeDTO;
 import com.agon.tcc.model.Campeonato;
 import com.agon.tcc.model.CampeonatoUsuario;
 import com.agon.tcc.model.Usuario;
@@ -93,19 +94,26 @@ public class CampeonatoService {
 	}
 	
 	@Transactional
-	public void adicionarEquipe(String cnpjAtletica, Long idCampeonato) {
+	public void adicionarEquipe(String cnpjAtletica, Long idCampeonato, Long idModalidade) {
 		Usuario usuario = this.usuarioService.findByCnpj(cnpjAtletica);
+		EquipeDTO equipe =  this.equipeService.findByAtleticaAndModalidade(usuario.getId(), idModalidade);
+		if(equipe == null) {
+			throw new RuntimeErrorException(null, "A atlética não possui um time da modalidade do campeonato!");
+		}
+		
 		CampeonatoUsuario campeonatoUsuarioAux = this.campeonatoUsuarioService.findByIdCampeonatoAndIdAtletica(idCampeonato, usuario.getId());
 		if(campeonatoUsuarioAux != null) {
 			throw new RuntimeErrorException(null, "Equipe já adicionada.");
 		}
+		
 		CampeonatoUsuario campeonatoUsuario = new CampeonatoUsuario(idCampeonato, usuario.getId());
 		this.campeonatoUsuarioService.create(campeonatoUsuario);
 	}
 	
 	@Transactional
-	public void removerEquipe(Long idCampeonato, Long idUsuario) {
-		CampeonatoUsuario campeonatoUsuarioAux = this.campeonatoUsuarioService.findByIdCampeonatoAndIdAtletica(idCampeonato, idUsuario);
+	public void removerEquipe(Long idCampeonato, Long idEquipe) {
+		Usuario atletica = this.usuarioService.findByEquipe(idEquipe);
+		CampeonatoUsuario campeonatoUsuarioAux = this.campeonatoUsuarioService.findByIdCampeonatoAndIdAtletica(idCampeonato, atletica.getId());
 		campeonatoUsuarioService.delete(campeonatoUsuarioAux.getId());
 	}
 	

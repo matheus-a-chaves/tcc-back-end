@@ -126,6 +126,19 @@ public class EquipeService {
 				.collect(Collectors.toList());
 	}
 	
+	public EquipeDTO findByAtleticaAndModalidade(Long idAtletica, Long idModalidade) {
+		Optional<Equipe> equipe = equipeRepository.findByAtleticaAndModalidade(idAtletica, idModalidade);
+		if (equipe.isPresent()) {
+			Equipe eq = equipe.get();
+			try {
+				return converteDados(eq);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
 	@Transactional
 	//public boolean adicionarJogador(Long idJogador, Long idEquipe, Long idAtletica) {
 	public boolean adicionarJogador(String cpfJogador, Long idEquipe, Long idAtletica) {

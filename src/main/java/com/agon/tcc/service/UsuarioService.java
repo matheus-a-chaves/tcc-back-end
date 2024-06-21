@@ -117,6 +117,10 @@ public class UsuarioService {
 				.collect(Collectors.toList());
 	}
 	
+	public Usuario findByEquipe(Long idEquipe) {
+		return usuarioRepository.findByEquipe(idEquipe);
+	}
+	
 	public Usuario findByCpf(String cpf) {
 		return usuarioRepository.findByCpf(cpf);
 	}

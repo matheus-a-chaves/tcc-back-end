@@ -56,21 +56,21 @@ public class CampeonatoController {
 		return ResponseEntity.created(uri).build();
 	}
 	
-	@PostMapping("/{idCampeonato}/adicionar")
-	public ResponseEntity<Void> adicionarEquipe(@RequestBody Map<String, String> cnpjValue, @PathVariable Long idCampeonato) {
+	@PostMapping("/{idCampeonato}/modalidade/{idModalidade}/adicionar")
+	public ResponseEntity<?> adicionarEquipe(@RequestBody Map<String, String> cnpjValue, @PathVariable Long idCampeonato, @PathVariable Long idModalidade) {
 		String cnpjAtletica = cnpjValue.get("cnpj");
 		try {
-			this.campeonatoService.adicionarEquipe(cnpjAtletica, idCampeonato);
+			this.campeonatoService.adicionarEquipe(cnpjAtletica, idCampeonato, idModalidade);
 			return ResponseEntity.ok().build();
 		} catch(Exception ex) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body(ex.getMessage());
 		}
 	}
 	
-	@PostMapping("/{idCampeonato}/usuario/{idUsuario}/remover")
-	public ResponseEntity<Void> removerEquipe(@PathVariable Long idCampeonato, @PathVariable Long idUsuario) {
+	@PostMapping("/{idCampeonato}/equipe/{idEquipe}/remover")
+	public ResponseEntity<Void> removerEquipe(@PathVariable Long idCampeonato, @PathVariable Long idEquipe) {
 		try {
-			this.campeonatoService.removerEquipe(idCampeonato, idUsuario);
+			this.campeonatoService.removerEquipe(idCampeonato, idEquipe);
 			return ResponseEntity.ok().build();
 		} catch(Exception ex) {
 			return ResponseEntity.badRequest().build();
