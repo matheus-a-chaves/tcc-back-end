@@ -1,5 +1,6 @@
 package com.agon.tcc.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import java.util.Optional;
@@ -29,6 +30,12 @@ public interface EquipeRepository extends JpaRepository<Equipe, Long> {
 	
 	@Query(value = "SELECT e.* FROM Equipe e JOIN Membros m ON e.id = m.id_equipe WHERE m.id_atletica = :idAtletica AND e.codigo_modalidade = :idModalidade", nativeQuery  = true)
 	Optional<Equipe> findByAtleticaAndModalidade(Long idAtletica, Long idModalidade);
+	
+	@Query(value = "SELECT DISTINCT e.* FROM Equipe e JOIN Membros m ON e.id = m.id_equipe "
+			+ "WHERE e.codigo_modalidade = :idModalidade "
+			+ "AND m.id_atletica != :idAtletica "
+			+ "AND e.id not in (SELECT e.id FROM equipe e JOIN dados_partida dp ON e.id = dp.equipe_id JOIN partida p ON dp.partida_id = p.id WHERE date(p.data_partida) != :data)", nativeQuery  = true)
+	List<Equipe> findTimesDisponiveisAmistoso(@Param("data") LocalDate data, Long idModalidade, Long idAtletica);
 
 	Optional<Equipe> findByNome(String nome);
 

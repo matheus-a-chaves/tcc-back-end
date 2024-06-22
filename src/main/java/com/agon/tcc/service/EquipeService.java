@@ -1,5 +1,6 @@
 package com.agon.tcc.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -137,6 +138,23 @@ public class EquipeService {
 			}
 		}
 		return null;
+	}
+	
+	@Transactional
+	public List<EquipeDTO> findTimesDisponiveisAmistoso(String dataString, Long idModalidade, Long idAtletica) {
+		LocalDate data = LocalDate.parse(dataString);
+		
+		return equipeRepository.findTimesDisponiveisAmistoso(data, idModalidade, idAtletica)
+				.stream()
+				.map(e -> {
+					try {
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
+				})
+				.collect(Collectors.toList());
 	}
 	
 	@Transactional
