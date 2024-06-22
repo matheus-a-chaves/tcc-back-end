@@ -11,9 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.agon.tcc.dto.AmistosoDTO;
 import com.agon.tcc.dto.PartidaDTO;
+import com.agon.tcc.model.Amistoso;
 import com.agon.tcc.model.DadosPartida;
+import com.agon.tcc.model.Endereco;
 import com.agon.tcc.model.Equipe;
 import com.agon.tcc.model.Partida;
 import com.agon.tcc.repository.PartidaRepository;
@@ -83,7 +84,6 @@ public class PartidaService {
 		}
 	}
 	
-	
 //	private void gerarPartidaAmistoso(List<Equipe> equipes, PartidaDTO partidaDTO) {
 //        Partida partida = new Partida();
 //        partida.setDataPartida(partidaDTO.dataPartida());
@@ -112,13 +112,14 @@ public class PartidaService {
 	 * @param etapa
 	 * @param dataPartida
 	 */
-	public Partida gerarPartida(AmistosoDTO amistosoDTO) {
-        Equipe equipeCasa = new Equipe(equipeService.findById(amistosoDTO.idEquipeCasa()));
-        Equipe equipeVisitante = new Equipe(equipeService.findById(amistosoDTO.idEquipeVisitante()));
-
+	public void gerarPartida(Long idEquipeCasa, Long idEquipeVisitante, Endereco enderecoAmistoso, Amistoso amistoso) {
+        Equipe equipeCasa = new Equipe(equipeService.findById(idEquipeCasa));
+        Equipe equipeVisitante = new Equipe(equipeService.findById(idEquipeVisitante));
+        
         Partida partida = new Partida();
-        partida.setDataPartida(amistosoDTO.dataHora());
-        partida.setEndereco(amistosoDTO.endereco());
+        partida.setDataPartida(amistoso.getDataHorario());
+        partida.setEndereco(enderecoAmistoso);
+        partida.setAmistoso(amistoso);
 
         DadosPartida dadosCasa = new DadosPartida();
         dadosCasa.setEquipe(equipeCasa);
@@ -142,6 +143,6 @@ public class PartidaService {
 
         partida.setDadosPartidas(dadosPartidas);
         
-        return partidaRepository.save(partida);
+        partidaRepository.save(partida);
     }
 }
