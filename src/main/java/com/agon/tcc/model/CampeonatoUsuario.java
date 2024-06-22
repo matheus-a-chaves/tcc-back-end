@@ -30,7 +30,7 @@ public class CampeonatoUsuario {
 	@Column(name= "campeonato_id", nullable = false)
 	private Long idCampeonato;
 	
-	@Column(name = "usuario_id", nullable = false)
+	@Column(name = "usuario_id")
 	private Long idAtletica;
 	
 	@Column(name = "criador_id")

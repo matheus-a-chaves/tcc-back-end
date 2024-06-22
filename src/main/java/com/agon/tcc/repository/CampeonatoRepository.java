@@ -14,4 +14,5 @@ public interface CampeonatoRepository extends JpaRepository<Campeonato, Long> {
 	@Query("SELECT DISTINCT c FROM Campeonato c JOIN c.usuarios u JOIN c.modalidade m WHERE u.id = :usuarioId AND m.id = :modalidadeId")
     List<Campeonato> findByUsuariosIdAndModalidadeId(Long usuarioId, Long modalidadeId);
 	
+	Campeonato findByNome(String nome);
 }

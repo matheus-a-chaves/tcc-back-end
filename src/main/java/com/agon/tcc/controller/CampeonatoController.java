@@ -46,9 +46,9 @@ public class CampeonatoController {
         return ResponseEntity.ok().body(campeonatosDTO);
     }
 	
-	@PostMapping
-	public ResponseEntity<Void> create(@RequestBody CampeonatoDTO campeonatoDTO) {
-		this.campeonatoService.create(campeonatoDTO);
+	@PostMapping("/create/usuario/{idUsuario}")
+	public ResponseEntity<Void> create(@RequestBody CampeonatoDTO campeonatoDTO, @PathVariable Long idUsuario) {
+		this.campeonatoService.create(campeonatoDTO, idUsuario);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/agon/campeonatos/{id}")
 				.buildAndExpand(campeonatoDTO.id())
