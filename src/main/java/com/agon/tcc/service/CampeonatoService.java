@@ -140,7 +140,39 @@ public class CampeonatoService {
 			}
 		}
 	}
-	
+
+	public List<CampeonatoDTO> findAllIntByModalidadeId(Long usuarioId, Long modalidadeId) {
+		return campeonatoRepository.findAllIntByModalidadeId(usuarioId, modalidadeId)
+				.stream()
+				.map(c -> {
+					try {
+						return new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(),
+								Util.convertToString(c.getRegulamento()), Util.convertToString(c.getImagemCampeonato()), c.getFormato(), c.getModalidade());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(), null, null, c.getFormato(), c.getModalidade());
+				})
+				.collect(Collectors.toList());
+	}
+
+	public List<CampeonatoDTO> findAllExtByModalidadeId(Long usuarioId, Long modalidadeId) {
+		return campeonatoRepository.findAllExtByModalidadeId(usuarioId, modalidadeId)
+				.stream()
+				.map(c -> {
+					try {
+						return new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(),
+								Util.convertToString(c.getRegulamento()), Util.convertToString(c.getImagemCampeonato()), c.getFormato(), c.getModalidade());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(), null, null, c.getFormato(), c.getModalidade());
+				})
+				.collect(Collectors.toList());
+	}
+
+
+
 	/*
 	 * Método para iniciar o Campeonato e gerar as partidas
 	 */

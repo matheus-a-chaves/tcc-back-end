@@ -98,4 +98,17 @@ public class CampeonatoController {
         campeonatoService.iniciarCampeonato(id);
         return ResponseEntity.ok().build();
     }
+
+	@GetMapping("/interno/atletica/{idAtletica}/modalidade/{idModalidade}")
+	public ResponseEntity<List<CampeonatoDTO>> findAllIntByModalidadeId(@PathVariable Long idAtletica, @PathVariable Long idModalidade) {
+		List<CampeonatoDTO> campeonatosDTO = this.campeonatoService.findAllIntByModalidadeId(idAtletica, idModalidade);
+		return ResponseEntity.ok().body(campeonatosDTO);
+	}
+
+
+	@GetMapping("externo/atletica/{idAtletica}/modalidade/{idModalidade}")
+	public ResponseEntity<List<CampeonatoDTO>> findAllExtByModalidadeId(@PathVariable Long idAtletica, @PathVariable Long idModalidade) {
+		List<CampeonatoDTO> campeonatosDTO = this.campeonatoService.findAllExtByModalidadeId(idAtletica, idModalidade);
+		return ResponseEntity.ok().body(campeonatosDTO);
+	}
 }
