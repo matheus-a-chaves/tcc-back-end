@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
 
+import com.agon.tcc.repository.MembroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,9 @@ public class CampeonatoService {
     
     @Autowired
     private CampeonatoUsuarioService campeonatoUsuarioService;
+
+	@Autowired
+	private MembroRepository membroRepository;
 	
 	private CampeonatoDTO converteDados(Campeonato camp) throws Exception {
         return new CampeonatoDTO(camp.getId(), camp.getNome(), camp.getQuantidadeEquipes(), camp.getDataInicio(), camp.getDataFim(), 
@@ -141,7 +145,9 @@ public class CampeonatoService {
 		}
 	}
 
-	public List<CampeonatoDTO> findAllIntByModalidadeId(Long usuarioId, Long modalidadeId) {
+	public List<CampeonatoDTO> findAllIntByModalidadeId(Long equipeId, Long modalidadeId) {
+		Long usuarioId = membroRepository.findIdAtleticaByIdEquipe(equipeId);
+
 		return campeonatoRepository.findAllIntByModalidadeId(usuarioId, modalidadeId)
 				.stream()
 				.map(c -> {
@@ -156,7 +162,9 @@ public class CampeonatoService {
 				.collect(Collectors.toList());
 	}
 
-	public List<CampeonatoDTO> findAllExtByModalidadeId(Long usuarioId, Long modalidadeId) {
+	public List<CampeonatoDTO> findAllExtByModalidadeId(Long equipeId, Long modalidadeId) {
+		Long usuarioId = membroRepository.findIdAtleticaByIdEquipe(equipeId);
+
 		return campeonatoRepository.findAllExtByModalidadeId(usuarioId, modalidadeId)
 				.stream()
 				.map(c -> {
