@@ -90,13 +90,11 @@ public class CampeonatoService {
 	
 	@Transactional
 	public void create(CampeonatoDTO campeonatoDTO, Long idUsuario) {
-		campeonatoRepository.save(new Campeonato(campeonatoDTO));
-		Campeonato campeonato = campeonatoRepository.findByNome(campeonatoDTO.nome());
-		
+		Campeonato campeonato = campeonatoRepository.save(new Campeonato(campeonatoDTO));
 		CampeonatoUsuario campeonatoUsuario = new CampeonatoUsuario();
 		campeonatoUsuario.setIdCampeonato(campeonato.getId());
 		campeonatoUsuario.setIdCriador(idUsuario);
-		this.campeonatoUsuarioService.create(campeonatoUsuario);
+		campeonatoUsuarioService.create(campeonatoUsuario);
 	}
 	
 	@Transactional
