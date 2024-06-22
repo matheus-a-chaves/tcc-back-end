@@ -67,7 +67,7 @@ public class CampeonatoController {
 		}
 	}
 	
-	@PostMapping("/{idCampeonato}/equipe/{idEquipe}/remover")
+	@GetMapping("/{idCampeonato}/equipe/{idEquipe}/remover")
 	public ResponseEntity<Void> removerEquipe(@PathVariable Long idCampeonato, @PathVariable Long idEquipe) {
 		try {
 			this.campeonatoService.removerEquipe(idCampeonato, idEquipe);
