@@ -12,7 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,7 +32,7 @@ public class Amistoso {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "data_horario", nullable = true)
+	@Column(name = "data_horario", nullable = false)
 	private LocalDateTime dataHorario;
 	
 	@Column(name = "status", nullable = false)
@@ -42,10 +41,6 @@ public class Amistoso {
 	@ManyToOne
 	@JoinColumn(name = "modalidade_id", nullable = false)
 	private Modalidade modalidade;
-	
-	@OneToOne
-	@JoinColumn(name = "partida_id", nullable = true)
-	private Partida partida;
 		
 	public Amistoso(AmistosoDTO amistosoDTO) {
 		this.id = amistosoDTO.id();
@@ -54,8 +49,8 @@ public class Amistoso {
 		} catch(DateTimeException dte) {
 			this.dataHorario = null;
 		}
+		this.status = amistosoDTO.status();
 		this.modalidade = amistosoDTO.modalidade();
-		this.partida = amistosoDTO.partida();
 	}
 	
 }
