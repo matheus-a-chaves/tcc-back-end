@@ -26,6 +26,9 @@ public interface EquipeRepository extends JpaRepository<Equipe, Long> {
 
 	@Query(value = "SELECT e.* FROM Equipe e JOIN Membros m ON e.id = m.id_equipe WHERE m.id_jogador = :idJogador", nativeQuery  = true)
 	List<Equipe> findAllTimesByIdJogador(Long idJogador);
+	
+	@Query(value = "SELECT e.* FROM Equipe e JOIN Membros m ON e.id = m.id_equipe WHERE m.id_atletica = :idAtletica AND e.codigo_modalidade = :idModalidade", nativeQuery  = true)
+	Optional<Equipe> findByAtleticaAndModalidade(Long idAtletica, Long idModalidade);
 
 	Optional<Equipe> findByNome(String nome);
 

@@ -2,6 +2,7 @@ package com.agon.tcc.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,14 +46,35 @@ public class CampeonatoController {
         return ResponseEntity.ok().body(campeonatosDTO);
     }
 	
-	@PostMapping
-	public ResponseEntity<Void> create(@RequestBody CampeonatoDTO campeonatoDTO) {
-		this.campeonatoService.create(campeonatoDTO);
+	@PostMapping("/create/usuario/{idUsuario}")
+	public ResponseEntity<Void> create(@RequestBody CampeonatoDTO campeonatoDTO, @PathVariable Long idUsuario) {
+		this.campeonatoService.create(campeonatoDTO, idUsuario);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/agon/campeonatos/{id}")
 				.buildAndExpand(campeonatoDTO.id())
 				.toUri();
 		return ResponseEntity.created(uri).build();
+	}
+	
+	@PostMapping("/{idCampeonato}/modalidade/{idModalidade}/adicionar")
+	public ResponseEntity<?> adicionarEquipe(@RequestBody Map<String, String> cnpjValue, @PathVariable Long idCampeonato, @PathVariable Long idModalidade) {
+		String cnpjAtletica = cnpjValue.get("cnpj");
+		try {
+			this.campeonatoService.adicionarEquipe(cnpjAtletica, idCampeonato, idModalidade);
+			return ResponseEntity.ok().build();
+		} catch(Exception ex) {
+			return ResponseEntity.badRequest().body(ex.getMessage());
+		}
+	}
+	
+	@PostMapping("/{idCampeonato}/equipe/{idEquipe}/remover")
+	public ResponseEntity<Void> removerEquipe(@PathVariable Long idCampeonato, @PathVariable Long idEquipe) {
+		try {
+			this.campeonatoService.removerEquipe(idCampeonato, idEquipe);
+			return ResponseEntity.ok().build();
+		} catch(Exception ex) {
+			return ResponseEntity.badRequest().build();
+		}
 	}
 	
 	@PutMapping("/{id}")
@@ -76,4 +98,17 @@ public class CampeonatoController {
         campeonatoService.iniciarCampeonato(id);
         return ResponseEntity.ok().build();
     }
+
+	@GetMapping("/interno/atletica/{idEquipe}/modalidade/{idModalidade}")
+	public ResponseEntity<List<CampeonatoDTO>> findAllIntByModalidadeId(@PathVariable Long idEquipe, @PathVariable Long idModalidade) {
+		List<CampeonatoDTO> campeonatosDTO = this.campeonatoService.findAllIntByModalidadeId(idEquipe, idModalidade);
+		return ResponseEntity.ok().body(campeonatosDTO);
+	}
+
+
+	@GetMapping("externo/atletica/{idAtletica}/modalidade/{idModalidade}")
+	public ResponseEntity<List<CampeonatoDTO>> findAllExtByModalidadeId(@PathVariable Long idAtletica, @PathVariable Long idModalidade) {
+		List<CampeonatoDTO> campeonatosDTO = this.campeonatoService.findAllExtByModalidadeId(idAtletica, idModalidade);
+		return ResponseEntity.ok().body(campeonatosDTO);
+	}
 }
