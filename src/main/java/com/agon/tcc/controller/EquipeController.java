@@ -70,7 +70,7 @@ public class EquipeController {
 		return ResponseEntity.ok().body(equipesDTO);
 	}
 	
-	@GetMapping("/disponiveis/modalidade/{idModalidade}/atletica/{idAtletica}")
+	@PostMapping("/disponiveis/modalidade/{idModalidade}/atletica/{idAtletica}")
 	public ResponseEntity<List<EquipeDTO>> findTimesDisponiveisAmistoso (@RequestBody Map<String, String> date, @PathVariable Long idModalidade, @PathVariable Long idAtletica) {
 		try {
 			String data = date.get("date");

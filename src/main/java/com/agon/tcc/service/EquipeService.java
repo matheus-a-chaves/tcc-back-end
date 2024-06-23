@@ -139,11 +139,11 @@ public class EquipeService {
 				.stream()
 				.map(e -> {
 					try {
-						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
+						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
+					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
 				})
 				.collect(Collectors.toList());
 	}
