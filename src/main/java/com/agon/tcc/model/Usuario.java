@@ -66,8 +66,11 @@ public class Usuario {
 	@Column(name = "dt_Nascimento")
     private Date dataNascimento;
 	
+	@Column(name = "salt")
+    private String salt;
 	
-	public Usuario(String nome, Date dataNascimento,String cpf, String cnpj, String imagemPerfil, String bairro, String cep, String cidade, String estado, Integer numero, String rua) {
+	
+	public Usuario(String nome, Date dataNascimento,String cpf, String cnpj, String imagemPerfil, String bairro, String cep, String cidade, String estado, Integer numero, String rua, String salt) {
 		this.nome = nome;
 		this.dataNascimento = dataNascimento;
         this.cpf = cpf;
@@ -83,6 +86,7 @@ public class Usuario {
         this.estado = estado;
         this.numero = numero;
         this.rua = rua;
+        this.salt = salt;
 	}	
 	
     public Usuario(UsuarioDTO usuarioDTO) {
@@ -103,6 +107,7 @@ public class Usuario {
         } catch (Exception e) {
             this.imagemPerfil = null;
         }
+        this.salt = usuarioDTO.salt();
     }
 
 }

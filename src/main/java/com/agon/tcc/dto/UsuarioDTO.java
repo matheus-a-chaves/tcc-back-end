@@ -14,6 +14,7 @@ public record UsuarioDTO(Long id,
 						String estado,
 						Integer numero,
 						String rua,
-						Integer tipoUsuario) {
+						Integer tipoUsuario,
+						String salt) {
 	
 }

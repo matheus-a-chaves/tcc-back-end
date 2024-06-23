@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import javax.management.RuntimeErrorException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.agon.tcc.dto.RegisterDTO;
@@ -16,6 +15,7 @@ import com.agon.tcc.model.Login;
 import com.agon.tcc.model.Usuario;
 import com.agon.tcc.repository.LoginRepository;
 import com.agon.tcc.repository.UsuarioRepository;
+import com.agon.tcc.util.PasswordUtil;
 import com.agon.tcc.util.Util;
 
 import jakarta.transaction.Transactional;
@@ -42,7 +42,8 @@ public class UsuarioService {
         					  user.getEstado(),
         					  user.getNumero(),  
         					  user.getRua(),
-        					  user.getTipoUsuario());
+        					  user.getTipoUsuario(),
+        					  user.getSalt());
     }
 	
 	public List<UsuarioDTO> findAll() {
@@ -54,7 +55,7 @@ public class UsuarioService {
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-					return new UsuarioDTO(user.getId(), user.getNome(), user.getDataNascimento(), user.getCpf(), user.getCnpj(), null, user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario() );
+					return new UsuarioDTO(user.getId(), user.getNome(), user.getDataNascimento(), user.getCpf(), user.getCnpj(), null, user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario(), user.getSalt());
 				})
 				.collect(Collectors.toList());
 	}
@@ -80,11 +81,11 @@ public class UsuarioService {
 		
 		try {
 			Usuario usuario = Util.createAndValidateTipoUsuario(data);
-			String passwordEncrypted = new BCryptPasswordEncoder().encode(data.password());
-			usuarioRepository.save(usuario);
+			String salt = PasswordUtil.gerarSalt();
+			usuario.setSalt(salt);
+			usuario = usuarioRepository.save(usuario);
 			
-			usuario = (usuario.getCpf() != null) ? this.findByCpf(usuario.getCpf()) : this.findByCnpj(usuario.getCnpj());
-			
+			String passwordEncrypted = PasswordUtil.criptografarPassword(data.password());
 			Login login = new Login(data.login(), passwordEncrypted, usuario.getId());
 			loginRepository.save(login);
 		} catch(Exception ex) {
@@ -120,11 +121,22 @@ public class UsuarioService {
 	public void alterarSenha(String data) {
 		List<String> dadosLogin = Util.recuperaDadosLogin(data);
 		Optional<Login> loginAux = this.loginRepository.findLogin(dadosLogin.get(0));
-		
-		String passwordEncrypted = new BCryptPasswordEncoder().encode(dadosLogin.get(1));
 		Login login = loginAux.get();
+		
+		Optional<Usuario> user = usuarioRepository.findById(login.getUsuario());
+		Usuario usuario = user.get();
+		
+		String salt = PasswordUtil.gerarSalt();
+		
+		//String passwordEncrypted = PasswordUtil.criptografarSenha(dadosLogin.get(1), usuario.getSalt());
+		String passwordEncrypted = PasswordUtil.criptografarPassword(dadosLogin.get(1));
+		
 		login.setSenha(passwordEncrypted);
 		this.loginRepository.save(login);
+		
+		usuario.setSalt(salt);
+		this.usuarioRepository.save(usuario);
+		
 	}
 	
 	public void delete(Long id) {
@@ -146,7 +158,7 @@ public class UsuarioService {
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-					return new UsuarioDTO(user.getId(), user.getNome(), user.getDataNascimento(), user.getCpf(), user.getCnpj(), null, user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario() );
+					return new UsuarioDTO(user.getId(), user.getNome(), user.getDataNascimento(), user.getCpf(), user.getCnpj(), null, user.getBairro(), user.getCep(),user.getCidade(), user.getEstado(),user.getNumero(),  user.getRua(),user.getTipoUsuario(), user.getSalt());
 				})
 				.collect(Collectors.toList());
 	}

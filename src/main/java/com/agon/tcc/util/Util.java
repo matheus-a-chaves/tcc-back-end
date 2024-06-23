@@ -30,7 +30,7 @@ public class Util {
 	
 	public static Usuario createAndValidateTipoUsuario(RegisterDTO data) {
 		
-		Usuario usuario = new Usuario(data.nome(), data.dataNascimento(), null, null, null, data.bairro(), data.cep(), data.cidade(), data.estado(), data.numero(), data.rua());
+		Usuario usuario = new Usuario(data.nome(), data.dataNascimento(), null, null, null, data.bairro(), data.cep(), data.cidade(), data.estado(), data.numero(), data.rua(), null);
 		
 		if(data.docIdentificacao().length() == 11) {
 			usuario.setTipoUsuario(2);

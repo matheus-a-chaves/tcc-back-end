@@ -61,7 +61,7 @@ public class UsuarioController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody UsuarioDTO usuarioDTO, @PathVariable Long id) {
 		this.usuarioService.update(new UsuarioDTO(id, usuarioDTO.nome(), usuarioDTO.dataNascimento(), null , null, usuarioDTO.imagemPerfil(), 
-													usuarioDTO.bairro(), usuarioDTO.cep(), usuarioDTO.cidade(), usuarioDTO.estado(), usuarioDTO.numero(), usuarioDTO.rua(), null));
+													usuarioDTO.bairro(), usuarioDTO.cep(), usuarioDTO.cidade(), usuarioDTO.estado(), usuarioDTO.numero(), usuarioDTO.rua(), null, null));
 		return ResponseEntity.noContent().build();
 	}
 	
