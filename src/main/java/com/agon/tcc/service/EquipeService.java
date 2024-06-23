@@ -33,6 +33,7 @@ public class EquipeService {
 	private UsuarioService usuarioService;
 	
 	private EquipeDTO converteDados(Equipe equipe) throws Exception {
+//      return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), equipe.getModalidade(), equipe.getEquipeGrupos(), equipe.getDadosPartidas());
 		return new EquipeDTO(equipe.getId(), equipe.getNome(), Util.convertToString(equipe.getImagem()), equipe.getModalidade());
     }
 	
@@ -41,10 +42,12 @@ public class EquipeService {
 				.stream()
 				.map(e -> {
 					try {
+//						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
 						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
+//					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
 					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
 				})
 				.collect(Collectors.toList());
@@ -81,10 +84,12 @@ public class EquipeService {
 				.stream()
 				.map(e -> {
 					try {
+//						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
 						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
+//					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
 					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
 				})
 				.collect(Collectors.toList());
@@ -95,10 +100,12 @@ public class EquipeService {
 				.stream()
 				.map(e -> {
 					try {
+//						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
 						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
+//					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
 					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
 				})
 				.collect(Collectors.toList());
@@ -109,10 +116,12 @@ public class EquipeService {
 				.stream()
 				.map(e -> {
 					try {
+//						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
 						return new EquipeDTO(e.getId(), e.getNome(), Util.convertToString(e.getImagem()), e.getModalidade());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
+//					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade(), e.getEquipeGrupos(), e.getDadosPartidas());
 					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
 				})
 				.collect(Collectors.toList());
@@ -134,7 +143,7 @@ public class EquipeService {
 	@Transactional
 	public List<EquipeDTO> findTimesDisponiveisAmistoso(String dataString, Long idModalidade, Long idAtletica) {
 		LocalDate data = LocalDate.parse(dataString);
-		
+
 		return equipeRepository.findTimesDisponiveisAmistoso(data, idModalidade, idAtletica)
 				.stream()
 				.map(e -> {
@@ -147,7 +156,7 @@ public class EquipeService {
 				})
 				.collect(Collectors.toList());
 	}
-	
+
 	@Transactional
 	//public boolean adicionarJogador(Long idJogador, Long idEquipe, Long idAtletica) {
 	public boolean adicionarJogador(String cpfJogador, Long idEquipe, Long idAtletica) {

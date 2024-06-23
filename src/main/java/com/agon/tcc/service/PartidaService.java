@@ -68,7 +68,7 @@ public class PartidaService {
     		Equipe equipeUm = new Equipe(equipeUmDTO);
     		Equipe equipeDois = new Equipe(equipeDoisDTO);
     		
-    		AgendaDTO agendaDTO = new AgendaDTO(aux.dataPartida(), aux.endereco(), equipeUm, equipeDois);
+    		AgendaDTO agendaDTO = new AgendaDTO(aux.amistoso().getId(),aux.dataPartida(), aux.endereco(), equipeUm, equipeDois);
     		listAgendaDTO.add(agendaDTO);
     	}
     	
@@ -91,7 +91,7 @@ public class PartidaService {
     		Equipe equipeUm = new Equipe(equipeUmDTO);
     		Equipe equipeDois = new Equipe(equipeDoisDTO);
     		
-    		AgendaDTO agendaDTO = new AgendaDTO(aux.dataPartida(), aux.endereco(), equipeUm, equipeDois);
+    		AgendaDTO agendaDTO = new AgendaDTO(aux.amistoso().getId(),aux.dataPartida(), aux.endereco(), equipeUm, equipeDois);
     		listAgendaDTO.add(agendaDTO);
     	}
     	

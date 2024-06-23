@@ -80,7 +80,7 @@ public class EquipeController {
 			return ResponseEntity.badRequest().build();
 		}
 	}
-	
+
 	@PostMapping("/atletica/{id}")
 	@Transactional
 	public ResponseEntity<Void> create(@RequestBody EquipeDTO equipeDTO, @PathVariable Long id) {
@@ -120,6 +120,7 @@ public class EquipeController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody EquipeDTO equipeDTO, @PathVariable Long id) {
+//		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade(), equipeDTO.equipeGrupos(), equipeDTO.dadosPartidas()));
 		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade()));
 		return ResponseEntity.noContent().build();
 	}
