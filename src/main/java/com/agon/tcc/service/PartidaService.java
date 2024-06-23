@@ -74,6 +74,29 @@ public class PartidaService {
     	
     	return listAgendaDTO;
     }
+    
+    public List<AgendaDTO> findAmistososByEquipe(Long idEquipe) {
+    	List<AgendaDTO> listAgendaDTO = new ArrayList<>();
+    	
+    	List<PartidaDTO> list = partidaRepository.findAmistososByEquipe(idEquipe)
+                .stream()
+                .map(p -> new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso()))
+                .collect(Collectors.toList());
+    	
+    	for(PartidaDTO aux : list) {
+    		DadosPartidaDTO dadosPartidaDTO = this.dadosPartidaService.findById(aux.dadosPartidas().get(0).getId());
+    		DadosPartidaDTO dadosPartidaTimeDoisDTO = this.dadosPartidaService.findById(aux.dadosPartidas().get(1).getId());
+    		EquipeDTO equipeUmDTO = this.equipeService.findById(dadosPartidaDTO.equipeId());
+    		EquipeDTO equipeDoisDTO = this.equipeService.findById(dadosPartidaTimeDoisDTO.equipeId());
+    		Equipe equipeUm = new Equipe(equipeUmDTO);
+    		Equipe equipeDois = new Equipe(equipeDoisDTO);
+    		
+    		AgendaDTO agendaDTO = new AgendaDTO(aux.dataPartida(), aux.endereco(), equipeUm, equipeDois);
+    		listAgendaDTO.add(agendaDTO);
+    	}
+    	
+    	return listAgendaDTO;
+    }
 
 //    public List<PartidaDTO> findByCampeonato(Long id) {
 //        return partidaRepository.findByCampeonato(id)

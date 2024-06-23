@@ -16,6 +16,9 @@ public interface PartidaRepository extends JpaRepository<Partida, Long> {
 //	@Query("SELECT p FROM Partida p WHERE p.campeonato.id = :campeonatoId")
 //  List<Partida> findByCampeonato(@Param("campeonatoId") Long campeonatoId);
 	
-	@Query(value ="SELECT p.* FROM partida p INNER JOIN dados_partida dp ON p.id = dp.partida_id WHERE date(p.data_partida) = :data AND dp.equipe_id = :idEquipe", nativeQuery = true)
+	@Query(value ="SELECT p.* FROM partida p INNER JOIN dados_partida dp ON p.id = dp.partida_id JOIN Amistoso a ON a.id = p.amistoso_id WHERE date(p.data_partida) = :data AND dp.equipe_id = :idEquipe AND a.status = 'CONFIRMADO'", nativeQuery = true)
 	List<Partida> encontrarPartidasPorData(@Param("data") LocalDate data, Long idEquipe);
+	
+	@Query(value ="SELECT p.* FROM partida p INNER JOIN dados_partida dp ON p.id = dp.partida_id JOIN Amistoso a ON a.id = p.amistoso_id WHERE dp.equipe_id = :idEquipe AND a.status = 'CONFIRMADO'", nativeQuery = true)
+	List<Partida> findAmistososByEquipe(@Param("idEquipe") Long idEquipe);
 }
