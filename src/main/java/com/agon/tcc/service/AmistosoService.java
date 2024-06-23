@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.agon.tcc.dto.AmistosoDTO;
 import com.agon.tcc.model.Amistoso;
-import com.agon.tcc.model.Partida;
 import com.agon.tcc.repository.AmistosoRepository;
 
 @Service
@@ -27,7 +26,7 @@ public class AmistosoService {
 	public List<AmistosoDTO> findAll() {
 		return amistosoRepository.findAll()
 				.stream()
-				.map(a -> new AmistosoDTO(a.getId(), a.getDataHorario(), a.getModalidade(), a.getPartida()))
+				.map(a -> new AmistosoDTO(a.getId(), a.getDataHorario(), a.getStatus(), a.getModalidade(), null))
 				.collect(Collectors.toList());
 	}
 	
@@ -35,7 +34,7 @@ public class AmistosoService {
 		Optional<Amistoso> amistoso = amistosoRepository.findById(id);
 		if (amistoso.isPresent()) {
 			Amistoso a = amistoso.get();
-			return new AmistosoDTO(a.getId(), a.getDataHorario(), a.getModalidade(), a.getPartida());
+			return new AmistosoDTO(a.getId(), a.getDataHorario(), a.getStatus(), a.getModalidade(), null);
 		}
 		return null;
 	}
@@ -48,7 +47,7 @@ public class AmistosoService {
 	@Transactional
 	public void update(AmistosoDTO amistosoDTO) {
 		Amistoso amistoso = new Amistoso(findById(amistosoDTO.id()));
-		amistoso.setPartida(amistosoDTO.partida());;
+		amistoso.setStatus(amistoso.getStatus());
 		this.amistosoRepository.save(amistoso);
 	}
 	
@@ -66,15 +65,13 @@ public class AmistosoService {
 	 * Método para gerar o Amistoso
 	 * @param amistosoDTO
 	 */
-	public void criarAmistoso(AmistosoDTO amistosoDTO) {
-		Partida partida = partidaService.gerarPartida(amistosoDTO);
-        
+	public void criarAmistoso(Long idEquipeCasa, Long idEquipeVisitante, AmistosoDTO amistosoDTO) {        
         Amistoso amistoso = new Amistoso();
         amistoso.setDataHorario(amistosoDTO.dataHora());
         amistoso.setStatus("PENDENTE");
         amistoso.setModalidade(amistosoDTO.modalidade());
-        amistoso.setPartida(partida);
-
         amistosoRepository.save(amistoso);
+
+		partidaService.gerarPartida(idEquipeCasa, idEquipeVisitante, amistosoDTO.endereco(), amistoso);
     }
 }

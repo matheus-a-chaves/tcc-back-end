@@ -59,7 +59,5 @@ public class Equipe {
 			this.imagem = null;
 		}
 		this.modalidade	= equipeDTO.modalidade();
-		this.equipeGrupos = equipeDTO.equipeGrupos();
-		this.dadosPartidas = equipeDTO.dadosPartidas();
 	}
 }

@@ -6,12 +6,16 @@ import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
 
+import com.agon.tcc.repository.MembroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.agon.tcc.dto.CampeonatoDTO;
+import com.agon.tcc.dto.EquipeDTO;
 import com.agon.tcc.model.Campeonato;
+import com.agon.tcc.model.CampeonatoUsuario;
+import com.agon.tcc.model.Usuario;
 import com.agon.tcc.repository.CampeonatoRepository;
 import com.agon.tcc.util.Util;
 
@@ -29,6 +33,15 @@ public class CampeonatoService {
 
     @Autowired
     private PartidaService partidaService;
+    
+    @Autowired
+    private UsuarioService usuarioService;
+    
+    @Autowired
+    private CampeonatoUsuarioService campeonatoUsuarioService;
+
+	@Autowired
+	private MembroRepository membroRepository;
 	
 	private CampeonatoDTO converteDados(Campeonato camp) throws Exception {
         return new CampeonatoDTO(camp.getId(), camp.getNome(), camp.getQuantidadeEquipes(), camp.getDataInicio(), camp.getDataFim(), 
@@ -80,8 +93,36 @@ public class CampeonatoService {
     }
 	
 	@Transactional
-	public void create(CampeonatoDTO campeonatoDTO) {
-		campeonatoRepository.save(new Campeonato(campeonatoDTO));
+	public void create(CampeonatoDTO campeonatoDTO, Long idUsuario) {
+		Campeonato campeonato = campeonatoRepository.save(new Campeonato(campeonatoDTO));
+		CampeonatoUsuario campeonatoUsuario = new CampeonatoUsuario();
+		campeonatoUsuario.setIdCampeonato(campeonato.getId());
+		campeonatoUsuario.setIdCriador(idUsuario);
+		campeonatoUsuarioService.create(campeonatoUsuario);
+	}
+	
+	@Transactional
+	public void adicionarEquipe(String cnpjAtletica, Long idCampeonato, Long idModalidade) {
+		Usuario usuario = this.usuarioService.findByCnpj(cnpjAtletica);
+		EquipeDTO equipe =  this.equipeService.findByAtleticaAndModalidade(usuario.getId(), idModalidade);
+		if(equipe == null) {
+			throw new RuntimeErrorException(null, "A atlética não possui um time da modalidade do campeonato!");
+		}
+		
+		CampeonatoUsuario campeonatoUsuarioAux = this.campeonatoUsuarioService.findByIdCampeonatoAndIdAtletica(idCampeonato, usuario.getId());
+		if(campeonatoUsuarioAux != null) {
+			throw new RuntimeErrorException(null, "Equipe já adicionada.");
+		}
+		
+		CampeonatoUsuario campeonatoUsuario = new CampeonatoUsuario(idCampeonato, usuario.getId());
+		this.campeonatoUsuarioService.create(campeonatoUsuario);
+	}
+	
+	@Transactional
+	public void removerEquipe(Long idCampeonato, Long idEquipe) {
+		Usuario atletica = this.usuarioService.findByEquipe(idEquipe);
+		CampeonatoUsuario campeonatoUsuarioAux = this.campeonatoUsuarioService.findByIdCampeonatoAndIdAtletica(idCampeonato, atletica.getId());
+		campeonatoUsuarioService.delete(campeonatoUsuarioAux.getId());
 	}
 	
 	@Transactional
@@ -103,7 +144,43 @@ public class CampeonatoService {
 			}
 		}
 	}
-	
+
+	public List<CampeonatoDTO> findAllIntByModalidadeId(Long equipeId, Long modalidadeId) {
+		Long usuarioId = membroRepository.findIdAtleticaByIdEquipe(equipeId);
+
+		return campeonatoRepository.findAllIntByModalidadeId(usuarioId, modalidadeId)
+				.stream()
+				.map(c -> {
+					try {
+						return new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(),
+								Util.convertToString(c.getRegulamento()), Util.convertToString(c.getImagemCampeonato()), c.getFormato(), c.getModalidade());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(), null, null, c.getFormato(), c.getModalidade());
+				})
+				.collect(Collectors.toList());
+	}
+
+	public List<CampeonatoDTO> findAllExtByModalidadeId(Long equipeId, Long modalidadeId) {
+		Long usuarioId = membroRepository.findIdAtleticaByIdEquipe(equipeId);
+
+		return campeonatoRepository.findAllExtByModalidadeId(usuarioId, modalidadeId)
+				.stream()
+				.map(c -> {
+					try {
+						return new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(),
+								Util.convertToString(c.getRegulamento()), Util.convertToString(c.getImagemCampeonato()), c.getFormato(), c.getModalidade());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return new CampeonatoDTO(c.getId(), c.getNome(), c.getQuantidadeEquipes(), c.getDataInicio(), c.getDataFim(), null, null, c.getFormato(), c.getModalidade());
+				})
+				.collect(Collectors.toList());
+	}
+
+
+
 	/*
 	 * Método para iniciar o Campeonato e gerar as partidas
 	 */

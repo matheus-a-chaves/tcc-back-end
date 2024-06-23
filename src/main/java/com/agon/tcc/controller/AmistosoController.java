@@ -51,7 +51,7 @@ public class AmistosoController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody AmistosoDTO amistosoDTO, @PathVariable Long id) {
-		this.amistosoService.update(new AmistosoDTO(amistosoDTO.id(), null, null, amistosoDTO.modalidade(), null, amistosoDTO.dataHora(), amistosoDTO.partida()));
+		this.amistosoService.update(new AmistosoDTO(amistosoDTO.id(), null, amistosoDTO.status(), null, null));
 		return ResponseEntity.noContent().build();
 	}
 	
@@ -61,9 +61,13 @@ public class AmistosoController {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@PostMapping("/criar")
-    public ResponseEntity<Void> criarAmistoso(@RequestBody AmistosoDTO amistosoDTO) {
-        amistosoService.criarAmistoso(amistosoDTO);
-        return ResponseEntity.ok().build();
+	@PostMapping("/equipeCasa/{idEquipeCasa}/equipeVisitante/{idEquipeVisitante}/criar")
+    public ResponseEntity<Void> criarAmistoso(@PathVariable Long idEquipeCasa, @PathVariable Long idEquipeVisitante, @RequestBody AmistosoDTO amistosoDTO) {
+        this.amistosoService.criarAmistoso(idEquipeCasa, idEquipeVisitante, amistosoDTO);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/agon/amistosos/{id}")
+				.buildAndExpand(amistosoDTO.id())
+				.toUri();
+		return ResponseEntity.created(uri).build();
     }
 }

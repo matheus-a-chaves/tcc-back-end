@@ -70,6 +70,17 @@ public class EquipeController {
 		return ResponseEntity.ok().body(equipesDTO);
 	}
 	
+	@PostMapping("/disponiveis/modalidade/{idModalidade}/atletica/{idAtletica}")
+	public ResponseEntity<List<EquipeDTO>> findTimesDisponiveisAmistoso (@RequestBody Map<String, String> date, @PathVariable Long idModalidade, @PathVariable Long idAtletica) {
+		try {
+			String data = date.get("date");
+			List<EquipeDTO> equipesDTO = this.equipeService.findTimesDisponiveisAmistoso(data, idModalidade, idAtletica);
+			return ResponseEntity.ok().body(equipesDTO);
+		} catch(Exception ex) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+	
 	@PostMapping("/atletica/{id}")
 	@Transactional
 	public ResponseEntity<Void> create(@RequestBody EquipeDTO equipeDTO, @PathVariable Long id) {
@@ -109,8 +120,7 @@ public class EquipeController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody EquipeDTO equipeDTO, @PathVariable Long id) {
-		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade(), equipeDTO.equipeGrupos(), equipeDTO.dadosPartidas()));
-//		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade()));
+		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade()));
 		return ResponseEntity.noContent().build();
 	}
 	
