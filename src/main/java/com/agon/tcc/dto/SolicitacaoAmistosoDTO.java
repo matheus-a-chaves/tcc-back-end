@@ -12,6 +12,7 @@ public record SolicitacaoAmistosoDTO(Long id,
 									 Equipe equipeVisitante,
 									 Equipe equipeCasa,
 									 StatusSolicitacao status,
-									 Endereco endereco) {
+									 Endereco endereco,
+									 Amistoso amistoso) {
 
 }

@@ -47,7 +47,7 @@ public class SolicitacaoAmistoso {
     public SolicitacaoAmistoso(SolicitacaoAmistosoDTO solicitacaoAmistosoDTO) {
         this.id = solicitacaoAmistosoDTO.id();
         this.dataSolicitacao = solicitacaoAmistosoDTO.dataSolicitacao();
-        // this.amistoso = solicitacaoAmistosoDTO.amistoso();
+        this.amistoso = solicitacaoAmistosoDTO.amistoso();
         this.equipeVisitante = solicitacaoAmistosoDTO.equipeVisitante();
         this.equipeCasa = solicitacaoAmistosoDTO.equipeCasa();
     }

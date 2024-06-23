@@ -35,7 +35,7 @@ public class SolicitacaoAmistosoService {
 	public List<SolicitacaoAmistosoDTO> findAll() {
 		return solicitacaoAmistosoRepository.findAll()
 				.stream()
-				.map(a -> new SolicitacaoAmistosoDTO(a.getId(), a.getDataSolicitacao(), a.getEquipeVisitante(), a.getEquipeCasa(), null, null))
+				.map(a -> new SolicitacaoAmistosoDTO(a.getId(), a.getDataSolicitacao(), a.getEquipeVisitante(), a.getEquipeCasa(), null, null,  a.getAmistoso()))
 				.collect(Collectors.toList());
 	}
 	
@@ -43,7 +43,7 @@ public class SolicitacaoAmistosoService {
 		Optional<SolicitacaoAmistoso> solicitacaoAmistoso = solicitacaoAmistosoRepository.findById(id);
 		if (solicitacaoAmistoso.isPresent()) {
 			SolicitacaoAmistoso a = solicitacaoAmistoso.get();
-			return new SolicitacaoAmistosoDTO(a.getId(), a.getDataSolicitacao(), a.getEquipeVisitante(), a.getEquipeCasa(),null, null);
+			return new SolicitacaoAmistosoDTO(a.getId(), a.getDataSolicitacao(), a.getEquipeVisitante(), a.getEquipeCasa(),null, null,  a.getAmistoso());
 		}
 		return null;
 	}
@@ -63,7 +63,7 @@ public class SolicitacaoAmistosoService {
 
 	        if (solicitacao != null && partida != null) {
 	            SolicitacaoAmistosoDTO solicitacaoDTO = new SolicitacaoAmistosoDTO(solicitacao.getId(),
-						solicitacao.getDataSolicitacao(), solicitacao.getEquipeVisitante(), solicitacao.getEquipeCasa(),solicitacao.getStatus(), partida.getEndereco());
+						solicitacao.getDataSolicitacao(), solicitacao.getEquipeVisitante(), solicitacao.getEquipeCasa(),solicitacao.getStatus(), partida.getEndereco(),  partida.getAmistoso());
 	            solicitacaoAmistosoDTOs.add(solicitacaoDTO);
 	        }
 	    }
