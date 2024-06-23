@@ -41,7 +41,7 @@ public class PartidaController {
 		return ResponseEntity.ok().body(partidaDTO);
 	}
 	
-	@GetMapping("/equipe/{idEquipe}")
+	@PostMapping("/equipe/{idEquipe}")
 	public ResponseEntity<List<AgendaDTO>> encontrarPartidasPorData(@RequestBody Map<String, String> date, @PathVariable Long idEquipe) {
 		try {
 			String data = date.get("data");

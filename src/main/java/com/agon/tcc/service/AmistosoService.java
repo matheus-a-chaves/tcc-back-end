@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
 
+import com.agon.tcc.dto.EquipeDTO;
+import com.agon.tcc.model.Equipe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,7 +98,7 @@ public class AmistosoService {
         solicitacao.setStatus(StatusSolicitacao.PENDENTE);
         solicitacaoAmistosoService.create(solicitacao);
 
-		partidaService.gerarPartida(idAtletica, idEquipeVisitante, amistosoDTO.endereco(), amistoso);
+		partidaService.gerarPartida(equipe.getId(), idEquipeVisitante, amistosoDTO.endereco(), amistoso);
     }
 	
 }
