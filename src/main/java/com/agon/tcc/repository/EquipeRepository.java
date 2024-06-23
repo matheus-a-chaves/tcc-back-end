@@ -1,5 +1,6 @@
 package com.agon.tcc.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import java.util.Optional;
@@ -18,7 +19,19 @@ public interface EquipeRepository extends JpaRepository<Equipe, Long> {
 	@Query("SELECT DISTINCT e FROM Equipe e JOIN e.dadosPartidas dp JOIN dp.partida p JOIN p.etapaCampeonato ec WHERE ec.campeonato.id = :campeonatoId")
     List<Equipe> findByCampeonatoId(@Param("campeonatoId") Long campeonatoId);
 
-	@Query(value = "SELECT e.* FROM Equipe e JOIN Equipe_Grupo eg ON e.id = eg.equipe_id JOIN grupo g ON eg.grupo_id = g.id JOIN campeonato c ON g.campeonato_id = c.id WHERE c.id = :idCampeonato", nativeQuery  = true)
+	@Query(value = "SELECT DISTINCT e2.*\n" +
+			"FROM membros m\n" +
+			"JOIN equipe e2 ON e2.id = m.id_equipe\n" +
+			"WHERE m.id_atletica IN (\n" +
+			"    SELECT c.usuario_id\n" +
+			"    FROM campeonato_usuario c\n" +
+			"    WHERE c.campeonato_id = :idCampeonato\n" +
+			")\n" +
+			"AND e2.codigo_modalidade IN (\n" +
+			"    SELECT c2.codigo_modalidade\n" +
+			"    FROM campeonato c2\n" +
+			"    WHERE c2.id = :idCampeonato\n" +
+			")\n", nativeQuery  = true)
 	List<Equipe> findAllTimesByIdCampeonato(Long idCampeonato);
 
 	@Query(value = "SELECT DISTINCT e.* FROM Equipe e JOIN Membros m ON e.id = m.id_equipe WHERE m.id_atletica = :idAtletica", nativeQuery  = true)
@@ -29,6 +42,12 @@ public interface EquipeRepository extends JpaRepository<Equipe, Long> {
 	
 	@Query(value = "SELECT e.* FROM Equipe e JOIN Membros m ON e.id = m.id_equipe WHERE m.id_atletica = :idAtletica AND e.codigo_modalidade = :idModalidade", nativeQuery  = true)
 	Optional<Equipe> findByAtleticaAndModalidade(Long idAtletica, Long idModalidade);
+	
+	@Query(value = "SELECT DISTINCT e.* FROM Equipe e JOIN Membros m ON e.id = m.id_equipe "
+			+ "WHERE e.codigo_modalidade = :idModalidade "
+			+ "AND m.id_atletica != :idAtletica "
+			+ "AND e.id not in (SELECT e.id FROM equipe e JOIN dados_partida dp ON e.id = dp.equipe_id JOIN partida p ON dp.partida_id = p.id WHERE date(p.data_partida) = :data)", nativeQuery  = true)
+	List<Equipe> findTimesDisponiveisAmistoso(@Param("data") LocalDate data, Long idModalidade, Long idAtletica);
 
 	Optional<Equipe> findByNome(String nome);
 

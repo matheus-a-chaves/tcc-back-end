@@ -14,7 +14,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	@Query(value = "SELECT u.* FROM Usuario u JOIN Membros m ON u.id = m.id_jogador WHERE m.id_equipe = :idEquipe", nativeQuery  = true)
 	List<Usuario> findAllJogadoresByEquipe(Long idEquipe);
 
-	@Query(value = "SELECT u.* FROM Usuario u JOIN Membros m ON u.id = m.id_atletica WHERE m.id_equipe = :idEquipe AND m.id_jogador is null", nativeQuery  = true)
+	@Query(value = "SELECT distinct u.* FROM usuario u \n" +
+			"inner join membros m on m.id_atletica = u.id\n" +
+			"where m.id_equipe =:idEquipe", nativeQuery = true)
 	Usuario findByEquipe(Long idEquipe);
 	
 	Usuario findByCpf(String cpf);
