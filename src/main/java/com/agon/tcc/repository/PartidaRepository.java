@@ -20,7 +20,7 @@ public interface PartidaRepository extends JpaRepository<Partida, Long> {
 		   " WHERE a.status = 'PENDENTE' " +
 		   "   AND dp.equipe_id in (SELECT DISTINCT m.id_equipe " +
 		   "  						  FROM membros m " +
-		   "						 WHERE m.id_atletica = :atleticaId)", nativeQuery = true)
+		   "						 WHERE m.id_atletica=:atleticaId)", nativeQuery = true)
 	List<Partida> buscarPartidasAtletica(Long atleticaId);
 
 //  List<Partida> findByCampeonato(@Param("campeonatoId") Long campeonatoId);
