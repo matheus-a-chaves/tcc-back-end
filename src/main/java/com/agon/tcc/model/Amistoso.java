@@ -4,7 +4,7 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 
 import com.agon.tcc.dto.AmistosoDTO;
-import com.agon.tcc.model.enums.StatusSolicitacao;
+import com.agon.tcc.model.enums.Status;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
@@ -44,7 +44,7 @@ public class Amistoso {
 	
 	@Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = true)
-    private StatusSolicitacao statusAmistoso;
+    private Status statusAmistoso;
 	
 	@OneToOne(mappedBy = "amistoso", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonManagedReference

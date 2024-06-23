@@ -15,7 +15,7 @@ import com.agon.tcc.dto.SolicitacaoAmistosoDTO;
 import com.agon.tcc.model.Amistoso;
 import com.agon.tcc.model.Partida;
 import com.agon.tcc.model.SolicitacaoAmistoso;
-import com.agon.tcc.model.enums.StatusSolicitacao;
+import com.agon.tcc.model.enums.Status;
 import com.agon.tcc.repository.AmistosoRepository;
 import com.agon.tcc.repository.PartidaRepository;
 import com.agon.tcc.repository.SolicitacaoAmistosoRepository;
@@ -107,11 +107,11 @@ public class SolicitacaoAmistosoService {
     	SolicitacaoAmistoso solicitacao = new SolicitacaoAmistoso(this.findById(idSolicitacao));
 		
         if ("aceitar".equalsIgnoreCase(resposta)) {
-        	solicitacao.setStatus(StatusSolicitacao.CONFIRMADO);
+        	solicitacao.setStatus(Status.CONFIRMADO);
         } else if ("recusar".equalsIgnoreCase(resposta)) {
-        	solicitacao.setStatus(StatusSolicitacao.RECUSADO);
+        	solicitacao.setStatus(Status.RECUSADO);
         } else {
-        	solicitacao.setStatus(StatusSolicitacao.PENDENTE);
+        	solicitacao.setStatus(Status.PENDENTE);
         }
         this.update(solicitacao);
 
