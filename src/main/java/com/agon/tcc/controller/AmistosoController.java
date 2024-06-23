@@ -51,7 +51,7 @@ public class AmistosoController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody AmistosoDTO amistosoDTO, @PathVariable Long id) {
-		this.amistosoService.update(new AmistosoDTO(amistosoDTO.id(), null, amistosoDTO.status(), null, null));
+		this.amistosoService.update(new AmistosoDTO(amistosoDTO.id(), null, amistosoDTO.statusAmistoso(), null, null));
 		return ResponseEntity.noContent().build();
 	}
 	

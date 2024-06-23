@@ -4,14 +4,20 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 
 import com.agon.tcc.dto.AmistosoDTO;
+import com.agon.tcc.model.enums.StatusSolicitacao;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,8 +41,12 @@ public class Amistoso {
 	@Column(name = "data_horario", nullable = false)
 	private LocalDateTime dataHorario;
 	
-	@Column(name = "status", nullable = false)
-	private String status;
+	@Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = true)
+    private StatusSolicitacao statusAmistoso;
+	
+	@OneToOne(mappedBy = "amistoso", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private SolicitacaoAmistoso solicitacaoAmistoso;
 	
 	@ManyToOne
 	@JoinColumn(name = "modalidade_id", nullable = false)
@@ -49,7 +59,7 @@ public class Amistoso {
 		} catch(DateTimeException dte) {
 			this.dataHorario = null;
 		}
-		this.status = amistosoDTO.status();
+		this.statusAmistoso = amistosoDTO.statusAmistoso();
 		this.modalidade = amistosoDTO.modalidade();
 	}
 	

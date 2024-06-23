@@ -12,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.agon.tcc.dto.AmistosoDTO;
 import com.agon.tcc.model.Amistoso;
+import com.agon.tcc.model.Equipe;
+import com.agon.tcc.model.SolicitacaoAmistoso;
+import com.agon.tcc.model.enums.StatusSolicitacao;
 import com.agon.tcc.repository.AmistosoRepository;
 
 @Service
@@ -22,11 +25,17 @@ public class AmistosoService {
 	
 	@Autowired
 	private PartidaService partidaService;
+	
+	@Autowired
+	private EquipeService equipeService;
+	
+	@Autowired
+	private SolicitacaoAmistosoService solicitacaoAmistosoService;
 				
 	public List<AmistosoDTO> findAll() {
 		return amistosoRepository.findAll()
 				.stream()
-				.map(a -> new AmistosoDTO(a.getId(), a.getDataHorario(), a.getStatus(), a.getModalidade(), null))
+				.map(a -> new AmistosoDTO(a.getId(), a.getDataHorario(), a.getStatusAmistoso(), a.getModalidade(), null))
 				.collect(Collectors.toList());
 	}
 	
@@ -34,7 +43,7 @@ public class AmistosoService {
 		Optional<Amistoso> amistoso = amistosoRepository.findById(id);
 		if (amistoso.isPresent()) {
 			Amistoso a = amistoso.get();
-			return new AmistosoDTO(a.getId(), a.getDataHorario(), a.getStatus(), a.getModalidade(), null);
+			return new AmistosoDTO(a.getId(), a.getDataHorario(), a.getStatusAmistoso(), a.getModalidade(), null);
 		}
 		return null;
 	}
@@ -47,7 +56,13 @@ public class AmistosoService {
 	@Transactional
 	public void update(AmistosoDTO amistosoDTO) {
 		Amistoso amistoso = new Amistoso(findById(amistosoDTO.id()));
-		amistoso.setStatus(amistoso.getStatus());
+		amistoso.setSolicitacaoAmistoso(amistoso.getSolicitacaoAmistoso());
+		this.amistosoRepository.save(amistoso);
+	}
+
+	@Transactional
+	public void update(Amistoso amistoso) {
+		amistoso.setStatusAmistoso(amistoso.getStatusAmistoso());
 		this.amistosoRepository.save(amistoso);
 	}
 	
@@ -65,13 +80,23 @@ public class AmistosoService {
 	 * Método para gerar o Amistoso
 	 * @param amistosoDTO
 	 */
-	public void criarAmistoso(Long idEquipeCasa, Long idEquipeVisitante, AmistosoDTO amistosoDTO) {        
+	public void criarAmistoso(Long idAtletica, Long idEquipeVisitante, AmistosoDTO amistosoDTO) {        
         Amistoso amistoso = new Amistoso();
         amistoso.setDataHorario(amistosoDTO.dataHora());
-        amistoso.setStatus("PENDENTE");
+        amistoso.setStatusAmistoso(StatusSolicitacao.PENDENTE);
         amistoso.setModalidade(amistosoDTO.modalidade());
         amistosoRepository.save(amistoso);
+        
+        SolicitacaoAmistoso solicitacao = new SolicitacaoAmistoso();
+        solicitacao.setDataSolicitacao(amistoso.getDataHorario());
+        solicitacao.setAmistoso(amistoso);
+        
+        Equipe equipe = new Equipe(equipeService.findByAtleticaAndModalidade(idAtletica, amistosoDTO.modalidade().getId()));
+        solicitacao.setEquipeVisitante(equipe);
+        solicitacao.setStatus(StatusSolicitacao.PENDENTE);
+        solicitacaoAmistosoService.create(solicitacao);
 
-		partidaService.gerarPartida(idEquipeCasa, idEquipeVisitante, amistosoDTO.endereco(), amistoso);
+		partidaService.gerarPartida(idAtletica, idEquipeVisitante, amistosoDTO.endereco(), amistoso);
     }
+	
 }

@@ -109,8 +109,8 @@ public class EquipeController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody EquipeDTO equipeDTO, @PathVariable Long id) {
-		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade(), equipeDTO.equipeGrupos(), equipeDTO.dadosPartidas()));
-//		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade()));
+//		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade(), equipeDTO.equipeGrupos(), equipeDTO.dadosPartidas()));
+		this.equipeService.update(new EquipeDTO(id, equipeDTO.nome(), equipeDTO.imagem(), equipeDTO.modalidade()));
 		return ResponseEntity.noContent().build();
 	}
 	
