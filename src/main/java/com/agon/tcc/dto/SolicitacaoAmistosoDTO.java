@@ -9,8 +9,8 @@ import com.agon.tcc.model.enums.StatusSolicitacao;
 
 public record SolicitacaoAmistosoDTO(Long id, 
 									 LocalDateTime dataSolicitacao,
-									 Amistoso amistoso,
 									 Equipe equipeVisitante,
+									 Equipe equipeCasa,
 									 StatusSolicitacao status,
 									 Endereco endereco) {
 

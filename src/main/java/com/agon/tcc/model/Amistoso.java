@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import com.agon.tcc.dto.AmistosoDTO;
 import com.agon.tcc.model.enums.StatusSolicitacao;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,6 +47,7 @@ public class Amistoso {
     private StatusSolicitacao statusAmistoso;
 	
 	@OneToOne(mappedBy = "amistoso", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonManagedReference
     private SolicitacaoAmistoso solicitacaoAmistoso;
 	
 	@ManyToOne

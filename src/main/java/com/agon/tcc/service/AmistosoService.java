@@ -93,12 +93,15 @@ public class AmistosoService {
         solicitacao.setDataSolicitacao(amistoso.getDataHorario());
         solicitacao.setAmistoso(amistoso);
         
-        Equipe equipe = new Equipe(equipeService.findByAtleticaAndModalidade(idAtletica, amistosoDTO.modalidade().getId()));
-        solicitacao.setEquipeVisitante(equipe);
+        Equipe equipeCasa = new Equipe(equipeService.findByAtleticaAndModalidade(idAtletica, amistosoDTO.modalidade().getId()));
+		Equipe equipeVisitante = new Equipe(equipeService.findById(idEquipeVisitante));
+
+		solicitacao.setEquipeCasa(equipeCasa);
+        solicitacao.setEquipeVisitante(equipeVisitante);
         solicitacao.setStatus(StatusSolicitacao.PENDENTE);
         solicitacaoAmistosoService.create(solicitacao);
 
-		partidaService.gerarPartida(equipe.getId(), idEquipeVisitante, amistosoDTO.endereco(), amistoso);
+		partidaService.gerarPartida(equipeCasa.getId(), equipeVisitante.getId(), amistosoDTO.endereco(), amistoso);
     }
 	
 }

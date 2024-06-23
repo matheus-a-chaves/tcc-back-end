@@ -57,11 +57,11 @@ public class SolicitacaoAmistosoController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody SolicitacaoAmistosoDTO solicitacaoAmistosoDTO, @PathVariable Long id) {
-		this.solicitacaoAmistosoService.update(new SolicitacaoAmistosoDTO(solicitacaoAmistosoDTO.id(), solicitacaoAmistosoDTO.dataSolicitacao(), solicitacaoAmistosoDTO.amistoso(), 
-																		  solicitacaoAmistosoDTO.equipeVisitante(), solicitacaoAmistosoDTO.status(), null));
+		this.solicitacaoAmistosoService.update(new SolicitacaoAmistosoDTO(solicitacaoAmistosoDTO.id(),
+				solicitacaoAmistosoDTO.dataSolicitacao(), solicitacaoAmistosoDTO.equipeVisitante(), solicitacaoAmistosoDTO.equipeCasa(), solicitacaoAmistosoDTO.status(), null));
 		return ResponseEntity.noContent().build();
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		this.solicitacaoAmistosoService.delete(id);
