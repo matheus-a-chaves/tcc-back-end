@@ -1,5 +1,6 @@
 package com.agon.tcc.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.agon.tcc.dto.AgendaDTO;
+import com.agon.tcc.dto.DadosPartidaDTO;
+import com.agon.tcc.dto.EquipeDTO;
 import com.agon.tcc.dto.PartidaDTO;
 import com.agon.tcc.model.Amistoso;
 import com.agon.tcc.model.Campeonato;
@@ -32,9 +36,12 @@ public class PartidaService {
 	
 	@Autowired
 	private EquipeService equipeService;
-	
+
     @Autowired
     private ResultadoService resultadoService;
+
+	@Autowired
+	private DadosPartidaService dadosPartidaService;
 		
     public List<PartidaDTO> findAll() {
         return partidaRepository.findAll()
@@ -50,6 +57,53 @@ public class PartidaService {
             return new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso(), p.getCampeonato());
         }
         return null;
+    }
+    
+    public List<AgendaDTO> encontrarPartidasPorData(String dataString, Long idEquipe) {
+    	List<AgendaDTO> listAgendaDTO = new ArrayList<>();
+    	LocalDate data = LocalDate.parse(dataString);
+    	
+    	List<PartidaDTO> list = partidaRepository.encontrarPartidasPorData(data, idEquipe)
+                .stream()
+                .map(p -> new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso(), p.getCampeonato()))
+                .collect(Collectors.toList());
+    	
+    	for(PartidaDTO aux : list) {
+    		DadosPartidaDTO dadosPartidaDTO = this.dadosPartidaService.findById(aux.dadosPartidas().get(0).getId());
+    		DadosPartidaDTO dadosPartidaTimeDoisDTO = this.dadosPartidaService.findById(aux.dadosPartidas().get(1).getId());
+    		EquipeDTO equipeUmDTO = this.equipeService.findById(dadosPartidaDTO.equipeId());
+    		EquipeDTO equipeDoisDTO = this.equipeService.findById(dadosPartidaTimeDoisDTO.equipeId());
+    		Equipe equipeUm = new Equipe(equipeUmDTO);
+    		Equipe equipeDois = new Equipe(equipeDoisDTO);
+    		
+    		AgendaDTO agendaDTO = new AgendaDTO(aux.amistoso().getId(),aux.dataPartida(), aux.endereco(), equipeUm, equipeDois);
+    		listAgendaDTO.add(agendaDTO);
+    	}
+    	
+    	return listAgendaDTO;
+    }
+    
+    public List<AgendaDTO> findAmistososByEquipe(Long idEquipe) {
+    	List<AgendaDTO> listAgendaDTO = new ArrayList<>();
+    	
+    	List<PartidaDTO> list = partidaRepository.findAmistososByEquipe(idEquipe)
+                .stream()
+                .map(p -> new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso(), p.getCampeonato()))
+                .collect(Collectors.toList());
+    	
+    	for(PartidaDTO aux : list) {
+    		DadosPartidaDTO dadosPartidaDTO = this.dadosPartidaService.findById(aux.dadosPartidas().get(0).getId());
+    		DadosPartidaDTO dadosPartidaTimeDoisDTO = this.dadosPartidaService.findById(aux.dadosPartidas().get(1).getId());
+    		EquipeDTO equipeUmDTO = this.equipeService.findById(dadosPartidaDTO.equipeId());
+    		EquipeDTO equipeDoisDTO = this.equipeService.findById(dadosPartidaTimeDoisDTO.equipeId());
+    		Equipe equipeUm = new Equipe(equipeUmDTO);
+    		Equipe equipeDois = new Equipe(equipeDoisDTO);
+    		
+    		AgendaDTO agendaDTO = new AgendaDTO(aux.amistoso().getId(),aux.dataPartida(), aux.endereco(), equipeUm, equipeDois);
+    		listAgendaDTO.add(agendaDTO);
+    	}
+    	
+    	return listAgendaDTO;
     }
 
     @Transactional
