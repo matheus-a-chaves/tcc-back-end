@@ -15,7 +15,7 @@ import com.agon.tcc.dto.SolicitacaoAmistosoDTO;
 import com.agon.tcc.model.Amistoso;
 import com.agon.tcc.model.Partida;
 import com.agon.tcc.model.SolicitacaoAmistoso;
-import com.agon.tcc.model.enums.StatusSolicitacao;
+import com.agon.tcc.model.enums.Status;
 import com.agon.tcc.repository.AmistosoRepository;
 import com.agon.tcc.repository.PartidaRepository;
 import com.agon.tcc.repository.SolicitacaoAmistosoRepository;
@@ -35,7 +35,7 @@ public class SolicitacaoAmistosoService {
 	public List<SolicitacaoAmistosoDTO> findAll() {
 		return solicitacaoAmistosoRepository.findAll()
 				.stream()
-				.map(a -> new SolicitacaoAmistosoDTO(a.getId(), a.getDataSolicitacao(), a.getAmistoso(), a.getEquipeVisitante(), null, null))
+				.map(a -> new SolicitacaoAmistosoDTO(a.getId(), a.getDataSolicitacao(), a.getEquipeVisitante(), a.getEquipeCasa(), null, null,  a.getAmistoso()))
 				.collect(Collectors.toList());
 	}
 	
@@ -43,7 +43,7 @@ public class SolicitacaoAmistosoService {
 		Optional<SolicitacaoAmistoso> solicitacaoAmistoso = solicitacaoAmistosoRepository.findById(id);
 		if (solicitacaoAmistoso.isPresent()) {
 			SolicitacaoAmistoso a = solicitacaoAmistoso.get();
-			return new SolicitacaoAmistosoDTO(a.getId(), a.getDataSolicitacao(), a.getAmistoso(), a.getEquipeVisitante(), null, null);
+			return new SolicitacaoAmistosoDTO(a.getId(), a.getDataSolicitacao(), a.getEquipeVisitante(), a.getEquipeCasa(),null, null,  a.getAmistoso());
 		}
 		return null;
 	}
@@ -62,8 +62,8 @@ public class SolicitacaoAmistosoService {
 	        SolicitacaoAmistoso solicitacao = i < solicitacoes.size() ? solicitacoes.get(i) : null;
 
 	        if (solicitacao != null && partida != null) {
-	            SolicitacaoAmistosoDTO solicitacaoDTO = new SolicitacaoAmistosoDTO(solicitacao.getId(), solicitacao.getDataSolicitacao(), solicitacao.getAmistoso(),
-	            																   solicitacao.getEquipeVisitante(), solicitacao.getStatus(), partida.getEndereco());
+	            SolicitacaoAmistosoDTO solicitacaoDTO = new SolicitacaoAmistosoDTO(solicitacao.getId(),
+						solicitacao.getDataSolicitacao(), solicitacao.getEquipeVisitante(), solicitacao.getEquipeCasa(),solicitacao.getStatus(), partida.getEndereco(),  partida.getAmistoso());
 	            solicitacaoAmistosoDTOs.add(solicitacaoDTO);
 	        }
 	    }
@@ -107,11 +107,11 @@ public class SolicitacaoAmistosoService {
     	SolicitacaoAmistoso solicitacao = new SolicitacaoAmistoso(this.findById(idSolicitacao));
 		
         if ("aceitar".equalsIgnoreCase(resposta)) {
-        	solicitacao.setStatus(StatusSolicitacao.CONFIRMADO);
+        	solicitacao.setStatus(Status.CONFIRMADO);
         } else if ("recusar".equalsIgnoreCase(resposta)) {
-        	solicitacao.setStatus(StatusSolicitacao.RECUSADO);
+        	solicitacao.setStatus(Status.RECUSADO);
         } else {
-        	solicitacao.setStatus(StatusSolicitacao.PENDENTE);
+        	solicitacao.setStatus(Status.PENDENTE);
         }
         this.update(solicitacao);
 

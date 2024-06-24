@@ -6,15 +6,15 @@ import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
 
+import com.agon.tcc.model.Equipe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.agon.tcc.dto.AmistosoDTO;
 import com.agon.tcc.model.Amistoso;
-import com.agon.tcc.model.Equipe;
 import com.agon.tcc.model.SolicitacaoAmistoso;
-import com.agon.tcc.model.enums.StatusSolicitacao;
+import com.agon.tcc.model.enums.Status;
 import com.agon.tcc.repository.AmistosoRepository;
 
 @Service
@@ -47,7 +47,17 @@ public class AmistosoService {
 		}
 		return null;
 	}
-	
+
+	public void cancelar(Long id) {
+			try {
+				Amistoso amistoso = new Amistoso(findById(id));
+				amistoso.setStatusAmistoso(Status.CANCELADO);
+				this.update(amistoso);
+			} catch (Exception e) {
+				throw new RuntimeErrorException(null, "Não foi possivel cancelar esse amistoso!");
+			}
+	}
+
 	@Transactional
 	public void create(AmistosoDTO amistosoDTO) {
 		amistosoRepository.save(new Amistoso(amistosoDTO));
@@ -83,7 +93,7 @@ public class AmistosoService {
 	public void criarAmistoso(Long idAtletica, Long idEquipeVisitante, AmistosoDTO amistosoDTO) {        
         Amistoso amistoso = new Amistoso();
         amistoso.setDataHorario(amistosoDTO.dataHora());
-        amistoso.setStatusAmistoso(StatusSolicitacao.PENDENTE);
+        amistoso.setStatusAmistoso(Status.PENDENTE);
         amistoso.setModalidade(amistosoDTO.modalidade());
         amistosoRepository.save(amistoso);
         
@@ -91,12 +101,15 @@ public class AmistosoService {
         solicitacao.setDataSolicitacao(amistoso.getDataHorario());
         solicitacao.setAmistoso(amistoso);
         
-        Equipe equipe = new Equipe(equipeService.findByAtleticaAndModalidade(idAtletica, amistosoDTO.modalidade().getId()));
-        solicitacao.setEquipeVisitante(equipe);
-        solicitacao.setStatus(StatusSolicitacao.PENDENTE);
+        Equipe equipeCasa = new Equipe(equipeService.findByAtleticaAndModalidade(idAtletica, amistosoDTO.modalidade().getId()));
+		Equipe equipeVisitante = new Equipe(equipeService.findById(idEquipeVisitante));
+
+		solicitacao.setEquipeCasa(equipeCasa);
+        solicitacao.setEquipeVisitante(equipeVisitante);
+        solicitacao.setStatus(Status.PENDENTE);
         solicitacaoAmistosoService.create(solicitacao);
 
-		partidaService.gerarPartidaAmistoso(equipe.getId(), idEquipeVisitante, amistosoDTO.endereco(), amistoso);
+		partidaService.gerarPartidaAmistoso(equipeCasa.getId(), equipeVisitante.getId(), amistosoDTO.endereco(), amistoso);
     }
 	
 }

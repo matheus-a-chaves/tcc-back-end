@@ -60,5 +60,9 @@ public class MembroService {
 			}
 		}
 	}
-	
+
+	public MembroDTO findMembroByIdJogador(Long id) {
+		Membro membro = this.membroRepository.findMembroByIdJogador(id);
+		return new MembroDTO(membro.getId(),membro.getIdEquipe(), membro.getIdAtletica(), membro.getIdJogador());
+	}
 }

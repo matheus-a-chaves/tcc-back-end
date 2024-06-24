@@ -70,4 +70,10 @@ public class AmistosoController {
 				.toUri();
 		return ResponseEntity.created(uri).build();
     }
+
+	@PutMapping("/cancelar/{id}")
+	public ResponseEntity<Void> cancelar(@PathVariable Long id) {
+		this.amistosoService.cancelar(id);
+		return ResponseEntity.noContent().build();
+	}
 }
