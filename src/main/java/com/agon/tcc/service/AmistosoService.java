@@ -96,7 +96,7 @@ public class AmistosoService {
         solicitacao.setStatus(StatusSolicitacao.PENDENTE);
         solicitacaoAmistosoService.create(solicitacao);
 
-		partidaService.gerarPartida(idAtletica, idEquipeVisitante, amistosoDTO.endereco(), amistoso);
+		partidaService.gerarPartidaAmistoso(idAtletica, idEquipeVisitante, amistosoDTO.endereco(), amistoso);
     }
 	
 }

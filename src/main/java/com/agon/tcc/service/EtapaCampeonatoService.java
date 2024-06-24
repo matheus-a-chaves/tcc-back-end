@@ -55,8 +55,8 @@ public class EtapaCampeonatoService {
 	}
     
 	@Transactional
-	public void create(EtapaCampeonatoDTO etapaCampeonatoDTO) {
-		etapaCampeonatoRepository.save(new EtapaCampeonato(etapaCampeonatoDTO));
+	public void create(EtapaCampeonato etapaCampeonato) {
+		etapaCampeonatoRepository.save(etapaCampeonato);
 	}
 	
 	@Transactional

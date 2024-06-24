@@ -80,8 +80,8 @@ public class ResultadoService {
     }
 	
 	@Transactional
-	public void create(ResultadoDTO resultadoDTO) {
-		resultadoRepository.save(new Resultado(resultadoDTO));
+	public void create(Resultado resultado) {
+		resultadoRepository.save(resultado);
 	}
 		
 	public void delete(Long id) {

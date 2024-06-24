@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
 
-import com.agon.tcc.repository.MembroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +14,12 @@ import com.agon.tcc.dto.CampeonatoDTO;
 import com.agon.tcc.dto.EquipeDTO;
 import com.agon.tcc.model.Campeonato;
 import com.agon.tcc.model.CampeonatoUsuario;
+import com.agon.tcc.model.Endereco;
+import com.agon.tcc.model.Equipe;
+import com.agon.tcc.model.EtapaCampeonato;
 import com.agon.tcc.model.Usuario;
 import com.agon.tcc.repository.CampeonatoRepository;
+import com.agon.tcc.repository.MembroRepository;
 import com.agon.tcc.util.Util;
 
 @Service
@@ -179,53 +182,45 @@ public class CampeonatoService {
 				.collect(Collectors.toList());
 	}
 
-
-
 	/*
 	 * Método para iniciar o Campeonato e gerar as partidas
 	 */
     @Transactional
-    public void iniciarCampeonato(Long campeonatoId) throws Exception {
-//        Campeonato campeonato = campeonatoRepository.findById(campeonatoId).orElseThrow(() -> new Exception("Campeonato não encontrado"));
-//        List<Equipe> equipes = equipeRepository.findByCampeonatoId(campeonatoId);
-//        
-//        if (equipes.size() != campeonato.getQuantidadeEquipes() || equipes.size() < 2) {
-//            throw new IllegalStateException("Número de equipes cadastradas não corresponde ao número esperado.");
-//        }
-//
-//        // Criando a etapa do campeonato
-//        EtapaCampeonato etapa = new EtapaCampeonato();
-//        if (campeonato.getFormato().getId() >= 4) {
-//        	//Caso seja formato composto
-//            etapa.setNomeEtapa("Fase de Grupos");
-//        } else if (campeonato.getFormato().getId() == 1) {
-//        	etapa.setNomeEtapa(campeonato.getFormato().getNome());
-//        } else if (campeonato.getFormato().getId() == 2) {
-//        	etapa.setNomeEtapa(campeonato.getFormato().getNome());
-//        }
-//        etapa.setCampeonato(campeonato);
-//        etapaCampeonatoRepository.save(etapa);
-//
-//        // Gerando as partidas
-//        for (int i = 0; i < equipes.size(); i++) {
-//            for (int j = i + 1; j < equipes.size(); j++) {
-//                Partida partida = new Partida();
-//                partida.setDataPartida(LocalDate.now().plusDays(3));
-//                partida.setEtapaCampeonato(etapa);
-//                
-//                DadosPartida dadosPartida1 = new DadosPartida();
-//                dadosPartida1.setEquipe(equipes.get(i));
-//                dadosPartida1.setPartida(partida);
-//
-//                DadosPartida dadosPartida2 = new DadosPartida();
-//                dadosPartida2.setEquipe(equipes.get(j));
-//                dadosPartida2.setPartida(partida);
-//
-//                partida.setDadosPartidas(Arrays.asList(dadosPartida1, dadosPartida2));
-//
-//                partidaRepository.save(partida);
-//            }
-//        }
+    public void iniciarCampeonato(Long idCampeonato, Endereco endereco) throws Exception {
+        try {
+        	Campeonato campeonato = campeonatoRepository.findById(idCampeonato).orElseThrow(() -> new Exception("Campeonato não encontrado"));
+        	List<Equipe> equipes = equipeService.findAllEquipesByIdCampeonato(idCampeonato);
+        	
+            //Verifica se a qtd de equipes mínima que é exigida de acordo com o formato do campeonato
+            if (equipes.size() != campeonato.getQuantidadeEquipes() || equipes.isEmpty()) {
+                throw new IllegalStateException("Número de equipes cadastradas não corresponde ao número esperado.");
+            }
+            
+            // Criando a etapa do campeonato
+            EtapaCampeonato etapa = new EtapaCampeonato();
+            if (campeonato.getFormato().getId() == 1) {//PONTOS CORRIDOS            	
+            	etapa.setNomeEtapa(campeonato.getFormato().getNome());
+            } /*else if (campeonato.getFormato().getId() == 2) {//ELIMINATÓRIA SIMPLES
+            	etapa.setNomeEtapa(campeonato.getFormato().getNome());
+            } else if (campeonato.getFormato().getId() == 3) {
+            	//FASE DE GRUPOS
+                etapa.setNomeEtapa("Fase de Grupos");
+            	etapa.setNomeEtapa(campeonato.getFormato().getNome());
+            	//ELIMINATÓRIA SIMPLES
+            } else if (campeonato.getFormato().getId() == 4) {
+            	//PONTOS CORRIDOS
+            	
+            	//ELIMINATORIA SIMPLES
+            	etapa.setNomeEtapa(campeonato.getFormato().getNome());
+            }*/
+            etapa.setCampeonato(campeonato);
+            etapaCampeonatoService.create(etapa);
+            
+            partidaService.gerarPartidasPontosCorridos(campeonato, etapa, equipes, endereco);
+        } catch (Exception e) {
+        	throw new Exception("Não foi possível iniciar o Campeonato");
+        }
+        
     }
 	
 }

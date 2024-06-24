@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agon.tcc.dto.CampeonatoDTO;
+import com.agon.tcc.model.Endereco;
 import com.agon.tcc.service.CampeonatoService;
 
 @RestController
@@ -94,8 +95,8 @@ public class CampeonatoController {
 	 * Endpoint de inicialização do Campeonato
 	 */
 	@PostMapping("/{id}/iniciar")
-    public ResponseEntity<Void> iniciarCampeonato(@PathVariable Long id) throws Exception {
-        campeonatoService.iniciarCampeonato(id);
+    public ResponseEntity<Void> iniciarCampeonato(@PathVariable Long id, @RequestBody Endereco endereco) throws Exception {
+        campeonatoService.iniciarCampeonato(id, endereco);
         return ResponseEntity.ok().build();
     }
 

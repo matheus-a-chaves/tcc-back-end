@@ -1,6 +1,8 @@
 package com.agon.tcc.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,10 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.agon.tcc.dto.PartidaDTO;
 import com.agon.tcc.model.Amistoso;
+import com.agon.tcc.model.Campeonato;
 import com.agon.tcc.model.DadosPartida;
 import com.agon.tcc.model.Endereco;
 import com.agon.tcc.model.Equipe;
+import com.agon.tcc.model.EtapaCampeonato;
 import com.agon.tcc.model.Partida;
+import com.agon.tcc.model.Resultado;
 import com.agon.tcc.repository.PartidaRepository;
 
 @Service
@@ -27,11 +32,14 @@ public class PartidaService {
 	
 	@Autowired
 	private EquipeService equipeService;
+	
+    @Autowired
+    private ResultadoService resultadoService;
 		
     public List<PartidaDTO> findAll() {
         return partidaRepository.findAll()
                 .stream()
-                .map(p -> new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso()))
+                .map(p -> new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso(), p.getCampeonato()))
                 .collect(Collectors.toList());
     }
 
@@ -39,17 +47,10 @@ public class PartidaService {
         Optional<Partida> partida = partidaRepository.findById(id);
         if (partida.isPresent()) {
             Partida p = partida.get();
-            return new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso());
+            return new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso(), p.getCampeonato());
         }
         return null;
     }
-
-//    public List<PartidaDTO> findByCampeonato(Long id) {
-//        return partidaRepository.findByCampeonato(id)
-//                .stream()
-//                .map(p -> new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas()))
-//                .collect(Collectors.toList());
-//    }
 
     @Transactional
     public void update(PartidaDTO partidaDTO) {
@@ -73,6 +74,11 @@ public class PartidaService {
 	public void create(PartidaDTO partidaDTO) {
 		partidaRepository.save(new Partida(partidaDTO));
 	}
+	
+	@Transactional
+	public void create(Partida partida) {
+		partidaRepository.save(partida);
+	}
 		
 	public void delete(Long id) {
 		if (findById(id) != null) {
@@ -84,27 +90,6 @@ public class PartidaService {
 		}
 	}
 	
-//	private void gerarPartidaAmistoso(List<Equipe> equipes, PartidaDTO partidaDTO) {
-//        Partida partida = new Partida();
-//        partida.setDataPartida(partidaDTO.dataPartida());
-//        List<DadosPartida> dadosPartidas = new ArrayList<>();
-//
-//        for (Equipe equipe : equipes) {
-//            DadosPartida dados = new DadosPartida();
-//            dados.setEquipe(equipe);
-//            dados.setPartida(partida);
-//            dados.setPlacar(0);
-//            dados.setQtdeCartaoVermelho(0);
-//            dados.setQtdeCartaoAmarelo(0);
-//            dados.setPenaltis(0);
-//            dadosPartidas.add(dados);
-//        }
-//        partida.setDadosPartidas(dadosPartidas);
-//
-//        // Salvar a partida e os dados de partida em cascata
-//        partidaRepository.save(partida);
-//    }
-	
 	/**
 	 * Método de geração de Partida e DadosPartida
 	 * @param equipeCasa
@@ -112,7 +97,7 @@ public class PartidaService {
 	 * @param etapa
 	 * @param dataPartida
 	 */
-	public void gerarPartida(Long idEquipeCasa, Long idEquipeVisitante, Endereco enderecoAmistoso, Amistoso amistoso) {
+	public void gerarPartidaAmistoso(Long idEquipeCasa, Long idEquipeVisitante, Endereco enderecoAmistoso, Amistoso amistoso) {
         Equipe equipeCasa = new Equipe(equipeService.findById(idEquipeCasa));
         Equipe equipeVisitante = new Equipe(equipeService.findById(idEquipeVisitante));
         
@@ -145,4 +130,100 @@ public class PartidaService {
         
         partidaRepository.save(partida);
     }
+	
+	/**
+	 * Método de geração de Partidas e DadosPartidas por Etapa de um Campeonato
+	 * @param campeonato
+	 * @param etapa
+	 * @param equipesCamp
+	 * @param enderecoDefault
+	 */
+    public void gerarPartidasPontosCorridos(Campeonato campeonato, EtapaCampeonato etapa, List<Equipe> equipesCamp, Endereco enderecoDefault) {
+//		if (etapa.getNomeEtapa().equals("Pontos Corridos")) {
+//			// Gerando as partidas por PONTOS CORRIDOS
+//			for (int i = 0; i < equipesCamp.size(); i++) {
+//	            for (int j = i + 1; j < equipesCamp.size(); j++) {
+//	                Partida partida = new Partida();
+//	                partida.setDataPartida(LocalDateTime.now().plusDays(3));
+//	                partida.setEtapaCampeonato(etapa);
+//	                partida.setEndereco(enderecoDefault);
+//	                
+//	                DadosPartida dadosPartida1 = new DadosPartida();
+//	                dadosPartida1.setEquipe(equipesCamp.get(i));
+//	                dadosPartida1.setPartida(partida);
+//	
+//	                DadosPartida dadosPartida2 = new DadosPartida();
+//	                dadosPartida2.setEquipe(equipesCamp.get(j));
+//	                dadosPartida2.setPartida(partida);
+//	
+//	                partida.setDadosPartidas(Arrays.asList(dadosPartida1, dadosPartida2));
+//	                this.create(partida);
+//	                	                
+//	                Resultado resultadoEquipe1 = new Resultado();
+//	                resultadoEquipe1.setEtapaCampeonato(etapa);
+//	                resultadoEquipe1.setDadosPartida(dadosPartida1);
+//	                resultadoEquipe1.setRodada("1");//inicia na rodada 1
+//	                resultadoService.create(resultadoEquipe1);
+//	                
+//	                Resultado resultadoEquipe2 = new Resultado();
+//	                resultadoEquipe2.setEtapaCampeonato(etapa);
+//	                resultadoEquipe2.setDadosPartida(dadosPartida2);
+//	                resultadoEquipe2.setRodada("1");//inicia na rodada 1
+//	                resultadoService.create(resultadoEquipe2);
+//	            }
+//	        }
+//		}
+        int totalEquipes = equipesCamp.size();
+        int totalPartidas = totalEquipes * (totalEquipes - 1);
+        int partidasPorRodada = totalPartidas / totalEquipes;
+        int rodadaAtual = 1;
+
+        List<Partida> partidas = new ArrayList<>();
+
+        // Gerando todas as partidas de ida e volta
+        for (int i = 0; i < totalEquipes; i++) {
+            for (int j = 0; j < totalEquipes; j++) {
+                if (i != j) {
+                    Partida partida = new Partida();
+                    partida.setDataPartida(LocalDateTime.now().plusDays(3 * rodadaAtual));
+                    partida.setEtapaCampeonato(etapa);
+                    partida.setEndereco(enderecoDefault);
+
+                    DadosPartida dadosPartida1 = new DadosPartida();
+                    dadosPartida1.setEquipe(equipesCamp.get(i));
+                    dadosPartida1.setPartida(partida);
+
+                    DadosPartida dadosPartida2 = new DadosPartida();
+                    dadosPartida2.setEquipe(equipesCamp.get(j));
+                    dadosPartida2.setPartida(partida);
+
+                    partida.setDadosPartidas(Arrays.asList(dadosPartida1, dadosPartida2));
+                    partidas.add(partida);
+
+                    Resultado resultadoEquipe1 = new Resultado();
+                    resultadoEquipe1.setEtapaCampeonato(etapa);
+                    resultadoEquipe1.setDadosPartida(dadosPartida1);
+                    resultadoEquipe1.setRodada(rodadaAtual);
+                    resultadoService.create(resultadoEquipe1);
+
+                    Resultado resultadoEquipe2 = new Resultado();
+                    resultadoEquipe2.setEtapaCampeonato(etapa);
+                    resultadoEquipe2.setDadosPartida(dadosPartida2);
+                    resultadoEquipe2.setRodada(rodadaAtual);
+                    resultadoService.create(resultadoEquipe2);
+
+                    if (partidas.size() % partidasPorRodada == 0) {
+                        rodadaAtual++;
+                    }
+                }
+            }
+        }
+
+        // Salvando todas as partidas após a distribuição das rodadas
+        for (Partida partida : partidas) {
+            partidaRepository.save(partida);
+        }
+    }
+    
+	
 }
