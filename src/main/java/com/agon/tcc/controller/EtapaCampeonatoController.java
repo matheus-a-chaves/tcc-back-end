@@ -57,7 +57,7 @@ public class EtapaCampeonatoController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody EtapaCampeonatoDTO etapaCampeonatoDTO, @PathVariable Long id) {
-		this.etapaCampeonatoService.update(new EtapaCampeonatoDTO(id, etapaCampeonatoDTO.nomeEtapa(), etapaCampeonatoDTO.campeonato()));
+		this.etapaCampeonatoService.update(new EtapaCampeonatoDTO(id, etapaCampeonatoDTO.nomeEtapa(), etapaCampeonatoDTO.campeonato(), etapaCampeonatoDTO.totalRodadas()));
 		return ResponseEntity.noContent().build();
 	}
 	

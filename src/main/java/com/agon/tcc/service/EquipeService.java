@@ -53,6 +53,11 @@ public class EquipeService {
 				.collect(Collectors.toList());
 	}
 	
+	public List<Equipe> findEquipesVencedorasRodadaAnterior(Integer idRodada) {
+		String rodada = String.valueOf(idRodada);
+		return equipeRepository.findEquipesVencedorasRodadaAnterior(rodada);
+	}
+	
 	public EquipeDTO findById(Long id) {
 		Optional<Equipe> equipe = equipeRepository.findById(id);
 		if (equipe.isPresent()) {

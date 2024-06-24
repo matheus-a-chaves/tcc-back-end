@@ -52,6 +52,9 @@ public class DadosPartida {
 	@JsonBackReference
 	private Equipe equipe;
 	
+	@Column(name = "dadosAtualizados")
+	private boolean dadosAtualizados;
+	
 	public DadosPartida(DadosPartidaDTO dadosPartidaDTO) {
 		this.id = dadosPartidaDTO.id();
 		this.placar = dadosPartidaDTO.placar();

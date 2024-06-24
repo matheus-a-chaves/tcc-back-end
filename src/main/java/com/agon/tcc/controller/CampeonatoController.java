@@ -94,9 +94,14 @@ public class CampeonatoController {
 	 * Endpoint de inicialização do Campeonato
 	 */
 	@PostMapping("/{id}/iniciar")
-    public ResponseEntity<Void> iniciarCampeonato(@PathVariable Long id) throws Exception {
-        campeonatoService.iniciarCampeonato(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> iniciarCampeonato(@PathVariable Long id) throws Exception {
+		try {
+			campeonatoService.iniciarCampeonato(id);
+	        return ResponseEntity.ok().build();
+		}catch (Exception ex) {
+			return ResponseEntity.badRequest().body(ex.getMessage());
+		}
+        
     }
 
 	@GetMapping("/interno/atletica/{idEquipe}/modalidade/{idModalidade}")

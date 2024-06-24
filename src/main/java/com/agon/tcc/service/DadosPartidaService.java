@@ -55,6 +55,11 @@ public class DadosPartidaService {
 				.collect(Collectors.toList());
 	}
 	
+	public List<DadosPartida> findAllByRodadaCampeonato(Integer idRodada) {
+		String rodada = String.valueOf(idRodada);
+        return dadosPartidaRepository.findAllByRodadaCampeonato(rodada);
+    }
+	
 	public DadosPartidaDTO findByEquipePartida(Long equipeId, Long partidaId) {
         Optional<DadosPartida> dadosPartida = dadosPartidaRepository.findByEquipePartida(equipeId, partidaId);
         if (dadosPartida.isPresent()) {

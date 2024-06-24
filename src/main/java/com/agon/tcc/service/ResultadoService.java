@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.agon.tcc.dto.ResultadoDTO;
+import com.agon.tcc.model.EtapaCampeonato;
 import com.agon.tcc.model.Resultado;
 import com.agon.tcc.repository.ResultadoRepository;
 
@@ -34,6 +35,10 @@ public class ResultadoService {
             return new ResultadoDTO(c.getId(), c.getVitorias(), c.getEmpates(), c.getDerrotas(), c.getSaldoGols(), c.getPontos(), c.getRodada());
         }
         return null;
+    }
+    
+	public List<Resultado> findAllByIdEtapaCampeonato(Long idEtapaCampeonato) {
+        return resultadoRepository.findAllByIdEtapaCampeonato(idEtapaCampeonato);
     }
 
 //	public List<ResultadoDTO> findByEquipe(Long id) {
@@ -82,6 +87,11 @@ public class ResultadoService {
 	@Transactional
 	public void create(ResultadoDTO resultadoDTO) {
 		resultadoRepository.save(new Resultado(resultadoDTO));
+	}
+	
+	@Transactional
+	public void create(Resultado resultado) {
+		resultadoRepository.save(resultado);
 	}
 		
 	public void delete(Long id) {
