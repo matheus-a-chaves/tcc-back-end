@@ -184,8 +184,9 @@ public class EquipeService {
 	}
 	
 	@Transactional
-	public void create(EquipeDTO equipeDTO) {
-		equipeRepository.save(new Equipe(equipeDTO));
+	public void create(EquipeDTO equipeDTO, Long idAtletica) {
+		Equipe equipe = equipeRepository.save(new Equipe(equipeDTO));
+		this.createMembros(equipe.getId(), idAtletica);
 	}
 	
 	@Transactional

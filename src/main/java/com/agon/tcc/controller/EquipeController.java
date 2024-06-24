@@ -84,12 +84,7 @@ public class EquipeController {
 	@PostMapping("/atletica/{id}")
 	@Transactional
 	public ResponseEntity<Void> create(@RequestBody EquipeDTO equipeDTO, @PathVariable Long id) {
-		this.equipeService.create(equipeDTO);
-		
-		EquipeDTO equipe = this.equipeService.findByNome(equipeDTO.nome());
-		
-		this.equipeService.createMembros(equipe.id(), id);
-		
+		this.equipeService.create(equipeDTO, id);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/agon/equipes/{id}")
 				.buildAndExpand(equipeDTO.id())
