@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.agon.tcc.model.DadosPartida;
-import com.agon.tcc.model.PartidaChaveamento;
 
 public interface DadosPartidaRepository extends JpaRepository<DadosPartida, Long> {
 
