@@ -44,7 +44,7 @@ public class PartidaService {
 	
 	@Autowired
 	private EquipeService equipeService;
-	
+
 	@Autowired
 	private DadosPartidaService dadosPartidaService;
 	
@@ -54,7 +54,7 @@ public class PartidaService {
     public List<PartidaDTO> findAll() {
         return partidaRepository.findAll()
                 .stream()
-                .map(p -> new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso()))
+                .map(p -> new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso(), p.getCampeonato()))
                 .collect(Collectors.toList());
     }
 
@@ -62,7 +62,7 @@ public class PartidaService {
         Optional<Partida> partida = partidaRepository.findById(id);
         if (partida.isPresent()) {
             Partida p = partida.get();
-            return new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso());
+            return new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso(), p.getCampeonato());
         }
         return null;
     }
@@ -73,10 +73,10 @@ public class PartidaService {
     	
     	List<PartidaDTO> list = partidaRepository.encontrarPartidasPorData(data, idEquipe)
                 .stream()
-                .map(p -> new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso()))
+                .map(p -> new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso(), p.getCampeonato()))
                 .collect(Collectors.toList());
     	
-    	for(PartidaDTO aux : list) {
+    	for (PartidaDTO aux : list) {
     		DadosPartidaDTO dadosPartidaDTO = this.dadosPartidaService.findById(aux.dadosPartidas().get(0).getId());
     		DadosPartidaDTO dadosPartidaTimeDoisDTO = this.dadosPartidaService.findById(aux.dadosPartidas().get(1).getId());
     		EquipeDTO equipeUmDTO = this.equipeService.findById(dadosPartidaDTO.equipeId());
@@ -96,10 +96,10 @@ public class PartidaService {
     	
     	List<PartidaDTO> list = partidaRepository.findAmistososByEquipe(idEquipe)
                 .stream()
-                .map(p -> new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso()))
+                .map(p -> new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso(), p.getCampeonato()))
                 .collect(Collectors.toList());
     	
-    	for(PartidaDTO aux : list) {
+    	for (PartidaDTO aux : list) {
     		DadosPartidaDTO dadosPartidaDTO = this.dadosPartidaService.findById(aux.dadosPartidas().get(0).getId());
     		DadosPartidaDTO dadosPartidaTimeDoisDTO = this.dadosPartidaService.findById(aux.dadosPartidas().get(1).getId());
     		EquipeDTO equipeUmDTO = this.equipeService.findById(dadosPartidaDTO.equipeId());
@@ -113,13 +113,13 @@ public class PartidaService {
     	
     	return listAgendaDTO;
     }
-
-//    public List<PartidaDTO> findByCampeonato(Long id) {
-//        return partidaRepository.findByCampeonato(id)
-//                .stream()
-//                .map(p -> new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas()))
-//                .collect(Collectors.toList());
-//    }
+    
+    public List<PartidaDTO> findByCampeonato(Long idCampeonato) {
+    	return partidaRepository.findByCampeonato(idCampeonato)
+                .stream()
+                .map(p -> new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso(), p.getCampeonato()))
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public void update(PartidaDTO partidaDTO) {
@@ -130,7 +130,8 @@ public class PartidaService {
             partida.setEndereco(partidaDTO.endereco());
             partida.setEtapaCampeonato(partidaDTO.etapaCampeonato());
             partida.setGrupo(partidaDTO.grupo());
-            
+            partida.setAmistoso(partidaDTO.amistoso());
+            partida.setCampeonato(partidaDTO.campeonato());
             try {
             	partidaRepository.save(partida);
             } catch (Exception e) {
@@ -159,27 +160,6 @@ public class PartidaService {
 		}
 	}
 	
-//	private void gerarPartidaAmistoso(List<Equipe> equipes, PartidaDTO partidaDTO) {
-//        Partida partida = new Partida();
-//        partida.setDataPartida(partidaDTO.dataPartida());
-//        List<DadosPartida> dadosPartidas = new ArrayList<>();
-//
-//        for (Equipe equipe : equipes) {
-//            DadosPartida dados = new DadosPartida();
-//            dados.setEquipe(equipe);
-//            dados.setPartida(partida);
-//            dados.setPlacar(0);
-//            dados.setQtdeCartaoVermelho(0);
-//            dados.setQtdeCartaoAmarelo(0);
-//            dados.setPenaltis(0);
-//            dadosPartidas.add(dados);
-//        }
-//        partida.setDadosPartidas(dadosPartidas);
-//
-//        // Salvar a partida e os dados de partida em cascata
-//        partidaRepository.save(partida);
-//    }
-	
 	/**
 	 * Método de geração de Partida e DadosPartida
 	 * @param equipeCasa
@@ -187,7 +167,8 @@ public class PartidaService {
 	 * @param etapa
 	 * @param dataPartida
 	 */
-	public void gerarPartida(Long idEquipeCasa, Long idEquipeVisitante, Endereco enderecoAmistoso, Amistoso amistoso) {
+	@Transactional
+	public void gerarPartidaAmistoso(Long idEquipeCasa, Long idEquipeVisitante, Endereco enderecoAmistoso, Amistoso amistoso) {
         Equipe equipeCasa = new Equipe(equipeService.findById(idEquipeCasa));
         Equipe equipeVisitante = new Equipe(equipeService.findById(idEquipeVisitante));
         

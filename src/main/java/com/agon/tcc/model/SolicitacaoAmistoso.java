@@ -2,7 +2,7 @@ package com.agon.tcc.model;
 
 import java.time.LocalDateTime;
 import com.agon.tcc.dto.SolicitacaoAmistosoDTO;
-import com.agon.tcc.model.enums.StatusSolicitacao;
+import com.agon.tcc.model.enums.Status;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -42,12 +42,12 @@ public class SolicitacaoAmistoso {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private StatusSolicitacao status;
+    private Status status;
 
     public SolicitacaoAmistoso(SolicitacaoAmistosoDTO solicitacaoAmistosoDTO) {
         this.id = solicitacaoAmistosoDTO.id();
         this.dataSolicitacao = solicitacaoAmistosoDTO.dataSolicitacao();
-        // this.amistoso = solicitacaoAmistosoDTO.amistoso();
+        this.amistoso = solicitacaoAmistosoDTO.amistoso();
         this.equipeVisitante = solicitacaoAmistosoDTO.equipeVisitante();
         this.equipeCasa = solicitacaoAmistosoDTO.equipeCasa();
     }

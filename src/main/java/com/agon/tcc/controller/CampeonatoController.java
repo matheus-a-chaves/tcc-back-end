@@ -100,10 +100,9 @@ public class CampeonatoController {
 		try {
 			campeonatoService.iniciarCampeonato(id, endereco);
 	        return ResponseEntity.ok().build();
-		}catch (Exception ex) {
+		} catch (Exception ex) {
 			return ResponseEntity.badRequest().body(ex.getMessage());
 		}
-        
     }
 	
 	@PostMapping("/{idCampeonato}/chaveamento")
@@ -122,7 +121,6 @@ public class CampeonatoController {
 		List<CampeonatoDTO> campeonatosDTO = this.campeonatoService.findAllIntByModalidadeId(idEquipe, idModalidade);
 		return ResponseEntity.ok().body(campeonatosDTO);
 	}
-
 
 	@GetMapping("externo/atletica/{idAtletica}/modalidade/{idModalidade}")
 	public ResponseEntity<List<CampeonatoDTO>> findAllExtByModalidadeId(@PathVariable Long idAtletica, @PathVariable Long idModalidade) {

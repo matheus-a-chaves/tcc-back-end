@@ -79,6 +79,4 @@ public class UsuarioController {
 		this.usuarioService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
-	
-
 }

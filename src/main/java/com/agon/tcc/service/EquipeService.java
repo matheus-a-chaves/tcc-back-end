@@ -100,6 +100,13 @@ public class EquipeService {
 				.collect(Collectors.toList());
 	}
 	
+	public List<Equipe> findAllEquipesByIdCampeonato(Long id) {
+		return equipeRepository.findAllTimesByIdCampeonato(id)
+				.stream()
+				.map(e -> new Equipe(e.getId(), e.getNome(), e.getImagem(), e.getModalidade(), null, null))
+				.collect(Collectors.toList());
+	}
+	
 	public List<EquipeDTO> findAllTimesByIdAtletica(Long id) {
 		return equipeRepository.findAllTimesByIdAtletica(id)
 				.stream()

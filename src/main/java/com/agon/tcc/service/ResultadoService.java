@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.agon.tcc.dto.ResultadoDTO;
-import com.agon.tcc.model.EtapaCampeonato;
 import com.agon.tcc.model.Resultado;
 import com.agon.tcc.repository.ResultadoRepository;
 
@@ -83,11 +82,6 @@ public class ResultadoService {
 //			}
 //        }
     }
-	
-	@Transactional
-	public void create(ResultadoDTO resultadoDTO) {
-		resultadoRepository.save(new Resultado(resultadoDTO));
-	}
 	
 	@Transactional
 	public void create(Resultado resultado) {

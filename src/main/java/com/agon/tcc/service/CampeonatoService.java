@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
 
-import com.agon.tcc.repository.MembroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +30,7 @@ import com.agon.tcc.model.Resultado;
 import com.agon.tcc.model.Usuario;
 import com.agon.tcc.repository.CampeonatoRepository;
 import com.agon.tcc.repository.EquipeRepository;
+import com.agon.tcc.repository.MembroRepository;
 import com.agon.tcc.util.Util;
 
 @Service

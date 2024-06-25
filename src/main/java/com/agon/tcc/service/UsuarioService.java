@@ -128,5 +128,4 @@ public class UsuarioService {
 	public Usuario findByCnpj(String cnpj) {
 		return usuarioRepository.findByCnpj(cnpj);
 	}
-
 }
