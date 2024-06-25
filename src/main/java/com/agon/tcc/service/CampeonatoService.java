@@ -1,6 +1,7 @@
 package com.agon.tcc.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -8,7 +9,8 @@ import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
 
-import com.agon.tcc.repository.MembroRepository;
+import com.agon.tcc.model.*;
+import com.agon.tcc.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,17 +19,6 @@ import com.agon.tcc.dto.CampeonatoDTO;
 import com.agon.tcc.dto.CampeonatoUsuarioDTO;
 import com.agon.tcc.dto.EquipeDTO;
 import com.agon.tcc.dto.EtapaCampeonatoDTO;
-import com.agon.tcc.model.Campeonato;
-import com.agon.tcc.model.CampeonatoUsuario;
-import com.agon.tcc.model.DadosPartida;
-import com.agon.tcc.model.Endereco;
-import com.agon.tcc.model.Equipe;
-import com.agon.tcc.model.EtapaCampeonato;
-import com.agon.tcc.model.Partida;
-import com.agon.tcc.model.Resultado;
-import com.agon.tcc.model.Usuario;
-import com.agon.tcc.repository.CampeonatoRepository;
-import com.agon.tcc.repository.EquipeRepository;
 import com.agon.tcc.util.Util;
 
 @Service
@@ -62,7 +53,13 @@ public class CampeonatoService {
 	
 	@Autowired
 	private EquipeRepository equipeRepository;
-	
+
+	@Autowired
+	private GrupoRepository grupoRepository;
+
+	@Autowired
+	private EquipeGrupoRepository equipeGrupoRepository;
+
 	private CampeonatoDTO converteDados(Campeonato camp) throws Exception {
         return new CampeonatoDTO(camp.getId(), camp.getNome(), camp.getQuantidadeEquipes(), camp.getDataInicio(), camp.getDataFim(), 
         						 Util.convertToString(camp.getRegulamento()), Util.convertToString(camp.getImagemCampeonato()), 
@@ -441,5 +438,117 @@ public class CampeonatoService {
         }
         return iteracoes;
     }
-	
+
+	public List<CampeonatoDTO> gerarFaseDeGrupos(Endereco endereco, Long idCampeonato) {
+		Optional<Campeonato> campeonato = campeonatoRepository.findById(idCampeonato);
+		List<Equipe> equipes = equipeRandomica(equipeRepository.findAllTimesByIdCampeonato(idCampeonato));
+		try {
+			if (campeonato.isPresent()) {
+				Campeonato camp = campeonato.get();
+				Integer quantidadePorGrupos = 4;
+				Integer quantidadeGrupos = camp.getQuantidadeEquipes() / 4;
+				if (camp.getQuantidadeEquipes() == 12) {
+					quantidadePorGrupos = 3;
+				}
+				List<Grupo> grupos = this.montarGrupos(quantidadePorGrupos, quantidadeGrupos, equipes, camp);
+				this.gerarPartidas(grupos, endereco, quantidadeGrupos);
+			}
+		} catch (RuntimeException error) {
+			throw new RuntimeException(error);
+		}
+		return null;
+	}
+
+	public List<Equipe> equipeRandomica(List<Equipe> equipes) {
+		for (int i = 0; i < equipes.size(); i++) {
+			int random = (int) (Math.random() * equipes.size());
+			Equipe aux = equipes.get(i);
+			equipes.set(i, equipes.get(random));
+			equipes.set(random, aux);
+		}
+		return equipes;
+	}
+
+	public List<Grupo> montarGrupos(int quantidadePorGrupos, int quantidadeGrupos, List<Equipe> equipes, Campeonato campeonato) {
+		List<Grupo> grupos = new ArrayList<>();
+		char grupoNome = 'A';
+
+		for (int i = 0; i < quantidadeGrupos; i++) {
+			Grupo grupo = new Grupo();
+			grupo.setCampeonato(campeonato);
+			grupo.setNome("Grupo " + grupoNome);
+			grupoRepository.save(grupo);
+
+			List<EquipeGrupo> equipesGrupos = new ArrayList<>();
+			for (int j = 0; j < quantidadePorGrupos; j++) {
+				EquipeGrupo equipeGrupo = new EquipeGrupo();
+				equipeGrupo.setEquipe(equipes.get(i * quantidadePorGrupos + j));
+				equipeGrupo.setGrupo(grupo);
+				equipeGrupo.setPontos(0);
+				equipeGrupo.setQtdJogos(0);
+				equipeGrupo.setVitorias(0);
+				equipeGrupo.setEmpates(0);
+				equipeGrupo.setDerrotas(0);
+				equipesGrupos.add(equipeGrupo);
+				this.equipeGrupoRepository.save(equipeGrupo); // Salva cada equipe do grupo
+			}
+
+			grupo.setEquipesGrupos(equipesGrupos);
+			grupo.setTotalJogos(calcularJogos(quantidadePorGrupos));
+			this.grupoRepository.save(grupo); // Atualiza o grupo com as equipes
+			grupos.add(grupo);
+			grupoNome++; // Incrementa a letra do grupo (de 'A' para 'B', etc.)
+		}
+
+		return grupos;
+	}
+
+	public void gerarPartidas(List<Grupo> grupos, Endereco endereco, int quantidadeRodadas) {
+		EtapaCampeonato etapaCampeonato = new EtapaCampeonato();
+		etapaCampeonato.setCampeonato(grupos.get(0).getCampeonato());
+		etapaCampeonato.setNomeEtapa("Fase de Grupos");
+		etapaCampeonato.setTotalRodadas(quantidadeRodadas);
+		this.etapaCampeonatoService.create(etapaCampeonato);
+		for (Grupo grupo : grupos) {
+			List<EquipeGrupo> equipesGrupos = grupo.getEquipesGrupos();
+			for (int i = 0; i < equipesGrupos.size(); i++) {
+				for (int j = i + 1; j < equipesGrupos.size(); j++) {
+					Partida partida = new Partida();
+					partida.setGrupo(grupo);
+					// partida.setDataPartida(...);
+					partida.setEndereco(endereco);
+					List<DadosPartida> dadosPartidas = new ArrayList<>();
+					DadosPartida dadosPartida1 = new DadosPartida();
+					dadosPartida1.setEquipe(equipesGrupos.get(i).getEquipe());
+					dadosPartida1.setPartida(partida);
+					dadosPartida1.setPlacar(0);
+					dadosPartida1.setQtdeCartaoAmarelo(0);
+					dadosPartida1.setQtdeCartaoVermelho(0);
+					dadosPartida1.setPenaltis(0);
+					dadosPartida1.setDadosAtualizados(false);
+					dadosPartidas.add(dadosPartida1);
+
+					DadosPartida dadosPartida2 = new DadosPartida();
+					dadosPartida2.setEquipe(equipesGrupos.get(j).getEquipe());
+					dadosPartida2.setPartida(partida);
+					dadosPartida2.setPlacar(0);
+					dadosPartida2.setQtdeCartaoAmarelo(0);
+					dadosPartida2.setQtdeCartaoVermelho(0);
+					dadosPartida2.setPenaltis(0);
+					dadosPartida2.setDadosAtualizados(false);
+					dadosPartidas.add(dadosPartida2);
+					partida.setDadosPartidas(dadosPartidas);
+					partida.setCampeonato(grupo.getCampeonato());
+
+					partida.setEtapaCampeonato(etapaCampeonato);
+					this.partidaService.create(partida); // Salva a partida
+				}
+			}
+		}
+
+	}
+
+	public int calcularJogos(int numeroEquipesGrupo) {
+		return (numeroEquipesGrupo * (numeroEquipesGrupo - 1)) / 2;
+	}
 }
