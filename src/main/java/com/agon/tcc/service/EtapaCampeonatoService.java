@@ -23,7 +23,7 @@ public class EtapaCampeonatoService {
 	public List<EtapaCampeonatoDTO> findAll() {
     	return etapaCampeonatoRepository.findAll()
 				.stream()
-				.map(ec -> new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato()))
+				.map(ec -> new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato(), ec.getTotalRodadas()))
 				.collect(Collectors.toList());
     }
 	
@@ -31,7 +31,7 @@ public class EtapaCampeonatoService {
 		Optional<EtapaCampeonato> etapaCampeonato = etapaCampeonatoRepository.findById(id);
 		if (etapaCampeonato.isPresent()) {
 			EtapaCampeonato ec = etapaCampeonato.get();
-			return new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato());
+			return new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato(), ec.getTotalRodadas());
 		} else {
 			return null;
 		}
@@ -40,7 +40,7 @@ public class EtapaCampeonatoService {
     public List<EtapaCampeonatoDTO> findByCampeonato(Long id) {
     	return etapaCampeonatoRepository.findByCampeonato(id)
 				.stream()
-				.map(ec -> new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato()))
+				.map(ec -> new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato(), ec.getTotalRodadas()))
 				.collect(Collectors.toList());
     }
     
@@ -48,7 +48,7 @@ public class EtapaCampeonatoService {
 		Optional<EtapaCampeonato> etapaCampeonato = etapaCampeonatoRepository.findByEtapaCampeonato(nomeEtapa, id);
 		if (etapaCampeonato.isPresent()) {
 			EtapaCampeonato ec = etapaCampeonato.get();
-			return new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato());
+			return new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato(), ec.getTotalRodadas());
 		} else {
 			return null;
 		}
@@ -57,6 +57,11 @@ public class EtapaCampeonatoService {
 	@Transactional
 	public void create(EtapaCampeonatoDTO etapaCampeonatoDTO) {
 		etapaCampeonatoRepository.save(new EtapaCampeonato(etapaCampeonatoDTO));
+	}
+	
+	@Transactional
+	public EtapaCampeonato create(EtapaCampeonato etapaCampeonato) {
+		return etapaCampeonatoRepository.save(etapaCampeonato);
 	}
 	
 	@Transactional

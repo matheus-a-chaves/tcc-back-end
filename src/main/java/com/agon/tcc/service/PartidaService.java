@@ -127,6 +127,11 @@ public class PartidaService {
 	public void create(PartidaDTO partidaDTO) {
 		partidaRepository.save(new Partida(partidaDTO));
 	}
+	
+	@Transactional
+	public void create(Partida partida) {
+		partidaRepository.save(partida);
+	}
 		
 	public void delete(Long id) {
 		if (findById(id) != null) {

@@ -57,6 +57,10 @@ public class Partida {
     @JoinColumn(name = "amistoso_id", nullable = true)
     private Amistoso amistoso;
     
+    @OneToOne(optional = true)
+    @JoinColumn(name = "campeonato_id", nullable = true)
+    private Campeonato campeonato;
+    
 	public Partida(PartidaDTO partidaDTO) {
 		this.id = partidaDTO.id();
 		this.dataPartida = partidaDTO.dataPartida();
