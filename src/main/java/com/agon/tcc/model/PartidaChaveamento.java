@@ -7,7 +7,8 @@ import lombok.Setter;
 @Setter
 public class PartidaChaveamento {
 	
-    private String partida;
-    private String equipe;
+    private Long partida;
+    private Equipe equipeUm;
+    private Equipe equipeDois;
 
 }

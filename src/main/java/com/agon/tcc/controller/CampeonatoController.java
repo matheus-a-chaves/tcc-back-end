@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agon.tcc.dto.CampeonatoDTO;
+import com.agon.tcc.model.PartidaChaveamento;
 import com.agon.tcc.service.CampeonatoService;
 
 @RestController
@@ -104,11 +105,11 @@ public class CampeonatoController {
         
     }
 	
-	@PostMapping("/{id}/chaveamento")
-    public ResponseEntity<?> visualizarChaveamento(@PathVariable Long id) throws Exception {
+	@PostMapping("/{idCampeonato}/chaveamento")
+    public ResponseEntity<?> visualizarChaveamento(@PathVariable Long idCampeonato) throws Exception {
 		try {
-			campeonatoService.visualizarChaveamento(id);
-	        return ResponseEntity.ok().build();
+			Map<Integer, List<PartidaChaveamento>> partidasChaveamento = campeonatoService.visualizarChaveamento(idCampeonato);
+	        return ResponseEntity.ok().body(partidasChaveamento);
 		}catch (Exception ex) {
 			return ResponseEntity.badRequest().body(ex.getMessage());
 		}

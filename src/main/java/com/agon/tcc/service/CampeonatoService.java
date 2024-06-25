@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.agon.tcc.dto.CampeonatoDTO;
-import com.agon.tcc.dto.CampeonatoUsuarioDTO;
 import com.agon.tcc.dto.EquipeDTO;
 import com.agon.tcc.dto.EtapaCampeonatoDTO;
 import com.agon.tcc.model.Campeonato;
@@ -446,18 +445,22 @@ public class CampeonatoService {
         return iteracoes;
     }
     
-    public void visualizarChaveamento(Long idCampeonato) {
+    public Map<Integer, List<PartidaChaveamento>> visualizarChaveamento(Long idCampeonato) {
     	List<EtapaCampeonatoDTO> etapasCampeonato = this.etapaCampeonatoService.findByCampeonato(idCampeonato);
     	EtapaCampeonato etapaCampeonato = new EtapaCampeonato(etapasCampeonato.get(0));
 
-    	Map<Integer, List<Partida>> partidasPorRodada = new HashMap<>();
+    	Map<Integer, List<PartidaChaveamento>> partidasPorRodada = new HashMap<>();
     	
     	for(int i = 1; i <= etapaCampeonato.getTotalRodadas(); i++) {
     		List<DadosPartida> dadosPartida = this.dadosPartidaService.findAllByRodadaCampeonato(i, etapaCampeonato.getId());
     		
     		for(DadosPartida dp : dadosPartida) {
-    			Partida partida = dp.getPartida();
     			int rodada = i;
+    			
+    			PartidaChaveamento partida = new PartidaChaveamento();
+    			partida.setPartida(dp.getPartida().getId());
+    			partida.setEquipeUm(dp.getPartida().getDadosPartidas().get(0).getEquipe());
+    			partida.setEquipeDois(dp.getPartida().getDadosPartidas().get(1).getEquipe());
     			
     			// Verifique se a rodada já está no map
                 if (!partidasPorRodada.containsKey(rodada)) {
@@ -465,13 +468,11 @@ public class CampeonatoService {
                     partidasPorRodada.put(rodada, new ArrayList<>());
                 }
     		    
-                // Adicione a partida atual à lista correspondente à rodada
+                // Adiciona partida do chaveamento por rodada
                 partidasPorRodada.get(rodada).add(partida);
     		}
-    		
     	}
-    	
-    	int a= 5;
+    	return partidasPorRodada;
     }
 	
 }
