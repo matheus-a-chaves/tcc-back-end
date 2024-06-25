@@ -62,11 +62,15 @@ public class PartidaController {
 		}
 	}
 	
-//	@GetMapping("/campeonato/{id}")
-//	public ResponseEntity<List<PartidaDTO>> findByCampeonato(@PathVariable Long id) {
-//		List<PartidaDTO> partidasDTO = this.partidaService.findByCampeonato(id);
-//		return ResponseEntity.ok().body(partidasDTO);
-//	}
+	@GetMapping("/campeonato/{id}")
+	public ResponseEntity<List<PartidaDTO>> findByCampeonato(@PathVariable Long id) {
+		try {
+			List<PartidaDTO> partidasDTO = this.partidaService.findByCampeonato(id);
+			return ResponseEntity.ok().body(partidasDTO);
+		} catch (Exception ex) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
 	
 	@PostMapping
 	public ResponseEntity<Void> create(@RequestBody PartidaDTO partidaDTO) {
@@ -81,7 +85,7 @@ public class PartidaController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody PartidaDTO partidaDTO, @PathVariable Long id) {
 		this.partidaService.update(new PartidaDTO(id, partidaDTO.dataPartida(), partidaDTO.endereco(), partidaDTO.etapaCampeonato(), 
-												  partidaDTO.grupo(), partidaDTO.dadosPartidas(), partidaDTO.amistoso()));
+												  partidaDTO.grupo(), partidaDTO.dadosPartidas(), partidaDTO.amistoso(), partidaDTO.campeonato()));
 		return ResponseEntity.noContent().build();
 	}
 	

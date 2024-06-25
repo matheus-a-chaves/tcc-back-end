@@ -35,6 +35,10 @@ public class ResultadoService {
         }
         return null;
     }
+    
+	public List<Resultado> findAllByIdEtapaCampeonato(Long idEtapaCampeonato) {
+        return resultadoRepository.findAllByIdEtapaCampeonato(idEtapaCampeonato);
+    }
 
 //	public List<ResultadoDTO> findByEquipe(Long id) {
 //		return resultadoRepository.findByEquipe(id)
@@ -80,8 +84,8 @@ public class ResultadoService {
     }
 	
 	@Transactional
-	public void create(ResultadoDTO resultadoDTO) {
-		resultadoRepository.save(new Resultado(resultadoDTO));
+	public void create(Resultado resultado) {
+		resultadoRepository.save(resultado);
 	}
 		
 	public void delete(Long id) {

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agon.tcc.dto.ResultadoDTO;
+import com.agon.tcc.model.Resultado;
 import com.agon.tcc.service.ResultadoService;
 
 @RestController
@@ -40,11 +41,11 @@ public class ResultadoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> create(@RequestBody ResultadoDTO resultadoDTO) {
-		this.resultadoService.create(resultadoDTO);
+	public ResponseEntity<Void> create(@RequestBody Resultado resultado) {
+		this.resultadoService.create(resultado);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/agon/resultados/{id}")
-				.buildAndExpand(resultadoDTO.id())
+				.buildAndExpand(resultado.getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}

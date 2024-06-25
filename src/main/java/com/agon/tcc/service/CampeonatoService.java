@@ -1,22 +1,36 @@
 package com.agon.tcc.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
 
-import com.agon.tcc.repository.MembroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.agon.tcc.dto.CampeonatoDTO;
 import com.agon.tcc.dto.EquipeDTO;
+import com.agon.tcc.dto.EtapaCampeonatoDTO;
 import com.agon.tcc.model.Campeonato;
 import com.agon.tcc.model.CampeonatoUsuario;
+import com.agon.tcc.model.DadosPartida;
+import com.agon.tcc.model.Endereco;
+import com.agon.tcc.model.Equipe;
+import com.agon.tcc.model.EtapaCampeonato;
+import com.agon.tcc.model.Partida;
+import com.agon.tcc.model.PartidaChaveamento;
+import com.agon.tcc.model.Resultado;
 import com.agon.tcc.model.Usuario;
 import com.agon.tcc.repository.CampeonatoRepository;
+import com.agon.tcc.repository.EquipeRepository;
+import com.agon.tcc.repository.MembroRepository;
 import com.agon.tcc.util.Util;
 
 @Service
@@ -39,9 +53,15 @@ public class CampeonatoService {
     
     @Autowired
     private CampeonatoUsuarioService campeonatoUsuarioService;
+    
+    @Autowired
+    private DadosPartidaService dadosPartidaService;
 
 	@Autowired
 	private MembroRepository membroRepository;
+	
+	@Autowired
+	private EquipeRepository equipeRepository;
 	
 	private CampeonatoDTO converteDados(Campeonato camp) throws Exception {
         return new CampeonatoDTO(camp.getId(), camp.getNome(), camp.getQuantidadeEquipes(), camp.getDataInicio(), camp.getDataFim(), 
@@ -179,53 +199,100 @@ public class CampeonatoService {
 				.collect(Collectors.toList());
 	}
 
-
-
 	/*
 	 * Método para iniciar o Campeonato e gerar as partidas
 	 */
     @Transactional
-    public void iniciarCampeonato(Long campeonatoId) throws Exception {
-//        Campeonato campeonato = campeonatoRepository.findById(campeonatoId).orElseThrow(() -> new Exception("Campeonato não encontrado"));
-//        List<Equipe> equipes = equipeRepository.findByCampeonatoId(campeonatoId);
-//        
-//        if (equipes.size() != campeonato.getQuantidadeEquipes() || equipes.size() < 2) {
-//            throw new IllegalStateException("Número de equipes cadastradas não corresponde ao número esperado.");
-//        }
-//
-//        // Criando a etapa do campeonato
-//        EtapaCampeonato etapa = new EtapaCampeonato();
-//        if (campeonato.getFormato().getId() >= 4) {
-//        	//Caso seja formato composto
-//            etapa.setNomeEtapa("Fase de Grupos");
-//        } else if (campeonato.getFormato().getId() == 1) {
-//        	etapa.setNomeEtapa(campeonato.getFormato().getNome());
-//        } else if (campeonato.getFormato().getId() == 2) {
-//        	etapa.setNomeEtapa(campeonato.getFormato().getNome());
-//        }
-//        etapa.setCampeonato(campeonato);
-//        etapaCampeonatoRepository.save(etapa);
-//
-//        // Gerando as partidas
-//        for (int i = 0; i < equipes.size(); i++) {
-//            for (int j = i + 1; j < equipes.size(); j++) {
-//                Partida partida = new Partida();
-//                partida.setDataPartida(LocalDate.now().plusDays(3));
-//                partida.setEtapaCampeonato(etapa);
-//                
-//                DadosPartida dadosPartida1 = new DadosPartida();
-//                dadosPartida1.setEquipe(equipes.get(i));
-//                dadosPartida1.setPartida(partida);
-//
-//                DadosPartida dadosPartida2 = new DadosPartida();
-//                dadosPartida2.setEquipe(equipes.get(j));
-//                dadosPartida2.setPartida(partida);
-//
-//                partida.setDadosPartidas(Arrays.asList(dadosPartida1, dadosPartida2));
-//
-//                partidaRepository.save(partida);
-//            }
-//        }
+    public void iniciarCampeonato(Long campeonatoId, Endereco endereco ) throws Exception {
+        Campeonato campeonato = campeonatoRepository.findById(campeonatoId).orElseThrow(() -> new Exception("Campeonato não encontrado"));
+        List<Equipe> equipes = equipeRepository.findByCampeonatoId(campeonatoId);
+        
+        //Verifica se a qtd de equipes mínima que é exigida de acordo com o formato do campeonato
+        if (equipes.size() != campeonato.getQuantidadeEquipes() || equipes.isEmpty()) {
+            throw new IllegalStateException("Número de equipes cadastradas não corresponde ao número esperado.");
+        }
+        
+        int rodada = 1;
+        
+     // Criando a etapa do campeonato
+        EtapaCampeonato etapa = new EtapaCampeonato();
+        if (campeonato.getFormato().getId() == 1) {//PONTOS CORRIDOS            	
+        	etapa.setNomeEtapa(campeonato.getFormato().getNome());
+        	
+        	etapa.setCampeonato(campeonato);
+            etapaCampeonatoService.create(etapa);
+            this.gerarPartidasPontosCorridos(campeonato, equipes, endereco, etapa);
+            
+        } else if(campeonato.getFormato().getId() == 2) {//ELIMINATORIA SIMPLES
+        	etapa.setNomeEtapa(campeonato.getFormato().getNome());
+        	
+        	int totalRodadas = this.totalRodadasEliminatoriaSimples(campeonato.getQuantidadeEquipes());
+        	etapa.setTotalRodadas(totalRodadas);
+        	etapa = etapaCampeonatoService.create(etapa);
+        	
+        	partidaService.gerarPartidasEliminatoriaSimples(endereco, campeonato, rodada, etapa);
+        	
+        }
+    }
+    
+    @Transactional
+    public void gerarPartidasPontosCorridos(Campeonato campeonato, List<Equipe> equipes, Endereco endereco, EtapaCampeonato etapa) throws Exception {
+    	try {
+	        // Gerando todas as partidas de ida
+	        for (int i = 0; i < equipes.size(); i++) {
+	            for (int j = i + 1; j < equipes.size(); j++) {
+	            	partidaService.gerarPartidaCampeonato(campeonato, equipes.get(i), equipes.get(j), endereco, etapa, 1);
+	            }
+	        }
+    	} catch (Exception ex) {
+    		throw new RuntimeErrorException(null, ex.getMessage());
+    	}
+    }
+    
+    public Map<Integer, List<PartidaChaveamento>> visualizarChaveamento(Long idCampeonato) {
+    	List<EtapaCampeonatoDTO> etapasCampeonato = this.etapaCampeonatoService.findByCampeonato(idCampeonato);
+    	EtapaCampeonato etapaCampeonato = new EtapaCampeonato(etapasCampeonato.get(0));
+
+    	Map<Integer, List<PartidaChaveamento>> partidasPorRodada = new HashMap<>();
+    	
+    	for(int i = 1; i <= etapaCampeonato.getTotalRodadas(); i++) {
+    		List<DadosPartida> dadosPartida = this.dadosPartidaService.findAllByRodadaCampeonato(i, etapaCampeonato.getId());
+    		int rodada = i;
+    		
+    		for(DadosPartida dp : dadosPartida) {
+    			
+    			PartidaChaveamento partida = new PartidaChaveamento();
+    			partida.setPartida(dp.getPartida().getId());
+    			partida.setEquipeUm(dp.getPartida().getDadosPartidas().get(0).getEquipe());
+    			partida.setEquipeDois(dp.getPartida().getDadosPartidas().get(1).getEquipe());
+    			
+    			// Verifique se a rodada já está no map
+                if (!partidasPorRodada.containsKey(rodada)) {
+                    // Se não estiver, crie uma nova lista para essa rodada
+                    partidasPorRodada.put(rodada, new ArrayList<>());
+                }
+    		    
+                // Adiciona partida do chaveamento por rodada
+                partidasPorRodada.get(rodada).add(partida);
+    		}
+    		
+    		if(!dadosPartida.isEmpty()) {
+    			List<PartidaChaveamento> aux = partidasPorRodada.get(rodada);
+        		aux = aux.stream().distinct().toList();
+        		partidasPorRodada.get(rodada).clear();
+        		partidasPorRodada.get(rodada).addAll(aux);
+    		}
+    	}
+    	return partidasPorRodada;
+    }
+    
+    public int totalRodadasEliminatoriaSimples(int totalTimes) {
+        int iteracoes = 0;
+        while (totalTimes > 1) {
+        	totalTimes /= 2;
+            iteracoes++;
+        }
+        return iteracoes;
     }
 	
 }

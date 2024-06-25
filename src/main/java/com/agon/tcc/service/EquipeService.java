@@ -53,6 +53,11 @@ public class EquipeService {
 				.collect(Collectors.toList());
 	}
 	
+	public List<Equipe> findEquipesVencedorasRodadaAnterior(Integer idRodada) {
+		String rodada = String.valueOf(idRodada);
+		return equipeRepository.findEquipesVencedorasRodadaAnterior(rodada);
+	}
+	
 	public EquipeDTO findById(Long id) {
 		Optional<Equipe> equipe = equipeRepository.findById(id);
 		if (equipe.isPresent()) {
@@ -92,6 +97,13 @@ public class EquipeService {
 //					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade() , e.getEquipeGrupos(), e.getDadosPartidas());
 					return new EquipeDTO(e.getId(), e.getNome(), null, e.getModalidade());
 				})
+				.collect(Collectors.toList());
+	}
+	
+	public List<Equipe> findAllEquipesByIdCampeonato(Long id) {
+		return equipeRepository.findAllTimesByIdCampeonato(id)
+				.stream()
+				.map(e -> new Equipe(e.getId(), e.getNome(), e.getImagem(), e.getModalidade(), null, null))
 				.collect(Collectors.toList());
 	}
 	

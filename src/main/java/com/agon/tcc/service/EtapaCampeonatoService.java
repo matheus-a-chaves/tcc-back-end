@@ -23,7 +23,7 @@ public class EtapaCampeonatoService {
 	public List<EtapaCampeonatoDTO> findAll() {
     	return etapaCampeonatoRepository.findAll()
 				.stream()
-				.map(ec -> new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato()))
+				.map(ec -> new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato(), ec.getTotalRodadas()))
 				.collect(Collectors.toList());
     }
 	
@@ -31,7 +31,7 @@ public class EtapaCampeonatoService {
 		Optional<EtapaCampeonato> etapaCampeonato = etapaCampeonatoRepository.findById(id);
 		if (etapaCampeonato.isPresent()) {
 			EtapaCampeonato ec = etapaCampeonato.get();
-			return new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato());
+			return new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato(), ec.getTotalRodadas());
 		} else {
 			return null;
 		}
@@ -40,7 +40,7 @@ public class EtapaCampeonatoService {
     public List<EtapaCampeonatoDTO> findByCampeonato(Long id) {
     	return etapaCampeonatoRepository.findByCampeonato(id)
 				.stream()
-				.map(ec -> new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato()))
+				.map(ec -> new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato(), ec.getTotalRodadas()))
 				.collect(Collectors.toList());
     }
     
@@ -48,21 +48,27 @@ public class EtapaCampeonatoService {
 		Optional<EtapaCampeonato> etapaCampeonato = etapaCampeonatoRepository.findByEtapaCampeonato(nomeEtapa, id);
 		if (etapaCampeonato.isPresent()) {
 			EtapaCampeonato ec = etapaCampeonato.get();
-			return new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato());
+			return new EtapaCampeonatoDTO(ec.getId(), ec.getNomeEtapa(), ec.getCampeonato(), ec.getTotalRodadas());
 		} else {
 			return null;
 		}
 	}
-    
-	@Transactional
-	public void create(EtapaCampeonatoDTO etapaCampeonatoDTO) {
-		etapaCampeonatoRepository.save(new EtapaCampeonato(etapaCampeonatoDTO));
-	}
 	
 	@Transactional
-	public void update(EtapaCampeonatoDTO etapaCampeonatoDTO) {
-		EtapaCampeonato novaEtapa = new EtapaCampeonato(findByEtapaCampeonato(etapaCampeonatoDTO.nomeEtapa(), etapaCampeonatoDTO.campeonato().getId()));
-		this.etapaCampeonatoRepository.save(novaEtapa);
+	public EtapaCampeonato create(EtapaCampeonato etapaCampeonato) {
+		return etapaCampeonatoRepository.save(etapaCampeonato);
+	}
+	
+//	@Transactional
+//	public EtapaCampeonatoDTO update(EtapaCampeonatoDTO etapaCampeonatoDTO) {
+//		EtapaCampeonato novaEtapa = new EtapaCampeonato(findByEtapaCampeonato(etapaCampeonatoDTO.nomeEtapa(), etapaCampeonatoDTO.campeonato().getId()));
+//		return etapaCampeonatoRepository.save(novaEtapa);
+//	}
+	
+	@Transactional
+	public EtapaCampeonato update(EtapaCampeonato etapaCampeonato) {
+		EtapaCampeonato novaEtapa = new EtapaCampeonato(findByEtapaCampeonato(etapaCampeonato.getNomeEtapa(), etapaCampeonato.getCampeonato().getId()));
+		return etapaCampeonatoRepository.save(novaEtapa);
 	}
 	
 	public void delete(Long id) {

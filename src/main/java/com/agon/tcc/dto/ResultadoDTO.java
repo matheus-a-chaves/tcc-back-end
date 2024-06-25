@@ -6,6 +6,6 @@ public record ResultadoDTO(Long id,
 							   Integer derrotas,
 							   String saldoGols,
 							   Integer pontos,
-							   String rodada) {
+							   Integer rodada) {
 
 }
