@@ -35,6 +35,10 @@ public class ResultadoService {
         }
         return null;
     }
+    
+	public List<Resultado> findAllByIdEtapaCampeonato(Long idEtapaCampeonato) {
+        return resultadoRepository.findAllByIdEtapaCampeonato(idEtapaCampeonato);
+    }
 
 //	public List<ResultadoDTO> findByEquipe(Long id) {
 //		return resultadoRepository.findByEquipe(id)

@@ -36,9 +36,19 @@ public class EtapaCampeonato {
 	@JoinColumn(name = "campeonato_id")
 	private Campeonato campeonato;
 	
+	@Column(name = "total_rodadas")
+	private Integer totalRodadas;
+	
 	public EtapaCampeonato(EtapaCampeonatoDTO etapaCampeonatoDTO) {
 		this.id = etapaCampeonatoDTO.id();
 		this.nomeEtapa = etapaCampeonatoDTO.nomeEtapa();
 		this.campeonato = etapaCampeonatoDTO.campeonato();
+		this.totalRodadas = etapaCampeonatoDTO.totalRodadas();
+	}
+	
+	public EtapaCampeonato(String nome, Campeonato campeonato, Integer totalRodadas) {
+		this.nomeEtapa = nome;
+		this.campeonato = campeonato;
+		this.totalRodadas = totalRodadas;
 	}
 }

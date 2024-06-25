@@ -48,6 +48,18 @@ public interface EquipeRepository extends JpaRepository<Equipe, Long> {
 			+ "AND m.id_atletica != :idAtletica "
 			+ "AND e.id not in (SELECT e.id FROM equipe e JOIN dados_partida dp ON e.id = dp.equipe_id JOIN partida p ON dp.partida_id = p.id WHERE date(p.data_partida) = :data)", nativeQuery  = true)
 	List<Equipe> findTimesDisponiveisAmistoso(@Param("data") LocalDate data, Long idModalidade, Long idAtletica);
+	
+	@Query(value = "SELECT e.*"
+			+ " FROM Equipe e "
+			+ " WHERE e.id IN ("
+			+ " WITH PartidaRank AS ("
+			+ " SELECT dp.partida_id, dp.equipe_id, dp.placar, dp.penaltis, "
+			+ " ROW_NUMBER() OVER(PARTITION BY dp.partida_id ORDER BY dp.placar DESC, dp.penaltis DESC) as ranking "
+			+ " FROM dados_partida dp JOIN resultado r ON dp.id = r.dados_partida_id"
+			+ " WHERE r.rodada = :rodada"
+			+ ") SELECT equipe_id FROM PartidaRank WHERE ranking = 1"
+			+ ")", nativeQuery = true)
+    List<Equipe> findEquipesVencedorasRodadaAnterior(@Param("rodada") String rodada);
 
 	Optional<Equipe> findByNome(String nome);
 
