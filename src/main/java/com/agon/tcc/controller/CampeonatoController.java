@@ -96,9 +96,9 @@ public class CampeonatoController {
 	 * Endpoint de inicialização do Campeonato
 	 */
 	@PostMapping("/{id}/iniciar/{rodada}")
-    public ResponseEntity<?> iniciarCampeonato(@PathVariable Long id, @PathVariable Integer rodada, @RequestBody Endereco endereco) throws Exception {
+    public ResponseEntity<?> iniciarCampeonato(@PathVariable Long id, @RequestBody Endereco endereco) throws Exception {
 		try {
-	        campeonatoService.iniciarCampeonato(id, endereco, rodada);
+	        campeonatoService.iniciarCampeonato(id, endereco);
 	        return ResponseEntity.ok().build();
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().body(ex.getMessage());
@@ -127,11 +127,22 @@ public class CampeonatoController {
 		List<CampeonatoDTO> campeonatosDTO = this.campeonatoService.findAllExtByModalidadeId(idAtletica, idModalidade);
 		return ResponseEntity.ok().body(campeonatosDTO);
 	}
-
-	@PostMapping("gerar/{idCampeonato}/grupos")
-	public ResponseEntity<List<CampeonatoDTO>> gerarFaseDeGrupos(@RequestBody Endereco endereco, @PathVariable Long idCampeonato) {
-		List<CampeonatoDTO> campeonatosDTO = this.campeonatoService.gerarFaseDeGrupos(endereco, idCampeonato);
-		return ResponseEntity.ok().body(campeonatosDTO);
+	
+	@PostMapping("{idCampeonato}/gerarProximaFase")
+	public ResponseEntity<List<CampeonatoDTO>> gerarProximaFase(@PathVariable Long idCampeonato) {
+		try {
+			this.campeonatoService.gerarProximaFase(idCampeonato);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ResponseEntity.ok().build();
 	}
+
+//	@PostMapping("gerar/{idCampeonato}/grupos")
+//	public ResponseEntity<List<CampeonatoDTO>> gerarFaseDeGrupos(@RequestBody Endereco endereco, @PathVariable Long idCampeonato) {
+//		List<CampeonatoDTO> campeonatosDTO = this.campeonatoService.gerarFaseDeGrupos(endereco, idCampeonato);
+//		return ResponseEntity.ok().body(campeonatosDTO);
+//	}
 
 }
