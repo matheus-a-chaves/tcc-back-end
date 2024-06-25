@@ -202,7 +202,7 @@ public class CampeonatoService {
 	 * Método para iniciar o Campeonato e gerar as partidas
 	 */
     @Transactional
-    public void iniciarCampeonato(Long idCampeonato, Endereco endereco) throws Exception {
+    public void iniciarCampeonato(Long idCampeonato, Endereco endereco, Integer rodada) throws Exception {
     	Campeonato campeonato = campeonatoRepository.findById(idCampeonato).orElseThrow(() -> new Exception("Campeonato não encontrado"));
     	List<Equipe> equipes = equipeService.findAllEquipesByIdCampeonato(idCampeonato);
     	
@@ -215,17 +215,24 @@ public class CampeonatoService {
         EtapaCampeonato etapa = new EtapaCampeonato();
         if (campeonato.getFormato().getId() == 1) {//PONTOS CORRIDOS            	
         	etapa.setNomeEtapa(campeonato.getFormato().getNome());
+        	
+        	etapa.setCampeonato(campeonato);
+            etapaCampeonatoService.create(etapa);
+//            int rodada = 1;
+            partidaService.gerarPartidasPontosCorridos(campeonato, etapa, equipes, endereco, rodada);
+        } else if(campeonato.getFormato().getId() == 2) {//ELIMINATORIA SIMPLES
+        	//etapa.setNomeEtapa(campeonato.getFormato().getNome());
+        	//etapa.setCampeonato(campeonato);
+            //etapaCampeonatoService.create(etapa);
+//            int rodada = 1;
+            this.gerarPartidasEliminatoriaSimples(endereco, campeonato, rodada);
         }
-        etapa.setCampeonato(campeonato);
-        etapaCampeonatoService.create(etapa);
-        int rodada = 1;
-        partidaService.gerarPartidasPontosCorridos(campeonato, etapa, equipes, endereco, rodada);        
+               
     }
     
     @Transactional
-    public void gerarPartidasEliminatoriaSimples(Endereco endereco, Long idCampeonato, Integer idRodada) throws Exception {
+    public void gerarPartidasEliminatoriaSimples(Endereco endereco, Campeonato campeonato, Integer idRodada) throws Exception {
     	try {
-    		Campeonato campeonato = campeonatoRepository.findById(idCampeonato).orElseThrow(() -> new Exception("Campeonato não encontrado"));
     		
     		if(campeonato.getQuantidadeEquipes() != campeonato.getUsuarios().size()) {
         		throw new RuntimeErrorException(null, "A quantidade de times inscritos é diferente do previsto para o campeonato!");
@@ -241,9 +248,9 @@ public class CampeonatoService {
         		EtapaCampeonato etapaCampeonato = new EtapaCampeonato(campeonato.getFormato().getNome(), campeonato, totalRodadas);
             	etapaCampeonato = etapaCampeonatoService.create(etapaCampeonato);
         		
-        		this.gerarPrimeiraRodada(campeonato, idCampeonato, etapaCampeonato, endereco);
+        		this.gerarPrimeiraRodada(campeonato, etapaCampeonato, endereco);
         	} else {
-        		this.gerarProximaRodada(campeonato, idCampeonato, idRodada);
+        		this.gerarProximaRodada(campeonato, idRodada);
         	}
         	
     	} catch(Exception ex) {
@@ -251,9 +258,9 @@ public class CampeonatoService {
     	}
     }
     
-    public void gerarProximaRodada(Campeonato campeonato, Long idCampeonato, Integer idRodada) {
+    public void gerarProximaRodada(Campeonato campeonato, Integer idRodada) {
     	
-    	List<EtapaCampeonatoDTO> etapasCampeonato = this.etapaCampeonatoService.findByCampeonato(idCampeonato);
+    	List<EtapaCampeonatoDTO> etapasCampeonato = this.etapaCampeonatoService.findByCampeonato(campeonato.getId());
     	
     	Integer rodadaAtual = idRodada;
     	EtapaCampeonato etapaCampeonato = new EtapaCampeonato(etapasCampeonato.get(0));
@@ -337,10 +344,10 @@ public class CampeonatoService {
     	}
     }
     
-    public void gerarPrimeiraRodada(Campeonato campeonato, Long idCampeonato, EtapaCampeonato etapaCampeonato, Endereco endereco) {
+    public void gerarPrimeiraRodada(Campeonato campeonato, EtapaCampeonato etapaCampeonato, Endereco endereco) {
     	int qtdadePartidasIniciais = campeonato.getQuantidadeEquipes()/2;
     	
-    	List<Equipe> equipesParticipantes = this.equipeRepository.findAllTimesByIdCampeonato(idCampeonato);
+    	List<Equipe> equipesParticipantes = this.equipeRepository.findAllTimesByIdCampeonato(campeonato.getId());
     	List<Equipe> grupoUm = equipesParticipantes.subList(0, qtdadePartidasIniciais);
     	List<Equipe> grupoDois = equipesParticipantes.subList(qtdadePartidasIniciais, equipesParticipantes.size());
     	
@@ -433,6 +440,7 @@ public class CampeonatoService {
                 partidasPorRodada.get(rodada).add(partida);
     		}
     	}
+    	
     	return partidasPorRodada;
     }
     

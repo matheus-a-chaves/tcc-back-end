@@ -59,6 +59,13 @@ public class PartidaService {
         return null;
     }
     
+    public List<PartidaDTO> findPartidasByCampeonato(Long idCampeonato) {
+        return partidaRepository.findPartidasByCampeonato(idCampeonato)
+                .stream()
+                .map(p -> new PartidaDTO(p.getId(), p.getDataPartida(), p.getEndereco(), p.getEtapaCampeonato(), p.getGrupo(), p.getDadosPartidas(), p.getAmistoso(), p.getCampeonato()))
+                .collect(Collectors.toList());
+    }
+    
     public List<AgendaDTO> encontrarPartidasPorData(String dataString, Long idEquipe) {
     	List<AgendaDTO> listAgendaDTO = new ArrayList<>();
     	LocalDate data = LocalDate.parse(dataString);

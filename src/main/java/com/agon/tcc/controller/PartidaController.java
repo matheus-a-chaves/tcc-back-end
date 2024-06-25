@@ -52,6 +52,16 @@ public class PartidaController {
 		}
 	}
 	
+	@PostMapping("/campeonato/{idCampeonato}")
+	public ResponseEntity<List<PartidaDTO>> findPartidasByCampeonato(@PathVariable Long idCampeonato) {
+		try {
+			List<PartidaDTO> partidasDTO = this.partidaService.findPartidasByCampeonato(idCampeonato);
+			return ResponseEntity.ok().body(partidasDTO);
+		} catch (Exception ex) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+	
 	@GetMapping("/amistosos/equipe/{idEquipe}")
 	public ResponseEntity<List<AgendaDTO>> findAmistososByEquipe(@PathVariable Long idEquipe) {
 		try {
