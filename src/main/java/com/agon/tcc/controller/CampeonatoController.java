@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import com.agon.tcc.model.Endereco;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -127,4 +128,13 @@ public class CampeonatoController {
 		List<CampeonatoDTO> campeonatosDTO = this.campeonatoService.findAllExtByModalidadeId(idAtletica, idModalidade);
 		return ResponseEntity.ok().body(campeonatosDTO);
 	}
+
+	@PostMapping("gerar/{idCampeonato}/grupos")
+	public ResponseEntity<List<CampeonatoDTO>> gerarFaseDeGrupos(@RequestBody Endereco endereco, @PathVariable Long idCampeonato) {
+		List<CampeonatoDTO> campeonatosDTO = this.campeonatoService.gerarFaseDeGrupos(endereco, idCampeonato);
+		return ResponseEntity.ok().body(campeonatosDTO);
+	}
+
+
+
 }
