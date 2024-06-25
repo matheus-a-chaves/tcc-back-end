@@ -95,9 +95,13 @@ public class CampeonatoController {
 	 * Endpoint de inicialização do Campeonato
 	 */
 	@PostMapping("/{id}/iniciar")
-    public ResponseEntity<Void> iniciarCampeonato(@PathVariable Long id, @RequestBody Endereco endereco) throws Exception {
-        campeonatoService.iniciarCampeonato(id, endereco);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> iniciarCampeonato(@PathVariable Long id, @RequestBody Endereco endereco) throws Exception {
+		try {
+	        campeonatoService.iniciarCampeonato(id, endereco);
+	        return ResponseEntity.ok().build();
+		} catch (Exception ex) {
+			return ResponseEntity.badRequest().body(ex.getMessage());
+		}
     }
 
 	@GetMapping("/interno/atletica/{idEquipe}/modalidade/{idModalidade}")
@@ -105,7 +109,6 @@ public class CampeonatoController {
 		List<CampeonatoDTO> campeonatosDTO = this.campeonatoService.findAllIntByModalidadeId(idEquipe, idModalidade);
 		return ResponseEntity.ok().body(campeonatosDTO);
 	}
-
 
 	@GetMapping("externo/atletica/{idAtletica}/modalidade/{idModalidade}")
 	public ResponseEntity<List<CampeonatoDTO>> findAllExtByModalidadeId(@PathVariable Long idAtletica, @PathVariable Long idModalidade) {
