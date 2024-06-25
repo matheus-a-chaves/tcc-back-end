@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.agon.tcc.dto.DadosPartidaDTO;
 import com.agon.tcc.model.DadosPartida;
+import com.agon.tcc.model.PartidaChaveamento;
 import com.agon.tcc.repository.DadosPartidaRepository;
 
 @Service
@@ -55,9 +56,8 @@ public class DadosPartidaService {
 				.collect(Collectors.toList());
 	}
 	
-	public List<DadosPartida> findAllByRodadaCampeonato(Integer idRodada) {
-		String rodada = String.valueOf(idRodada);
-        return dadosPartidaRepository.findAllByRodadaCampeonato(rodada);
+	public List<DadosPartida> findAllByRodadaCampeonato(Integer idRodada, Long idEtapaCampeonato) {
+        return dadosPartidaRepository.findAllByRodadaCampeonato(idRodada, idEtapaCampeonato);
     }
 	
 	public DadosPartidaDTO findByEquipePartida(Long equipeId, Long partidaId) {

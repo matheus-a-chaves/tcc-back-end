@@ -52,7 +52,7 @@ public class DadosPartida {
 	@JsonBackReference
 	private Equipe equipe;
 	
-	@Column(name = "dadosAtualizados")
+	@Column(name = "dados_atualizados")
 	private boolean dadosAtualizados;
 	
 	public DadosPartida(DadosPartidaDTO dadosPartidaDTO) {

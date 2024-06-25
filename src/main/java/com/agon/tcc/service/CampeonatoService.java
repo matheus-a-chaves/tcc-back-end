@@ -1,8 +1,11 @@
 package com.agon.tcc.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,7 @@ import com.agon.tcc.model.Endereco;
 import com.agon.tcc.model.Equipe;
 import com.agon.tcc.model.EtapaCampeonato;
 import com.agon.tcc.model.Partida;
+import com.agon.tcc.model.PartidaChaveamento;
 import com.agon.tcc.model.Resultado;
 import com.agon.tcc.model.Usuario;
 import com.agon.tcc.repository.CampeonatoRepository;
@@ -263,17 +267,17 @@ public class CampeonatoService {
     	try {
     		Campeonato campeonato = campeonatoRepository.findById(idCampeonato).orElseThrow(() -> new Exception("Campeonato não encontrado"));
     		
-        	if(endereco == null) {
-        		throw new RuntimeErrorException(null, "Favor cadastrar um endereço para o campeonato!");
-        	}
-    		
     		if(campeonato.getQuantidadeEquipes() != campeonato.getUsuarios().size()) {
         		throw new RuntimeErrorException(null, "A quantidade de times inscritos é diferente do previsto para o campeonato!");
         	}
         	
         	if(idRodada == 1) {
         		
-        		int totalRodadas = this.totalRodadas(campeonato.getQuantidadeEquipes());
+        		if(endereco == null) {
+            		throw new RuntimeErrorException(null, "Favor cadastrar um endereço para o campeonato!");
+            	}
+        		
+        		int totalRodadas = this.totalRodadasEliminatoriaSimples(campeonato.getQuantidadeEquipes());
         		EtapaCampeonato etapaCampeonato = new EtapaCampeonato(campeonato.getFormato().getNome(), campeonato, totalRodadas);
             	etapaCampeonato = etapaCampeonatoService.create(etapaCampeonato);
         		
@@ -298,7 +302,7 @@ public class CampeonatoService {
     		throw new RuntimeErrorException(null, "O campeonato não possui mais rodadas!");
     	}
     	
-    	List<DadosPartida> dadosPartida = this.dadosPartidaService.findAllByRodadaCampeonato(idRodada - 1);
+    	List<DadosPartida> dadosPartida = this.dadosPartidaService.findAllByRodadaCampeonato(idRodada - 1, etapaCampeonato.getId());
     	int contDadosAtualizados = 0;
     	
     	for(DadosPartida dp : dadosPartida) {
@@ -350,7 +354,7 @@ public class CampeonatoService {
         		
         		Resultado resultadoEquipe1 = new Resultado();
         		resultadoEquipe1.setDadosPartida(dadosPartida1);
-        		resultadoEquipe1.setRodada(String.valueOf(rodadaAtual));
+        		resultadoEquipe1.setRodada(rodadaAtual);
         		resultadoEquipe1.setVitorias(0);
         		resultadoEquipe1.setEmpates(0);
         		resultadoEquipe1.setDerrotas(0);
@@ -361,7 +365,7 @@ public class CampeonatoService {
         		
         		Resultado resultadoEquipe2 = new Resultado();
         		resultadoEquipe2.setDadosPartida(dadosPartida2);
-        		resultadoEquipe2.setRodada(String.valueOf(rodadaAtual));
+        		resultadoEquipe2.setRodada(rodadaAtual);
         		resultadoEquipe2.setVitorias(0);
         		resultadoEquipe2.setEmpates(0);
         		resultadoEquipe2.setDerrotas(0);
@@ -411,7 +415,7 @@ public class CampeonatoService {
     		
     		Resultado resultadoEquipe1 = new Resultado();
     		resultadoEquipe1.setDadosPartida(dadosPartida1);
-    		resultadoEquipe1.setRodada("1");
+    		resultadoEquipe1.setRodada(1);
     		resultadoEquipe1.setVitorias(0);
     		resultadoEquipe1.setEmpates(0);
     		resultadoEquipe1.setDerrotas(0);
@@ -422,7 +426,7 @@ public class CampeonatoService {
     		
     		Resultado resultadoEquipe2 = new Resultado();
     		resultadoEquipe2.setDadosPartida(dadosPartida2);
-    		resultadoEquipe2.setRodada("1");
+    		resultadoEquipe2.setRodada(1);
     		resultadoEquipe2.setVitorias(0);
     		resultadoEquipe2.setEmpates(0);
     		resultadoEquipe2.setDerrotas(0);
@@ -433,13 +437,41 @@ public class CampeonatoService {
     	}
     }
     
-    public int totalRodadas(int totalTimes) {
+    public int totalRodadasEliminatoriaSimples(int totalTimes) {
         int iteracoes = 0;
         while (totalTimes > 1) {
         	totalTimes /= 2;
             iteracoes++;
         }
         return iteracoes;
+    }
+    
+    public void visualizarChaveamento(Long idCampeonato) {
+    	List<EtapaCampeonatoDTO> etapasCampeonato = this.etapaCampeonatoService.findByCampeonato(idCampeonato);
+    	EtapaCampeonato etapaCampeonato = new EtapaCampeonato(etapasCampeonato.get(0));
+
+    	Map<Integer, List<Partida>> partidasPorRodada = new HashMap<>();
+    	
+    	for(int i = 1; i <= etapaCampeonato.getTotalRodadas(); i++) {
+    		List<DadosPartida> dadosPartida = this.dadosPartidaService.findAllByRodadaCampeonato(i, etapaCampeonato.getId());
+    		
+    		for(DadosPartida dp : dadosPartida) {
+    			Partida partida = dp.getPartida();
+    			int rodada = i;
+    			
+    			// Verifique se a rodada já está no map
+                if (!partidasPorRodada.containsKey(rodada)) {
+                    // Se não estiver, crie uma nova lista para essa rodada
+                    partidasPorRodada.put(rodada, new ArrayList<>());
+                }
+    		    
+                // Adicione a partida atual à lista correspondente à rodada
+                partidasPorRodada.get(rodada).add(partida);
+    		}
+    		
+    	}
+    	
+    	int a= 5;
     }
 	
 }

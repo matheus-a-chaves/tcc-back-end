@@ -103,6 +103,17 @@ public class CampeonatoController {
 		}
         
     }
+	
+	@PostMapping("/{id}/chaveamento")
+    public ResponseEntity<?> visualizarChaveamento(@PathVariable Long id) throws Exception {
+		try {
+			campeonatoService.visualizarChaveamento(id);
+	        return ResponseEntity.ok().build();
+		}catch (Exception ex) {
+			return ResponseEntity.badRequest().body(ex.getMessage());
+		}
+        
+    }
 
 	@GetMapping("/interno/atletica/{idEquipe}/modalidade/{idModalidade}")
 	public ResponseEntity<List<CampeonatoDTO>> findAllIntByModalidadeId(@PathVariable Long idEquipe, @PathVariable Long idModalidade) {
