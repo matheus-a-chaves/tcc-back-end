@@ -58,7 +58,7 @@ public class SolicitacaoAmistosoController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@RequestBody SolicitacaoAmistosoDTO solicitacaoAmistosoDTO, @PathVariable Long id) {
 		this.solicitacaoAmistosoService.update(new SolicitacaoAmistosoDTO(solicitacaoAmistosoDTO.id(),
-				solicitacaoAmistosoDTO.dataSolicitacao(), solicitacaoAmistosoDTO.equipeVisitante(), solicitacaoAmistosoDTO.equipeCasa(), solicitacaoAmistosoDTO.status(), null));
+				solicitacaoAmistosoDTO.dataSolicitacao(), solicitacaoAmistosoDTO.equipeVisitante(), solicitacaoAmistosoDTO.equipeCasa(), solicitacaoAmistosoDTO.status(), null, solicitacaoAmistosoDTO.amistoso()));
 		return ResponseEntity.noContent().build();
 	}
 

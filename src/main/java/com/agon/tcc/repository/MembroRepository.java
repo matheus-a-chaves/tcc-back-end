@@ -14,4 +14,6 @@ public interface MembroRepository extends JpaRepository<Membro, Long>{
 
 	@Query(value = "select id_atletica from membros m where m.id_equipe = :idEquipe", nativeQuery = true)
 	Long findIdAtleticaByIdEquipe(Long idEquipe);
+
+	Optional<Membro>  findMembroByIdJogador(Long idJogador);
 }

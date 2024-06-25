@@ -60,5 +60,18 @@ public class MembroService {
 			}
 		}
 	}
-	
+
+	public MembroDTO findMembroByIdJogador(Long id) {
+		try {
+			Optional<Membro>  optionalMembro = this.membroRepository.findMembroByIdJogador(id);
+			if(optionalMembro.isPresent()){
+				Membro membro = optionalMembro.get();
+				return new MembroDTO(membro.getId(),membro.getIdEquipe(), membro.getIdAtletica(), membro.getIdJogador());
+			}
+			return null;
+		} catch (Exception e) {
+			throw new RuntimeErrorException(null, "Não é possível excontrar atletica");
+		}
+
+	}
 }
