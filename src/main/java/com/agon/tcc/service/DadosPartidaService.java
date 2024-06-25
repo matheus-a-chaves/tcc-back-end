@@ -79,6 +79,7 @@ public class DadosPartidaService {
             dadosPartida.setQtdeCartaoVermelho(dadosPartidaDTO.qtdeCartaoVermelho());
             dadosPartida.setQtdeCartaoAmarelo(dadosPartidaDTO.qtdeCartaoAmarelo());
             dadosPartida.setPenaltis(dadosPartidaDTO.penaltis());
+            dadosPartida.setDadosAtualizados(true);
             
             try {
             	dadosPartidaRepository.save(dadosPartida);

@@ -59,10 +59,16 @@ public class EtapaCampeonatoService {
 		return etapaCampeonatoRepository.save(etapaCampeonato);
 	}
 	
+//	@Transactional
+//	public EtapaCampeonatoDTO update(EtapaCampeonatoDTO etapaCampeonatoDTO) {
+//		EtapaCampeonato novaEtapa = new EtapaCampeonato(findByEtapaCampeonato(etapaCampeonatoDTO.nomeEtapa(), etapaCampeonatoDTO.campeonato().getId()));
+//		return etapaCampeonatoRepository.save(novaEtapa);
+//	}
+	
 	@Transactional
-	public void update(EtapaCampeonatoDTO etapaCampeonatoDTO) {
-		EtapaCampeonato novaEtapa = new EtapaCampeonato(findByEtapaCampeonato(etapaCampeonatoDTO.nomeEtapa(), etapaCampeonatoDTO.campeonato().getId()));
-		this.etapaCampeonatoRepository.save(novaEtapa);
+	public EtapaCampeonato update(EtapaCampeonato etapaCampeonato) {
+		EtapaCampeonato novaEtapa = new EtapaCampeonato(findByEtapaCampeonato(etapaCampeonato.getNomeEtapa(), etapaCampeonato.getCampeonato().getId()));
+		return etapaCampeonatoRepository.save(novaEtapa);
 	}
 	
 	public void delete(Long id) {

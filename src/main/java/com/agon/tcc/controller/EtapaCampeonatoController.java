@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -56,11 +54,11 @@ public class EtapaCampeonatoController {
         return ResponseEntity.created(uri).build();
     }
 		
-	@PutMapping("/{id}")
-	public ResponseEntity<Void> update(@RequestBody EtapaCampeonatoDTO etapaCampeonatoDTO, @PathVariable Long id) {
-		this.etapaCampeonatoService.update(new EtapaCampeonatoDTO(id, etapaCampeonatoDTO.nomeEtapa(), etapaCampeonatoDTO.campeonato(), etapaCampeonatoDTO.totalRodadas()));
-		return ResponseEntity.noContent().build();
-	}
+//	@PutMapping("/{id}")
+//	public ResponseEntity<Void> update(@RequestBody EtapaCampeonatoDTO etapaCampeonatoDTO, @PathVariable Long id) {
+//		this.etapaCampeonatoService.update(new EtapaCampeonatoDTO(id, etapaCampeonatoDTO.nomeEtapa(), etapaCampeonatoDTO.campeonato(), etapaCampeonatoDTO.totalRodadas()));
+//		return ResponseEntity.noContent().build();
+//	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {

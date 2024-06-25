@@ -57,7 +57,7 @@ public class Partida {
     @JoinColumn(name = "amistoso_id", nullable = true)
     private Amistoso amistoso;
     
-    @OneToOne(optional = true)
+    @ManyToOne(optional = true)
     @JoinColumn(name = "campeonato_id", nullable = true)
     private Campeonato campeonato;
     

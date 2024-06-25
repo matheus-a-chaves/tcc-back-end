@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -63,12 +64,7 @@ public class Campeonato {
     )
     private List<Usuario> usuarios;
 	
-	@ManyToMany
-    @JoinTable(
-        name = "campeonato_partida",
-        joinColumns = @JoinColumn(name = "campeonato_id"),
-        inverseJoinColumns = @JoinColumn(name = "partida_id")
-    )
+	@OneToMany(mappedBy = "campeonato")
     private List<Partida> partidas;
 	
 	public Campeonato(CampeonatoDTO campeonatoDTO) {
