@@ -134,6 +134,4 @@ public class CampeonatoController {
 		return ResponseEntity.ok().body(campeonatosDTO);
 	}
 
-
-
 }

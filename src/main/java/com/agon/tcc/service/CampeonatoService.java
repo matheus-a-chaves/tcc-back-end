@@ -421,9 +421,10 @@ public class CampeonatoService {
     	
     	for(int i = 1; i <= etapaCampeonato.getTotalRodadas(); i++) {
     		List<DadosPartida> dadosPartida = this.dadosPartidaService.findAllByRodadaCampeonato(i, etapaCampeonato.getId());
+    		int rodada = i;
     		
     		for(DadosPartida dp : dadosPartida) {
-    			int rodada = i;
+    			
     			
     			PartidaChaveamento partida = new PartidaChaveamento();
     			partida.setPartida(dp.getPartida().getId());
@@ -439,8 +440,13 @@ public class CampeonatoService {
                 // Adiciona partida do chaveamento por rodada
                 partidasPorRodada.get(rodada).add(partida);
     		}
+    		
+    		List<PartidaChaveamento> aux = partidasPorRodada.get(rodada);
+    		aux = (List<PartidaChaveamento>) aux.stream().distinct();
+    		
+    		partidasPorRodada.get(rodada).clear();
+    		partidasPorRodada.get(rodada).addAll(aux);
     	}
-    	
     	return partidasPorRodada;
     }
     
