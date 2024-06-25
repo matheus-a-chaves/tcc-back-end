@@ -202,6 +202,57 @@ public class PartidaService {
         partidaRepository.save(partida);
     }
 	
+	@Transactional
+	public void gerarPartidaCampeonato(Campeonato campeonato, Equipe equipe1, Equipe equipe2, Endereco endereco, EtapaCampeonato etapa, Integer rodada) {
+	    Partida partida = new Partida();
+	    partida.setEtapaCampeonato(etapa);
+	    partida.setEndereco(endereco);
+	    partida.setCampeonato(campeonato);
+
+	    DadosPartida dadosPartida1 = new DadosPartida();
+	    dadosPartida1.setEquipe(equipe1);
+	    dadosPartida1.setPartida(partida);
+	    dadosPartida1.setPlacar(0);
+	    dadosPartida1.setQtdeCartaoVermelho(0);
+	    dadosPartida1.setQtdeCartaoAmarelo(0);
+	    dadosPartida1.setPenaltis(0);
+	    dadosPartida1.setDadosAtualizados(false);
+
+	    DadosPartida dadosPartida2 = new DadosPartida();
+	    dadosPartida2.setEquipe(equipe2);
+	    dadosPartida2.setPartida(partida);
+	    dadosPartida2.setPlacar(0);
+	    dadosPartida2.setQtdeCartaoVermelho(0);
+	    dadosPartida2.setQtdeCartaoAmarelo(0);
+	    dadosPartida2.setPenaltis(0);
+	    dadosPartida2.setDadosAtualizados(false);
+
+	    partida.setDadosPartidas(Arrays.asList(dadosPartida1, dadosPartida2));
+	    this.create(partida);
+
+	    Resultado resultadoEquipe1 = new Resultado();
+	    resultadoEquipe1.setEtapaCampeonato(etapa);
+	    resultadoEquipe1.setDadosPartida(dadosPartida1);
+	    resultadoEquipe1.setRodada(rodada);
+	    resultadoEquipe1.setVitorias(0);
+	    resultadoEquipe1.setEmpates(0);
+	    resultadoEquipe1.setDerrotas(0);
+	    resultadoEquipe1.setSaldoGols("0");
+	    resultadoEquipe1.setPontos(0);
+	    resultadoService.create(resultadoEquipe1);
+
+	    Resultado resultadoEquipe2 = new Resultado();
+	    resultadoEquipe2.setEtapaCampeonato(etapa);
+	    resultadoEquipe2.setDadosPartida(dadosPartida2);
+	    resultadoEquipe2.setRodada(rodada);
+	    resultadoEquipe2.setVitorias(0);
+	    resultadoEquipe2.setEmpates(0);
+	    resultadoEquipe2.setDerrotas(0);
+	    resultadoEquipe2.setSaldoGols("0");
+	    resultadoEquipe2.setPontos(0);
+	    resultadoService.create(resultadoEquipe2);
+	}
+	
     @Transactional
     public void gerarPartidasEliminatoriaSimples(Endereco endereco, Campeonato campeonato, Integer idRodada, EtapaCampeonato etapaCampeonato) throws Exception {
     	try {

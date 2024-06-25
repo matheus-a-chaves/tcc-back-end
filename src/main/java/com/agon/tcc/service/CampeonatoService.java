@@ -221,7 +221,7 @@ public class CampeonatoService {
         	
         	etapa.setCampeonato(campeonato);
             etapaCampeonatoService.create(etapa);
-            partidaService.gerarPartidasPontosCorridos(campeonato, etapa, equipes, endereco, rodada);
+            this.gerarPartidasPontosCorridos(campeonato, equipes, endereco, etapa);
             
         } else if(campeonato.getFormato().getId() == 2) {//ELIMINATORIA SIMPLES
         	etapa.setNomeEtapa(campeonato.getFormato().getNome());
@@ -233,6 +233,20 @@ public class CampeonatoService {
         	partidaService.gerarPartidasEliminatoriaSimples(endereco, campeonato, rodada, etapa);
         	
         }
+    }
+    
+    @Transactional
+    public void gerarPartidasPontosCorridos(Campeonato campeonato, List<Equipe> equipes, Endereco endereco, EtapaCampeonato etapa) throws Exception {
+    	try {
+	        // Gerando todas as partidas de ida
+	        for (int i = 0; i < equipes.size(); i++) {
+	            for (int j = i + 1; j < equipes.size(); j++) {
+	            	partidaService.gerarPartidaCampeonato(campeonato, equipes.get(i), equipes.get(j), endereco, etapa, 1);
+	            }
+	        }
+    	} catch (Exception ex) {
+    		throw new RuntimeErrorException(null, ex.getMessage());
+    	}
     }
     
     public Map<Integer, List<PartidaChaveamento>> visualizarChaveamento(Long idCampeonato) {
