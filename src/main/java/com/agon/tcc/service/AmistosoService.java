@@ -57,7 +57,7 @@ public class AmistosoService {
 				throw new RuntimeErrorException(null, "Não foi possivel cancelar esse amistoso!");
 			}
 	}
-	
+
 	@Transactional
 	public void create(AmistosoDTO amistosoDTO) {
 		amistosoRepository.save(new Amistoso(amistosoDTO));
@@ -109,7 +109,7 @@ public class AmistosoService {
         solicitacao.setStatus(Status.PENDENTE);
         solicitacaoAmistosoService.create(solicitacao);
 
-		partidaService.gerarPartida(equipeCasa.getId(), equipeVisitante.getId(), amistosoDTO.endereco(), amistoso);
+		partidaService.gerarPartidaAmistoso(equipeCasa.getId(), equipeVisitante.getId(), amistosoDTO.endereco(), amistoso);
     }
 	
 }

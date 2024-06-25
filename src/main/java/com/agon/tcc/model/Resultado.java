@@ -45,6 +45,7 @@ public class Resultado {
 	@Column(nullable = false, columnDefinition = "INT DEFAULT 0")
 	private Integer pontos;
 	
+	@Column(nullable = false, columnDefinition = "INT DEFAULT 0")
 	private Integer rodada;
 	
 	@ManyToOne

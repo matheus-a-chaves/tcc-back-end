@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.agon.tcc.model.Amistoso;
+import com.agon.tcc.model.Campeonato;
 import com.agon.tcc.model.DadosPartida;
 import com.agon.tcc.model.Endereco;
 import com.agon.tcc.model.EtapaCampeonato;
@@ -15,6 +16,7 @@ public record PartidaDTO(Long id,
 						 EtapaCampeonato etapaCampeonato,
 						 Grupo grupo,
 						 List<DadosPartida> dadosPartidas,
-						 Amistoso amistoso) {
+						 Amistoso amistoso,
+						 Campeonato campeonato) {
 
 }

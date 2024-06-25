@@ -69,6 +69,7 @@ public class Partida {
 		this.grupo = partidaDTO.grupo();
 		this.dadosPartidas = partidaDTO.dadosPartidas();
 		this.amistoso = partidaDTO.amistoso();
+		this.campeonato = partidaDTO.campeonato();
 	}
 	
 }

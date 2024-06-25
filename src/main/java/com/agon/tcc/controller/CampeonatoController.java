@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agon.tcc.dto.CampeonatoDTO;
+import com.agon.tcc.model.Endereco;
 import com.agon.tcc.model.PartidaChaveamento;
 import com.agon.tcc.service.CampeonatoService;
 
@@ -95,14 +96,13 @@ public class CampeonatoController {
 	 * Endpoint de inicialização do Campeonato
 	 */
 	@PostMapping("/{id}/iniciar")
-    public ResponseEntity<?> iniciarCampeonato(@PathVariable Long id) throws Exception {
+    public ResponseEntity<?> iniciarCampeonato(@PathVariable Long id, @RequestBody Endereco endereco) throws Exception {
 		try {
-			campeonatoService.iniciarCampeonato(id);
+	        campeonatoService.iniciarCampeonato(id, endereco);
 	        return ResponseEntity.ok().build();
-		}catch (Exception ex) {
+		} catch (Exception ex) {
 			return ResponseEntity.badRequest().body(ex.getMessage());
 		}
-        
     }
 	
 	@PostMapping("/{idCampeonato}/chaveamento")
@@ -121,7 +121,6 @@ public class CampeonatoController {
 		List<CampeonatoDTO> campeonatosDTO = this.campeonatoService.findAllIntByModalidadeId(idEquipe, idModalidade);
 		return ResponseEntity.ok().body(campeonatosDTO);
 	}
-
 
 	@GetMapping("externo/atletica/{idAtletica}/modalidade/{idModalidade}")
 	public ResponseEntity<List<CampeonatoDTO>> findAllExtByModalidadeId(@PathVariable Long idAtletica, @PathVariable Long idModalidade) {
