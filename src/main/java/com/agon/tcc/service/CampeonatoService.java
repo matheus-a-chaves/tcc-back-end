@@ -255,7 +255,10 @@ public class CampeonatoService {
     			partida.setPartida(dp.getPartida().getId());
     			partida.setEquipeUm(dp.getPartida().getDadosPartidas().get(0).getEquipe());
     			partida.setEquipeDois(dp.getPartida().getDadosPartidas().get(1).getEquipe());
-    			
+    			partida.setDataPartida(dp.getPartida().getDataPartida());
+				partida.setEndereco(dp.getPartida().getEndereco());
+				partida.setPartidaExpirada(dp.getPartida().getDataPartida().isBefore(LocalDateTime.now()));
+				partida.setPartidaFinalizada(dp.isDadosAtualizados());
     			// Verifique se a rodada já está no map
                 if (!partidasPorRodada.containsKey(rodada)) {
                     // Se não estiver, crie uma nova lista para essa rodada

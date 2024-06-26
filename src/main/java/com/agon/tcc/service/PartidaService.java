@@ -426,9 +426,16 @@ public class PartidaService {
 			partidaResponse.setEndereco(p.endereco());
 			partidaResponse.setDataPartida(p.dataPartida());
 
-			if (p.dataPartida().isBefore(LocalDateTime.now())) {
-				partidaResponse.setPartidaExpirada(true);
+			Integer idRodada = this.resultadoService.findByDadosPartida(p.dadosPartidas().get(0).getId());
+
+			partidaResponse.setIdRodada(idRodada);
+			if(p.dataPartida() != null)
+			{
+				if (p.dataPartida().isBefore(LocalDateTime.now())) {
+					partidaResponse.setPartidaExpirada(true);
+				}
 			}
+
 
 			boolean partidaFinalizada = false;
 			for (DadosPartida dadosPartida : p.dadosPartidas()) {

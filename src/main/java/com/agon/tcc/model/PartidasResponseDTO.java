@@ -24,5 +24,6 @@ public class PartidasResponseDTO {
     private LocalDateTime dataPartida;
     private boolean partidaFinalizada;
     private boolean partidaExpirada;
+    private Integer idRodada;
 
 }

@@ -82,7 +82,7 @@ public class ResultadoService {
 //			}
 //        }
     }
-	
+
 	@Transactional
 	public void create(Resultado resultado) {
 		resultadoRepository.save(resultado);
@@ -97,4 +97,10 @@ public class ResultadoService {
 			}
 		}
 	}
+
+	public Integer findByDadosPartida(Long idDadosPartida) {
+        Integer resultado = resultadoRepository.findByDadosPartida(idDadosPartida);
+
+        return resultado;
+    }
 }

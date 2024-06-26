@@ -13,5 +13,7 @@ public interface ResultadoRepository extends JpaRepository<Resultado, Long> {
 
 	@Query(value = "SELECT r.* FROM Resultado r WHERE r.etapa_campeonato_id = :idEtapaCampeonato", nativeQuery  = true)
 	List<Resultado> findAllByIdEtapaCampeonato(Long idEtapaCampeonato);
-	
+
+	@Query(value = "select r.rodada from resultado r where dados_partida_id=:idDadosPartida", nativeQuery  = true)
+	Integer findByDadosPartida(Long idDadosPartida);
 }

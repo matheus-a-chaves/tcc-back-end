@@ -70,7 +70,7 @@ public class DadosPartidaController {
 	@PutMapping("/equipe/{equipeId}/partida/{partidaId}")
 	public ResponseEntity<Void> update(@RequestBody DadosPartidaDTO dadosPartidaDTO, @PathVariable Long equipeId, @PathVariable Long partidaId) {
 		this.dadosPartidaService.update(new DadosPartidaDTO(dadosPartidaDTO.id(), dadosPartidaDTO.placar(), dadosPartidaDTO.qtdeCartaoVermelho(), dadosPartidaDTO.qtdeCartaoAmarelo(), 
-															dadosPartidaDTO.penaltis(), dadosPartidaDTO.equipeId(), dadosPartidaDTO.partidaId()), partidaId, partidaId);
+															dadosPartidaDTO.penaltis(), dadosPartidaDTO.equipeId(), dadosPartidaDTO.partidaId()), equipeId, partidaId);
 		return ResponseEntity.noContent().build();
 	}
 	
