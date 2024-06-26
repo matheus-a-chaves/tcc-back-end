@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import com.agon.tcc.model.PartidasResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -93,5 +94,11 @@ public class PartidaController {
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		this.partidaService.delete(id);
 		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("visualizar/{idCampeonato}/partida")
+	public ResponseEntity<List<PartidasResponseDTO>> findPartidasByIdCampeonato(@PathVariable Long idCampeonato) {
+		List<PartidasResponseDTO> campeonatosDTO = this.partidaService.findPartidasByIdAtltica(idCampeonato);
+		return ResponseEntity.ok().body(campeonatosDTO);
 	}
 }

@@ -10,23 +10,12 @@ import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
 
+import com.agon.tcc.dto.*;
+import com.agon.tcc.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.agon.tcc.dto.AgendaDTO;
-import com.agon.tcc.dto.DadosPartidaDTO;
-import com.agon.tcc.dto.EquipeDTO;
-import com.agon.tcc.dto.EtapaCampeonatoDTO;
-import com.agon.tcc.dto.PartidaDTO;
-import com.agon.tcc.model.Amistoso;
-import com.agon.tcc.model.Campeonato;
-import com.agon.tcc.model.DadosPartida;
-import com.agon.tcc.model.Endereco;
-import com.agon.tcc.model.Equipe;
-import com.agon.tcc.model.EtapaCampeonato;
-import com.agon.tcc.model.Partida;
-import com.agon.tcc.model.Resultado;
 import com.agon.tcc.repository.EquipeRepository;
 import com.agon.tcc.repository.PartidaRepository;
 
@@ -371,7 +360,6 @@ public class PartidaService {
     	for(int i = 0; i < qtdadePartidasIniciais; i++) {
     		
     		Partida partida = new Partida();
-            partida.setDataPartida(LocalDateTime.now().plusDays(3));
             partida.setEtapaCampeonato(etapaCampeonato);
             partida.setEndereco(endereco);
             partida.setCampeonato(campeonato);
@@ -420,5 +408,44 @@ public class PartidaService {
     		resultadoService.create(resultadoEquipe2);
     	}
     }
+
+
+	public List<PartidasResponseDTO> findPartidasByIdAtltica(Long idCampeonato) {
+		List<PartidaDTO> partidas = this.findByCampeonato(idCampeonato);
+
+		List<PartidasResponseDTO> partidasResponse = new ArrayList<>();
+
+		for (PartidaDTO p : partidas) {
+			PartidasResponseDTO partidaResponse = new PartidasResponseDTO();
+			partidaResponse.setIdPartida(p.id());
+			partidaResponse.setNomeEtapa(p.etapaCampeonato().getNomeEtapa());
+			partidaResponse.setCampeonato(p.campeonato().getId());
+			partidaResponse.setTotalRodadas(p.etapaCampeonato().getTotalRodadas().longValue());
+			partidaResponse.setEquipeUm(p.dadosPartidas().get(0).getEquipe());
+			partidaResponse.setEquipeDois(p.dadosPartidas().get(1).getEquipe());
+			partidaResponse.setEndereco(p.endereco());
+			partidaResponse.setDataPartida(p.dataPartida());
+
+			if (p.dataPartida().isBefore(LocalDateTime.now())) {
+				partidaResponse.setPartidaExpirada(true);
+			}
+
+			boolean partidaFinalizada = false;
+			for (DadosPartida dadosPartida : p.dadosPartidas()) {
+				if (dadosPartida.isDadosAtualizados()) {
+					partidaFinalizada = true;
+					break;
+				}
+			}
+			partidaResponse.setPartidaFinalizada(partidaFinalizada);
+
+			partidasResponse.add(partidaResponse);
+		}
+
+		return partidasResponse;
+	}
+
+
+
 
 }

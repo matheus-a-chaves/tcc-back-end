@@ -13,7 +13,7 @@ import com.agon.tcc.model.Partida;
 @Repository
 public interface PartidaRepository extends JpaRepository<Partida, Long> {
 
-	@Query(value = "SELECT p FROM Partida p WHERE p.campeonato.id = :campeonatoId", nativeQuery = true)
+	@Query(value = "SELECT p.* FROM Partida p WHERE p.campeonato_id = :campeonatoId", nativeQuery = true)
     List<Partida> findByCampeonato(@Param("campeonatoId") Long campeonatoId);
 
 	@Query(value = "SELECT p.* FROM partida p " +

@@ -11,23 +11,12 @@ import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
 
+import com.agon.tcc.dto.*;
+import com.agon.tcc.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.agon.tcc.dto.CampeonatoDTO;
-import com.agon.tcc.dto.EquipeDTO;
-import com.agon.tcc.dto.EtapaCampeonatoDTO;
-import com.agon.tcc.model.Campeonato;
-import com.agon.tcc.model.CampeonatoUsuario;
-import com.agon.tcc.model.DadosPartida;
-import com.agon.tcc.model.Endereco;
-import com.agon.tcc.model.Equipe;
-import com.agon.tcc.model.EtapaCampeonato;
-import com.agon.tcc.model.Partida;
-import com.agon.tcc.model.PartidaChaveamento;
-import com.agon.tcc.model.Resultado;
-import com.agon.tcc.model.Usuario;
 import com.agon.tcc.repository.CampeonatoRepository;
 import com.agon.tcc.repository.EquipeRepository;
 import com.agon.tcc.repository.MembroRepository;
@@ -286,7 +275,7 @@ public class CampeonatoService {
     	}
     	return partidasPorRodada;
     }
-    
+
     public int totalRodadasEliminatoriaSimples(int totalTimes) {
         int iteracoes = 0;
         while (totalTimes > 1) {
