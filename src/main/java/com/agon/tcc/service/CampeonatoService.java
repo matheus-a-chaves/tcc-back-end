@@ -205,7 +205,7 @@ public class CampeonatoService {
     @Transactional
     public void iniciarCampeonato(Long campeonatoId, Endereco endereco ) throws Exception {
         Campeonato campeonato = campeonatoRepository.findById(campeonatoId).orElseThrow(() -> new Exception("Campeonato não encontrado"));
-        List<Equipe> equipes = equipeRepository.findByCampeonatoId(campeonatoId);
+        List<Equipe> equipes = equipeService.findAllEquipesByIdCampeonato(campeonatoId);
         
         //Verifica se a qtd de equipes mínima que é exigida de acordo com o formato do campeonato
         if (equipes.size() != campeonato.getQuantidadeEquipes() || equipes.isEmpty()) {
