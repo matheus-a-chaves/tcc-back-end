@@ -54,8 +54,7 @@ public class EquipeService {
 	}
 	
 	public List<Equipe> findEquipesVencedorasRodadaAnterior(Integer idRodada) {
-		String rodada = String.valueOf(idRodada);
-		return equipeRepository.findEquipesVencedorasRodadaAnterior(rodada);
+		return equipeRepository.findEquipesVencedorasRodadaAnterior(idRodada);
 	}
 	
 	public EquipeDTO findById(Long id) {

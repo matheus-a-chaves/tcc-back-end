@@ -192,7 +192,7 @@ public class CampeonatoService {
 	 * Método para iniciar o Campeonato e gerar as partidas
 	 */
     @Transactional
-    public void iniciarCampeonato(Long campeonatoId, Endereco endereco ) throws Exception {
+    public void iniciarCampeonato(Long campeonatoId, Endereco endereco, Integer idRodada) throws Exception {
         Campeonato campeonato = campeonatoRepository.findById(campeonatoId).orElseThrow(() -> new Exception("Campeonato não encontrado"));
         List<Equipe> equipes = equipeService.findAllEquipesByIdCampeonato(campeonatoId);
         
@@ -200,8 +200,6 @@ public class CampeonatoService {
         if (equipes.size() != campeonato.getQuantidadeEquipes() || equipes.isEmpty()) {
             throw new IllegalStateException("Número de equipes cadastradas não corresponde ao número esperado.");
         }
-        
-        int rodada = 1;
         
      // Criando a etapa do campeonato
         EtapaCampeonato etapa = new EtapaCampeonato();
@@ -220,7 +218,7 @@ public class CampeonatoService {
 			etapa.setCampeonato(campeonato);
         	etapa = etapaCampeonatoService.create(etapa);
         	
-        	partidaService.gerarPartidasEliminatoriaSimples(endereco, campeonato, rodada, etapa);
+        	partidaService.gerarPartidasEliminatoriaSimples(endereco, campeonato, idRodada, etapa);
         	
         }
     }

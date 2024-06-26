@@ -96,10 +96,10 @@ public class CampeonatoController {
 	/*
 	 * Endpoint de inicialização do Campeonato
 	 */
-	@PostMapping("/{id}/iniciar")
-    public ResponseEntity<?> iniciarCampeonato(@PathVariable Long id, @RequestBody Endereco endereco) throws Exception {
+	@PostMapping("/{id}/iniciar/{idRodada}")
+    public ResponseEntity<?> iniciarCampeonato(@PathVariable Long id, @RequestBody Endereco endereco, @PathVariable Integer idRodada) throws Exception {
 		try {
-			campeonatoService.iniciarCampeonato(id, endereco);
+			campeonatoService.iniciarCampeonato(id, endereco, idRodada);
 	        return ResponseEntity.ok().build();
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().body(ex.getMessage());

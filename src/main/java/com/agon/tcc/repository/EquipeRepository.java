@@ -59,7 +59,7 @@ public interface EquipeRepository extends JpaRepository<Equipe, Long> {
 			+ " WHERE r.rodada = :rodada"
 			+ ") SELECT equipe_id FROM PartidaRank WHERE ranking = 1"
 			+ ")", nativeQuery = true)
-    List<Equipe> findEquipesVencedorasRodadaAnterior(@Param("rodada") String rodada);
+    List<Equipe> findEquipesVencedorasRodadaAnterior(@Param("rodada") Integer rodada);
 
 	Optional<Equipe> findByNome(String nome);
 
