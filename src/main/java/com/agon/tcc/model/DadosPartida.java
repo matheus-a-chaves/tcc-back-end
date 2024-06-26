@@ -44,12 +44,12 @@ public class DadosPartida {
 	
 	@ManyToOne
 	@JoinColumn(name = "partida_id")
-	@JsonBackReference
+	@JsonBackReference("partida-dadosPartida")
 	private Partida partida;
 	
 	@ManyToOne
 	@JoinColumn(name = "equipe_id")
-	@JsonBackReference
+	@JsonBackReference("equipe-dadosPartida")
 	private Equipe equipe;
 	
 	@Column(name = "dadosAtualizados")

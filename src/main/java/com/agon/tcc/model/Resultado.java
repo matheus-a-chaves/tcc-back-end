@@ -47,7 +47,7 @@ public class Resultado {
 	
 	@Column(nullable = false, columnDefinition = "INT DEFAULT 0")
 	private Integer rodada;
-	
+		
 	@ManyToOne
 	@JoinColumn(name = "etapa_campeonato_id")
 	@JsonBackReference

@@ -194,17 +194,10 @@ public class CampeonatoService {
 	/*
 	 * Método para iniciar o Campeonato e gerar as partidas
 	 */
-
+	@Transactional
     public void iniciarCampeonato(Long idCampeonato, Endereco endereco) throws Exception {
     	Campeonato campeonato = campeonatoRepository.findById(idCampeonato).orElseThrow(() -> new Exception("Campeonato não encontrado"));
     	List<Equipe> equipes = equipeService.findAllEquipesByIdCampeonato(idCampeonato);
-    	
-//    	endereco.setCep("12345");
-//    	endereco.setRua("Rua das Laranjeiras");
-//    	endereco.setNumero(10);
-//    	endereco.setBairro("Bairro de teste");
-//    	endereco.setCidade("Curitiba");
-//    	endereco.setEstado("PR");    	
     	
         //Verifica se a qtd de equipes mínima que é exigida de acordo com o formato do campeonato
         if (equipes.size() != campeonato.getQuantidadeEquipes() || equipes.isEmpty()) {
@@ -225,7 +218,6 @@ public class CampeonatoService {
         if (campeonato.getFormato().getId() == 2) {//ELIMINATÓRIA SIMPLES
     		etapa.setNomeEtapa(campeonato.getFormato().getNome());
             etapaCampeonatoService.create(etapa);
-//        	this.gerarPartidasEliminatoriaSimples(endereco, idCampeonato, 1, etapa);
             this.gerarPartidasEliminatoriaSimples(endereco, campeonato, 1, etapa);
         }
         if (campeonato.getFormato().getId() == 3) {//FASE DE GRUPOS + ELIMINATÓRIA SIMPLES

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -83,9 +84,20 @@ public class PartidaController {
     }
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Void> update(@RequestBody PartidaDTO partidaDTO, @PathVariable Long id) {
-		this.partidaService.update(new PartidaDTO(id, partidaDTO.dataPartida(), partidaDTO.endereco(), partidaDTO.etapaCampeonato(), 
-												  partidaDTO.grupo(), partidaDTO.dadosPartidas(), partidaDTO.amistoso(), partidaDTO.campeonato()));
+	public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody PartidaDTO partidaDTO) {
+		try {
+			this.partidaService.update(new PartidaDTO(id, partidaDTO.dataPartida(), partidaDTO.endereco(), partidaDTO.etapaCampeonato(), 
+												  	  partidaDTO.grupo(), partidaDTO.dadosPartidas(), partidaDTO.amistoso(), partidaDTO.campeonato()));
+			return ResponseEntity.noContent().build();
+		} catch (Exception ex) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+	
+	@PatchMapping("/{id}/atualizar")
+	public ResponseEntity<Void> updateParcial(@PathVariable Long id, @Validated @RequestBody PartidaDTO partidaDTO) {
+		this.partidaService.updateParcial(new PartidaDTO(id, partidaDTO.dataPartida(), partidaDTO.endereco(), partidaDTO.etapaCampeonato(), 
+											  	  		 partidaDTO.grupo(), partidaDTO.dadosPartidas(), partidaDTO.amistoso(), partidaDTO.campeonato()));
 		return ResponseEntity.noContent().build();
 	}
 	

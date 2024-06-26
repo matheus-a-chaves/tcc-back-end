@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.agon.tcc.dto.ResultadoDTO;
+import com.agon.tcc.dto.ResultadoResponseDTO;
 import com.agon.tcc.model.Resultado;
 import com.agon.tcc.service.ResultadoService;
 
@@ -39,6 +40,12 @@ public class ResultadoController {
 		ResultadoDTO resultadoDTO = this.resultadoService.findById(id);
 		return ResponseEntity.ok().body(resultadoDTO);
 	}
+	
+//	@GetMapping("/campeonato/{idCampeonato}/pontosCorridos")
+//	public ResponseEntity<List<ResultadoResponseDTO>> findAllByCampeonatoPontosCorridos(@PathVariable Long idCampeonato) {
+//		List<ResultadoResponseDTO> resultadosDTO = this.resultadoService.findAllByCampeonatoPontosCorridos(idCampeonato);
+//		return ResponseEntity.ok().body(resultadosDTO);
+//	}
 	
 	@PostMapping
 	public ResponseEntity<Void> create(@RequestBody Resultado resultado) {

@@ -130,6 +130,21 @@ public class PartidaService {
 			}
         }
     }
+    
+    @Transactional
+	public void updateParcial(PartidaDTO partidaDTO) {
+		Optional<Partida> optPartida = partidaRepository.findById(partidaDTO.id());
+		if (optPartida.isPresent()) {
+            Partida partida = optPartida.get();
+            partida.setDataPartida(partidaDTO.dataPartida());
+            partida.setEndereco(partidaDTO.endereco());
+            try {
+            	partidaRepository.save(partida);
+            } catch (Exception e) {
+				throw new RuntimeErrorException(null, "Não foi possível atualizar a partida " + partida.getId());
+			}
+        }
+	}
 	
 	@Transactional
 	public void create(PartidaDTO partidaDTO) {

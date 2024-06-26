@@ -62,6 +62,9 @@ public interface EquipeRepository extends JpaRepository<Equipe, Long> {
     List<Equipe> findEquipesVencedorasRodadaAnterior(@Param("rodada") String rodada);
 
 	Optional<Equipe> findByNome(String nome);
+	
+	@Query(value = "select e.* from equipe e where e.id = :idEquipe", nativeQuery = true)
+	Equipe findByIdEquipe(@Param("idEquipe") Long idEquipe);
 
 	@Modifying
 	@Query(value = "INSERT INTO Membros(id_equipe, id_atletica) values (:idEquipe,:idAtletica)", nativeQuery  = true)
