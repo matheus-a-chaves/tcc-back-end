@@ -19,7 +19,7 @@ public class DadosPartidaService {
 
 	@Autowired
 	private DadosPartidaRepository dadosPartidaRepository;
-	
+		
 	public List<DadosPartidaDTO> findAll() {
         return dadosPartidaRepository.findAll()
                 .stream()
@@ -70,7 +70,7 @@ public class DadosPartidaService {
         return null;
     }
 
-    @Transactional
+	@Transactional
     public void update(DadosPartidaDTO dadosPartidaDTO, Long equipeId, Long partidaId) {
         Optional<DadosPartida> optPartida = dadosPartidaRepository.findByEquipePartida(equipeId, partidaId);
         if (optPartida.isPresent()) {
@@ -79,7 +79,6 @@ public class DadosPartidaService {
             dadosPartida.setQtdeCartaoVermelho(dadosPartidaDTO.qtdeCartaoVermelho());
             dadosPartida.setQtdeCartaoAmarelo(dadosPartidaDTO.qtdeCartaoAmarelo());
             dadosPartida.setPenaltis(dadosPartidaDTO.penaltis());
-            dadosPartida.setDadosAtualizados(true);
             
             try {
             	dadosPartidaRepository.save(dadosPartida);
@@ -104,5 +103,4 @@ public class DadosPartidaService {
 			}
 		}
 	}
-
 }

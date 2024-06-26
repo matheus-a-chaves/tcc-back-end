@@ -23,10 +23,10 @@ public interface DadosPartidaRepository extends JpaRepository<DadosPartida, Long
 	@Query(value = "SELECT dp.* FROM dados_partida dp JOIN resultado r ON dp.id = r.dados_partida_id WHERE r.rodada = :rodada", nativeQuery = true)
 	List<DadosPartida> findAllByRodadaCampeonato(String rodada);
 	
-	@Query(value = "SELECT dp.* "
-			+ "  FROM public.dados_partida dp "
-			+ "  JOIN public.partida p ON dp.partida_id = p.id "
-			+ " WHERE dp.equipe_id = :equipeId AND p.campeonato_id = :campeonatoId AND dp.dados_atualizados = true", nativeQuery = true)
-	List<DadosPartida> findAllByEquipe(@Param(":equipeId") Long equipeId, @Param(":campeonatoId") Long campeonatoId);
+//	@Query(value = "SELECT dp.* "
+//			+ "  FROM public.dados_partida dp "
+//			+ "  JOIN public.partida p ON dp.partida_id = p.id "
+//			+ " WHERE dp.equipe_id = :equipeId AND p.campeonato_id = :campeonatoId AND dp.dados_atualizados = true", nativeQuery = true)
+//	List<DadosPartida> findAllByEquipe(@Param(":equipeId") Long equipeId, @Param(":campeonatoId") Long campeonatoId);
 
 }
