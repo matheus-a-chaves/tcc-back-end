@@ -228,6 +228,7 @@ public class CampeonatoService {
         	
         	int totalRodadas = this.totalRodadasEliminatoriaSimples(campeonato.getQuantidadeEquipes());
         	etapa.setTotalRodadas(totalRodadas);
+			etapa.setCampeonato(campeonato);
         	etapa = etapaCampeonatoService.create(etapa);
         	
         	partidaService.gerarPartidasEliminatoriaSimples(endereco, campeonato, rodada, etapa);

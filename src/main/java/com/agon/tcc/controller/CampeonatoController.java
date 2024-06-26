@@ -105,7 +105,7 @@ public class CampeonatoController {
 		}
     }
 	
-	@PostMapping("/{idCampeonato}/chaveamento")
+	@GetMapping("/{idCampeonato}/chaveamento")
     public ResponseEntity<?> visualizarChaveamento(@PathVariable Long idCampeonato) throws Exception {
 		try {
 			Map<Integer, List<PartidaChaveamento>> partidasChaveamento = campeonatoService.visualizarChaveamento(idCampeonato);
